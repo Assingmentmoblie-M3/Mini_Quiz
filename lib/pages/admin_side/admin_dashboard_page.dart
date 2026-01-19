@@ -1,48 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/layout/admin_sidebar.dart';
-class AdminDashboardPage extends StatefulWidget {
-  const AdminDashboardPage({super.key});
+import 'package:mini_quiz/components/layout/section_card.dart';
+import 'package:mini_quiz/components/layout/stat_card.dart';
 
-  @override
-  State<AdminDashboardPage> createState() => _AdminDashboardPageState();
-}
-
-class _AdminDashboardPageState extends State<AdminDashboardPage> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _pages = const [
-    Center(child: Text("Dashboard", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Category", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Questions", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Answers", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Users", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Result", style: TextStyle(fontSize: 30))),
-  ];
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mini Quiz Admin"),
-      ),
+      backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          // Sidebar - always visible
-          SizedBox(
-            width: 250,
-            child: AdminSidebar(
-              selectedIndex: _selectedIndex,
-              onItemSelected: (index) {
-                setState(() => _selectedIndex = index);
-              },
-            ),
-          ),
+          const Sidebar(selected: "Dashboard"),
 
-          // Content area - fills the rest
           Expanded(
-            child: Container(
-              color: Colors.grey[100], // optional background color
-              child: _pages[_selectedIndex],
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Home > ',
+                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                        ),
+                        TextSpan(
+                          text: 'Dashboard',
+                          style: TextStyle(
+                            color: const Color(0xFF5C5C5C),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Dashboard",
+                    style: TextStyle(
+                      color: Color(0xFF009E08),
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Top statistics
+                  Row(
+                    children: const [
+                      StatCard(
+                        title: "Total Users",
+                        value: "25",
+                        color: Colors.green,
+                      ),
+                      SizedBox(width: 16),
+                      StatCard(
+                        title: "Total Quizzes",
+                        value: "20",
+                        color: Colors.orange,
+                      ),
+                      SizedBox(width: 16),
+                      StatCard(
+                        title: "Average Score",
+                        value: "80%",
+                        color: Colors.pink,
+                      ),
+                      SizedBox(width: 16),
+                      StatCard(
+                        title: "Completion Rate",
+                        value: "85%",
+                        color: Colors.blue,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  Expanded(
+                    child: Row(
+                      children: const [
+                        Expanded(
+                          flex: 3,
+                          child: SectionCard(
+                            title: "Recent Quiz Attempts",
+                            child: RecentQuizTable(),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          flex: 2,
+                          child: SectionCard(
+                            title: "Fav Topic",
+                            child: FavTopicTable(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

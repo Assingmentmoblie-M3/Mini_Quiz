@@ -1,113 +1,113 @@
 import 'package:flutter/material.dart';
 
-class AdminSidebar extends StatelessWidget {
-  final int selectedIndex;
-  final Function(int) onItemSelected;
+class Sidebar extends StatelessWidget {
+  final String selected;
 
-  const AdminSidebar({
-    super.key,
-    required this.selectedIndex,
-    required this.onItemSelected,
-  });
+  const Sidebar({super.key, required this.selected});
+
+  Widget _menuItem({
+    required IconData icon,
+    required String title,
+    required bool active,
+  }) {
+    return Container(
+      color: active ? Colors.black26 : Colors.transparent,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: active ? const Color(0xFF62FF6A) : Colors.white70,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: TextStyle(
+              color: active ? const Color(0xFF62FF6A) : Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: ListView(
-              children: [
-                _sidebarItem(
-                  icon: Icons.dashboard,
-                  title: "Dashboard",
-                  index: 0,
-                ),
-                _sidebarItem(
-                  icon: Icons.category,
-                  title: "Category",
-                  index: 1,
-                ),
-                _sidebarItem(
-                  icon: Icons.help_outline,
-                  title: "Questions",
-                  index: 2,
-                ),
-                _sidebarItem(
-                  icon: Icons.question_answer,
-                  title: "Answers",
-                  index: 3,
-                ),
-                _sidebarItem(
-                  icon: Icons.people,
-                  title: "Users",
-                  index: 4,
-                ),
-                _sidebarItem(
-                  icon: Icons.bar_chart,
-                  title: "Result",
-                  index: 5,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return DrawerHeader(
-      decoration: const BoxDecoration(
-        color: Colors.deepPurple,
-      ),
+    return Container(
+      width: 230,
+      color: const Color(0xFF5E5E5E),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: const [
-          Text(
-            "Mini Quiz",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+        children: [
+          const SizedBox(height: 30),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'mini ',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  TextSpan(
+                    text: 'Quiz\n',
+                    style: TextStyle(
+                      color: const Color(0xFF00D60B),
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Dashboard',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ],
+              ),
             ),
           ),
-          SizedBox(height: 6),
-          Text(
-            "Admin Dashboard",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white70,
-            ),
+
+          const SizedBox(height: 30),
+
+          _menuItem(
+            icon: Icons.dashboard,
+            title: "Dashboard",
+            active: selected == "Dashboard",
+          ),
+          _menuItem(
+            icon: Icons.category,
+            title: "Category",
+            active: selected == "Category",
+          ),
+          _menuItem(
+            icon: Icons.bar_chart,
+            title: "Levels",
+            active: selected == "Levels",
+          ),
+          _menuItem(
+            icon: Icons.help_outline,
+            title: "Questions",
+            active: selected == "Questions",
+          ),
+          _menuItem(
+            icon: Icons.check_circle_outline,
+            title: "Answers",
+            active: selected == "Answers",
+          ),
+          _menuItem(
+            icon: Icons.people_outline,
+            title: "Users",
+            active: selected == "Users",
+          ),
+          _menuItem(
+            icon: Icons.assignment_outlined,
+            title: "Results",
+            active: selected == "Results",
           ),
         ],
       ),
-    );
-  }
-
-  Widget _sidebarItem({
-    required IconData icon,
-    required String title,
-    required int index,
-  }) {
-    final bool isSelected = selectedIndex == index;
-
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? Colors.deepPurple : Colors.grey,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: isSelected ? Colors.deepPurple : Colors.black87,
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      selected: isSelected,
-      onTap: () => onItemSelected(index),
     );
   }
 }
