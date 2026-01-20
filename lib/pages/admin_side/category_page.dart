@@ -47,9 +47,74 @@ class CategoryScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 20),
+                  Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF007F06),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    width: 150,
+                    child: Text(
+                      "View Categories",
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
-                  // Top statistics
-                  
+                        children: [
+                          Text(
+                            "Add Category",
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Category Name",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              isDense: true,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF007F06),
+                                ),
+                                child: const Text(
+                                  "Add Category",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
