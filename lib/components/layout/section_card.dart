@@ -20,7 +20,11 @@ class SectionCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF5E5E5E)),
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF5E5E5E),
+            ),
           ),
           const SizedBox(height: 12),
           Expanded(child: child),
@@ -42,15 +46,30 @@ class RecentQuizTable extends StatelessWidget {
       child: DataTable(
         columns: const [
           DataColumn(
-            label: Text("Topic", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF5E5E5E))),
+            label: Text(
+              "Topic",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF5E5E5E),
+              ),
+            ),
           ),
           DataColumn(
-            label: Text("Level", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF5E5E5E))),
+            label: Text(
+              "Level",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF5E5E5E),
+              ),
+            ),
           ),
           DataColumn(
             label: Text(
               "Status",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF5E5E5E)),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF5E5E5E),
+              ),
             ),
           ),
         ],
@@ -80,12 +99,21 @@ class FavTopicTable extends StatelessWidget {
       child: DataTable(
         columns: const [
           DataColumn(
-            label: Text("Topic", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF5E5E5E))),
+            label: Text(
+              "Topic",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF5E5E5E),
+              ),
+            ),
           ),
           DataColumn(
             label: Text(
               "Total Users",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF5E5E5E)),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF5E5E5E),
+              ),
             ),
           ),
         ],

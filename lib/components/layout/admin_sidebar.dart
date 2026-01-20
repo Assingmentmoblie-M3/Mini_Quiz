@@ -42,9 +42,6 @@ class Sidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 30),
-
-          
-
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: RichText(

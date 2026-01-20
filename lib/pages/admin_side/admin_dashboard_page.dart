@@ -13,7 +13,6 @@ class DashboardScreen extends StatelessWidget {
       body: Row(
         children: [
           const Sidebar(selected: "Dashboard"),
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24),
