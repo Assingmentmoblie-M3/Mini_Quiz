@@ -101,7 +101,7 @@ class CategoryScreen extends StatelessWidget {
                                   backgroundColor: const Color(0xFF007F06),
                                 ),
                                 child: const Text(
-                                  "Add Category",
+                                  "Add Levels",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
