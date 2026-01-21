@@ -60,7 +60,7 @@ class _LevelsScreenState extends State<QuestionScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  //View Levels
+                  //View Questions
                   const SizedBox(height: 20),
                   Container(
                     height: 40,
@@ -98,7 +98,7 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          //Filed Levels Name
+                          //Filed
                           SizedBox(
                             width: 500,
                             height: 40,
@@ -112,12 +112,11 @@ class _LevelsScreenState extends State<QuestionScreen> {
                               ),
                             ),
                           ),
-
+                          const SizedBox(height:15),
                           //Score
-                          const SizedBox(height: 20),
                           SizedBox(
-                            height: 40,
                             width: 500,
+                            height: 40,
                             child: TextField(
                               decoration: InputDecoration(
                                 labelText: "Score",
@@ -169,7 +168,7 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             height: 40,
                             width: 500,
                             child: DropdownButtonFormField<String>(
-                              value: selectedCategory,
+                              value: selectLevels,
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 12,
