@@ -1,7 +1,9 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/levels_page.dart';
-import 'package:mini_quiz/pages/admin_side/question_page.dart';
+// import 'package:mini_quiz/pages/admin_side/answer_page.dart';
+// import 'package:mini_quiz/pages/admin_side/levels_page.dart';
+// import 'package:mini_quiz/pages/admin_side/question_page.dart';
+import 'package:mini_quiz/pages/admin_side/user_page.dart';
 // import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 // import 'package:mini_quiz/pages/admin_side/levels_page.dart';
 // import 'package:mini_quiz/pages/admin_side/category_page.dart';
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mini Quiz',
       debugShowCheckedModeBanner: false,
-      home: const QuestionScreen(),
+      home: const UserScreen(),
     );
   }
 }
