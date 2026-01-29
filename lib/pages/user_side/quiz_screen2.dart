@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class QuizScreen2 extends StatefulWidget {
@@ -8,7 +9,43 @@ class QuizScreen2 extends StatefulWidget {
 }
 
 class _QuizScreen2State extends State<QuizScreen2> {
-  String? _selectedOption; // Track selected option
+  String? _selectedOption;
+
+  // ===== TIMER =====
+  static const int totalSeconds = 60; // 1 minutes
+  int remainingSeconds = totalSeconds;
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (remainingSeconds == 0) {
+        t.cancel();
+        Navigator.pushNamed(context, '/q3'); // auto next question
+      } else {
+        setState(() {
+          remainingSeconds--;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  String formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +73,7 @@ class _QuizScreen2State extends State<QuizScreen2> {
               Row(
                 children: [
                   _backButton(() {
+                    timer?.cancel();
                     Navigator.pop(context);
                   }),
                   const SizedBox(width: 12),
@@ -63,7 +101,11 @@ class _QuizScreen2State extends State<QuizScreen2> {
             color: Color(0xFF19A99A),
           ),
         ),
-        Text('2:00\n$step', textAlign: TextAlign.right),
+        Text(
+          '${formatTime(remainingSeconds)}\n$step',
+          textAlign: TextAlign.right,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
@@ -94,7 +136,7 @@ class _QuizScreen2State extends State<QuizScreen2> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedOption = value; // Update selected option
+          _selectedOption = value;
         });
       },
       child: Container(
@@ -134,17 +176,12 @@ class _QuizScreen2State extends State<QuizScreen2> {
     return SizedBox(
       height: 52,
       child: ElevatedButton(
-        onPressed: () {
-          // You can use _selectedOption here
-          if (_selectedOption != null) {
-            print('Selected: $_selectedOption');
-            // Navigate to next question
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Please select an option')),
-            );
-          }
-        },
+        onPressed: _selectedOption == null
+            ? null
+            : () {
+                timer?.cancel();
+                Navigator.pushNamed(context, '/q3');
+              },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF19A99A),
           shape: RoundedRectangleBorder(

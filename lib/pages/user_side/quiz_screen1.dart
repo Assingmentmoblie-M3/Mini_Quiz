@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class QuizScreen1 extends StatefulWidget {
@@ -10,12 +11,48 @@ class QuizScreen1 extends StatefulWidget {
 class _QuizScreen1State extends State<QuizScreen1> {
   int? selectedIndex;
 
+  // ===== TIMER =====
+  static const int totalSeconds = 60; //  change to 1 minute
+  int remainingSeconds = totalSeconds;
+  Timer? timer;
+
   final List<String> answers = [
     'A. Yes, I am',
     'B. Yes, I am sure',
     'C. Because I am gay',
     'D. Yes, I am',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (remainingSeconds == 0) {
+        t.cancel();
+        Navigator.pushNamed(context, '/q2');
+      } else {
+        setState(() {
+          remainingSeconds--;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  String formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +92,7 @@ class _QuizScreen1State extends State<QuizScreen1> {
                   onPressed: selectedIndex == null
                       ? null
                       : () {
+                          timer?.cancel();
                           Navigator.pushNamed(context, '/q2');
                         },
                   style: ElevatedButton.styleFrom(
@@ -87,7 +125,11 @@ class _QuizScreen1State extends State<QuizScreen1> {
             color: Color(0xFF19A99A),
           ),
         ),
-        Text('2:00\n$step', textAlign: TextAlign.right),
+        Text(
+          '${formatTime(remainingSeconds)}\n$step',
+          textAlign: TextAlign.right,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
