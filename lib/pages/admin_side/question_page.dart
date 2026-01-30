@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
+
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
   @override
   State<QuestionScreen> createState() => _LevelsScreenState();
 }
+
 class _LevelsScreenState extends State<QuestionScreen> {
   String? selectedCategory;
   String? selectLevels;
@@ -61,18 +64,32 @@ class _LevelsScreenState extends State<QuestionScreen> {
                     ),
                   ),
                   //View Questions
-                  const SizedBox(height: 20),
-                  Container(
-                    height: 40,
-                    width: 150,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF007F06),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "View Questions",
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ViewQuestionScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF007F06),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 25,
+                            vertical: 20,
+                          ),
+                        ),
+                        child: const Text(
+                          "View Category",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
                   //box of information
@@ -100,7 +117,7 @@ class _LevelsScreenState extends State<QuestionScreen> {
                           const SizedBox(height: 20),
                           //Filed
                           SizedBox(
-                            width: 500,
+                            width: double.infinity,
                             height: 40,
                             child: TextField(
                               decoration: InputDecoration(
@@ -112,10 +129,10 @@ class _LevelsScreenState extends State<QuestionScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height:15),
+                          const SizedBox(height: 10),
                           //Score
                           SizedBox(
-                            width: 500,
+                            width: double.infinity,
                             height: 40,
                             child: TextField(
                               decoration: InputDecoration(
@@ -128,10 +145,10 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             ),
                           ),
                           //DropdownButtonForm
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           SizedBox(
                             height: 40,
-                            width: 500,
+                            width: double.infinity,
                             child: DropdownButtonFormField<String>(
                               value: selectedCategory,
                               decoration: InputDecoration(
@@ -163,10 +180,10 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             ),
                           ),
                           //
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           SizedBox(
                             height: 40,
-                            width: 500,
+                            width: double.infinity,
                             child: DropdownButtonFormField<String>(
                               value: selectLevels,
                               decoration: InputDecoration(
@@ -197,23 +214,29 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             ),
                           ),
                           //
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              ElevatedButton(
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 25,
+                                    vertical: 20,
+                                  ),
                                 ),
                                 child: const Text(
-                                  "Add Questions",
+                                  "Add Question",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
