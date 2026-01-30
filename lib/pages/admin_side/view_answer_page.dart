@@ -1,46 +1,46 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
-import 'category_page.dart';
+import 'answer_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
 
-class ViewCategoryScreen extends StatefulWidget {
-  const ViewCategoryScreen({super.key});
+class ViewAnswerScreen extends StatefulWidget {
+  const ViewAnswerScreen({super.key});
 
   @override
-  State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
+  State<ViewAnswerScreen> createState() => _ViewAnswerScreenState();
 }
 
-class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
-  String searchText = "";
-
+class _ViewAnswerScreenState extends State<ViewAnswerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
-
+          const Sidebar(selected: "Answers"),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: 'Answers',
                           style: TextStyle(
-                            color: Color(0xFF5C5C5C),
+                            color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -49,7 +49,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Answers",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -59,7 +59,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
 
                   const SizedBox(height: 5),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 10),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
@@ -69,14 +69,14 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const CategoryScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
+                                      const AnswerScreen(),
+                              transitionDuration: Duration.zero, // no animation
+                              reverseTransitionDuration:
+                                  Duration.zero, // no animation when back
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                  
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
@@ -84,7 +84,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                           ),
                         ),
                         child: const Text(
-                          "Add New Category",
+                          "Add New Answer",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -94,14 +94,8 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                   const SizedBox(height: 15),
                   Expanded(
                     child: SectionCard(
-                      title: "Table Category",
-                      onSearchChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
-                      },
-                      searchHint: "Search category...",
-                      child: const CategoryTable(),
+                      title: "Table Answers",
+                      child: AnswerTable(),
                     ),
                   ),
                 ],
@@ -114,14 +108,9 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   }
 }
 
-class CategoryTable extends StatefulWidget {
-  const CategoryTable({super.key});
+class AnswerTable extends StatelessWidget {
+  const AnswerTable({super.key});
 
-  @override
-  State<CategoryTable> createState() => _CategoryTableState();
-}
-
-class _CategoryTableState extends State<CategoryTable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -130,19 +119,22 @@ class _CategoryTableState extends State<CategoryTable> {
         columns: const [
           DataColumn(
             numeric: true,
-            label: Center(
-              child: Text(
-                "No.",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF5E5E5E),
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: Center(
+                child: Text(
+                  "No.",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
                 ),
               ),
             ),
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "Actions",
@@ -156,10 +148,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
-                  "Category Name",
+                  "Question",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -170,10 +162,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
-                  "Description",
+                  "Answer A",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -184,10 +176,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
-                  "Status",
+                  "Answer B",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -198,7 +190,35 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: Center(
+                child: Text(
+                  "Answer C",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: Center(
+                child: Text(
+                  "Answer C",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "Created At",
@@ -214,24 +234,27 @@ class _CategoryTableState extends State<CategoryTable> {
         rows: [
           DataRow(
             cells: [
-              DataCell(Center(child: Text("1"))),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("1")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: ActionButtons(
                     onEdit: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const CategoryScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => AnswerScreen()),
                       );
                     },
                     onDelete: () {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
+                          title: const Text("Are you sure deleting answer?"),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
@@ -250,41 +273,37 @@ class _CategoryTableState extends State<CategoryTable> {
               ),
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Science")),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Q1")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Science related quizzes")),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer A")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
-                      ),
-                    ),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer B")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer C")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer D")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Center(child: Text("2026-01-01")),
                 ),
               ),

@@ -3,9 +3,13 @@ import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/components/stat_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,13 +28,14 @@ class DashboardScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka',),
                         ),
                         TextSpan(
                           text: 'Dashboard',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],

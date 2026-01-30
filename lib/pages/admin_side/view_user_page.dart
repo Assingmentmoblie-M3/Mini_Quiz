@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/pages/admin_side/user_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-class ViewUserScreen extends StatelessWidget {
+
+class ViewUserScreen extends StatefulWidget {
   const ViewUserScreen({super.key});
 
+  @override
+  State<ViewUserScreen> createState() => _ViewUserScreenState();
+}
+
+class _ViewUserScreenState extends State<ViewUserScreen> {
+  String searchText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,13 +32,17 @@ class ViewUserScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Users',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -50,23 +61,27 @@ class ViewUserScreen extends StatelessWidget {
 
                   const SizedBox(height: 5),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 10),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const UserScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const UserScreen(),
+                              transitionDuration: Duration.zero, 
+                              reverseTransitionDuration:
+                                  Duration.zero, 
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 40,
                             vertical: 20,
                           ),
                         ),
@@ -80,16 +95,15 @@ class ViewUserScreen extends StatelessWidget {
 
                   const SizedBox(height: 15),
                   Expanded(
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Users",
-                            child: UserTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
+                    child: SectionCard(
+                      title: "Table Users",
+                      onSearchChanged: (value) {
+                        setState(() {
+                          searchText = value;
+                        });
+                      },
+                      searchHint: "Search users...",
+                      child: const UserTable(),
                     ),
                   ),
                 ],
@@ -114,7 +128,7 @@ class UserTable extends StatelessWidget {
           DataColumn(
             numeric: true,
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Center(
                 child: Text(
                   "No.",
@@ -128,7 +142,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Center(
                 child: Text(
                   "Actions",
@@ -142,7 +156,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 50),
               child: Center(
                 child: Text(
                   "User Email",
@@ -156,7 +170,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
+              padding: EdgeInsets.symmetric(horizontal: 35),
               child: Center(
                 child: Text(
                   "Status",
@@ -170,7 +184,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Created At",
@@ -188,13 +202,13 @@ class UserTable extends StatelessWidget {
             cells: [
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Center(child: Text("1")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: ActionButtons(
                     onEdit: () {
                       Navigator.push(
@@ -218,11 +232,11 @@ class UserTable extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );  
+                      );
                     },
                   ),
-                ),  
-              ),  
+                ),
+              ),
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -250,7 +264,6 @@ class UserTable extends StatelessWidget {
                     ),
                   ),
                 ),
-                
               ),
               DataCell(
                 Padding(
