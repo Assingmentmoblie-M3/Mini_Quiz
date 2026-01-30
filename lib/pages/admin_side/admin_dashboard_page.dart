@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/layout/admin_sidebar.dart';
-import 'package:mini_quiz/components/layout/section_card.dart';
-import 'package:mini_quiz/components/layout/stat_card.dart';
+import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/components/section_card.dart';
+import 'package:mini_quiz/components/stat_card.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
