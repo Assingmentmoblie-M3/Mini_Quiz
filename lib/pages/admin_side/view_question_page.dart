@@ -1,21 +1,25 @@
-import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/section_card.dart';
-import 'category_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-class ViewCategoryScreen extends StatelessWidget {
-  const ViewCategoryScreen({super.key});
+import 'package:mini_quiz/components/section_card.dart';
+import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/question_page.dart';
+class ViewQuestionScreen extends StatefulWidget {
+  const ViewQuestionScreen({super.key});
+  @override
+  State<ViewQuestionScreen> createState() => _ViewQuestionScreenState();
+}
+class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
+          const Sidebar(selected: "Questions"),
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding:const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -27,7 +31,7 @@ class ViewCategoryScreen extends StatelessWidget {
                           style: TextStyle(color: Color(0xFF8C8C8C)),
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: 'Questions',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
@@ -39,7 +43,7 @@ class ViewCategoryScreen extends StatelessWidget {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Questions",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -57,8 +61,7 @@ class ViewCategoryScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const CategoryScreen(),
+                              builder: (context) => const QuestionScreen(),
                             ),
                           );
                         },
@@ -70,7 +73,7 @@ class ViewCategoryScreen extends StatelessWidget {
                           ),
                         ),
                         child: const Text(
-                          "Add New Category",
+                          "Add New Question",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -80,11 +83,11 @@ class ViewCategoryScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   Expanded(
                     child: Row(
-                      children: const [
+                      children:const [
                         Expanded(
                           child: SectionCard(
-                            title: "Table Category",
-                            child: CategoryTable(),
+                            title: "Table Questions",
+                            child: QuestionsTable(),
                           ),
                         ),
                         SizedBox(width: 16),
@@ -101,9 +104,9 @@ class ViewCategoryScreen extends StatelessWidget {
   }
 }
 
-class CategoryTable extends StatelessWidget {
-  const CategoryTable({super.key});
 
+class QuestionsTable extends StatelessWidget {
+  const QuestionsTable({super.key});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -111,9 +114,8 @@ class CategoryTable extends StatelessWidget {
       child: DataTable(
         columns: const [
           DataColumn(
-            numeric: true,
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
+              padding:const EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "No.",
@@ -141,10 +143,10 @@ class CategoryTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.symmetric(horizontal:25),
               child: Center(
                 child: Text(
-                  "Category Name",
+                  "Questions",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -155,10 +157,10 @@ class CategoryTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
+              padding: const EdgeInsets.symmetric(horizontal:60),
               child: Center(
                 child: Text(
-                  "Description",
+                  "Score",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -172,7 +174,7 @@ class CategoryTable extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 35),
               child: Center(
                 child: Text(
-                  "Status",
+                  "Category",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -186,7 +188,7 @@ class CategoryTable extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
-                  "Created At",
+                  "Level",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -196,6 +198,7 @@ class CategoryTable extends StatelessWidget {
             ),
           ),
         ],
+
         rows: [
           DataRow(
             cells: [
@@ -212,69 +215,55 @@ class CategoryTable extends StatelessWidget {
                     onEdit: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => CategoryScreen()),
+                        MaterialPageRoute(builder: (_) => QuestionScreen()),
                       );
                     },
                     onDelete: () {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
                           actions: [
                             TextButton(
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                               child: const Text("Cancel"),
                             ),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
                               child: const Text("Delete"),
                             ),
                           ],
                         ),
-                      );  
+                      );
                     },
                   ),
-                ),  
-              ),  
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Science")),
                 ),
               ),
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Science related quizzes")),
+                  child: Center(child: Text("What is Flutter?")),
                 ),
               ),
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text("1")),
                 ),
-                
               ),
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("2026-01-01")),
+                  child: Center(child: Text("English")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(child: Text("Easy")),
                 ),
               ),
             ],

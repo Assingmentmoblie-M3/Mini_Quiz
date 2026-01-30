@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
+import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
+import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
 class Sidebar extends StatelessWidget {
   final String selected;
 
@@ -112,7 +114,13 @@ class Sidebar extends StatelessWidget {
             active: selected == "Levels",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => 
+                const ViewLevelScreen(),
+                transitionDuration: Duration.zero, // no animation
+                reverseTransitionDuration:
+                    Duration.zero, // no animation when back
+              ),
             ),
           ),
           _menuItem(
@@ -121,7 +129,13 @@ class Sidebar extends StatelessWidget {
             active: selected == "Questions",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
+             PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ViewQuestionScreen(),
+                transitionDuration: Duration.zero, // no animation
+                reverseTransitionDuration:
+                    Duration.zero, // no animation when back
+              ),
             ),
           ),
           _menuItem(

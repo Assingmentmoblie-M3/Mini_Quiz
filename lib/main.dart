@@ -1,6 +1,8 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/admin_side/category_page.dart';
+import 'package:mini_quiz/pages/admin_side/levels_page.dart';
  void main() {
   runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
 }
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const CategoryScreen(),
+      home: const DashboardScreen(),
     );
   }
 }
