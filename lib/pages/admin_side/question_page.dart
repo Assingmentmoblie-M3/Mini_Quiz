@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/layout/admin_sidebar.dart';
+import 'package:mini_quiz/layout/admin_sidebar.dart';
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
   @override

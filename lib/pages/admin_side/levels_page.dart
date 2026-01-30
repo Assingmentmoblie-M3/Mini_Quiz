@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/layout/admin_sidebar.dart';
+import 'package:mini_quiz/layout/admin_sidebar.dart';
 
 class LevelsScreen extends StatefulWidget {
   const LevelsScreen({super.key});

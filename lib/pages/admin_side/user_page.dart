@@ -1,8 +1,8 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-class CategoryScreen extends StatelessWidget {
-  const CategoryScreen({super.key});
+import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
+class UserScreen extends StatelessWidget {
+  const UserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class CategoryScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
+          const Sidebar(selected: "Users"),
 
           Expanded(
             child: Padding(
@@ -26,7 +26,7 @@ class CategoryScreen extends StatelessWidget {
                           style: TextStyle(color: Color(0xFF8C8C8C)),
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: 'Users',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class CategoryScreen extends StatelessWidget {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Users",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -57,7 +57,7 @@ class CategoryScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ViewCategoryScreen(),
+                                  const ViewUserScreen(),
                             ),
                           );
                         },
@@ -69,7 +69,7 @@ class CategoryScreen extends StatelessWidget {
                           ),
                         ),
                         child: const Text(
-                          "View Category",
+                          "View Users",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -90,7 +90,7 @@ class CategoryScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Add Category",
+                            "Add User",
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 20,
@@ -100,7 +100,7 @@ class CategoryScreen extends StatelessWidget {
                           const SizedBox(height: 20),
                           TextField(
                             decoration: InputDecoration(
-                              labelText: "Category Name",
+                              labelText: "User Email",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -108,15 +108,7 @@ class CategoryScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 10),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              isDense: true,
-                            ),
-                          ),
+                          
                           const SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
@@ -132,7 +124,7 @@ class CategoryScreen extends StatelessWidget {
                                   ),
                                 ),
                                 child: const Text(
-                                  "Add Levels",
+                                  "Add User",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
