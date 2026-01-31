@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
+import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
+import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
 
@@ -123,29 +125,31 @@ class Sidebar extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewCategoryScreen(),
+                pageBuilder: (context, animation, secondaryAnimation) => 
+                const ViewLevelScreen(),
                 transitionDuration: Duration.zero, // no animation
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
               ),
             ),
           ),
+
           _menuItem(
             icon: Icons.help_outline,
             title: "Questions",
             active: selected == "Questions",
             onTap: () => Navigator.push(
               context,
-              PageRouteBuilder(
+             PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewCategoryScreen(),
+                    const ViewQuestionScreen(),
                 transitionDuration: Duration.zero, // no animation
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
               ),
             ),
           ),
+
           _menuItem(
             icon: Icons.check_circle_outline,
             title: "Answers",

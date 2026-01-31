@@ -142,7 +142,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   ),
                                 ),
                                 child: const Text(
-                                  "Save",
+                                  "Add Levels",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
