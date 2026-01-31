@@ -7,7 +7,6 @@ import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
 import 'package:mini_quiz/pages/admin_side/levels_page.dart';
 void main() {
 runApp(DevicePreview(builder: (context) => const MyApp()));
-;
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
