@@ -3,10 +3,8 @@ import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import './levels_page.dart';
-
 class ViewLevelScreen extends StatelessWidget {
   const ViewLevelScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,6 +224,7 @@ class _LevelsTableState extends State<LevelsTable> {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
+                              title: const Text("Are you sure deleting category?"),
                               actions: [
                                 TextButton(
                                   onPressed: () {
