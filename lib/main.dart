@@ -4,27 +4,18 @@ import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/admin_side/category_page.dart';
 import 'package:mini_quiz/pages/admin_side/user_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-<<<<<<< HEAD
+import 'package:mini_quiz/pages/admin_side/levels_page.dart';
 void main() {
 runApp(DevicePreview(builder: (context) => const MyApp()));
-=======
-import 'package:mini_quiz/pages/admin_side/levels_page.dart';
-
- void main() {
-  runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
->>>>>>> kionyong
+;
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-<<<<<<< HEAD
       home: const ViewCategoryScreen(),
-=======
->>>>>>> kionyong
       theme: ThemeData(
         fontFamily: 'Fredoka',
         textTheme: const TextTheme(
@@ -32,11 +23,6 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 16, ),
         ),
       ),
-<<<<<<< HEAD
-      // home: const DashboardScreen(),
-=======
-      home: const ViewCategoryScreen(),
->>>>>>> kionyong
     );
   }
 }
