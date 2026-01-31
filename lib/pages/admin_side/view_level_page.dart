@@ -11,6 +11,7 @@ class ViewLevelScreen extends StatefulWidget {
 }
 
 class _ViewLevelScreenState extends State<ViewLevelScreen> {
+  String searchText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +89,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                       title: "Table Levels",
                       onSearchChanged: (value) {
                         setState(() {
-                          var searchText = value;
+                           searchText = value;
                         });
                       },
                       searchHint: "Search levels...",

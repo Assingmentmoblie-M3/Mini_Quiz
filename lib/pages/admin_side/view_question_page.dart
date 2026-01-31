@@ -11,6 +11,7 @@ class ViewQuestionScreen extends StatefulWidget {
 }
 
 class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
+  String searchText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +89,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                       title: "Table Questions",
                       onSearchChanged: (value) {
                         setState(() {
-                          var searchText = value;
+                           searchText = value;
                         });
                       },
                       searchHint: "Search questions...",

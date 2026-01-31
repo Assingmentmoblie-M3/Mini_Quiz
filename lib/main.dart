@@ -16,8 +16,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: const DashboardScreen(),
-      // home: const ViewCategoryScreen(),
       theme: ThemeData(
         fontFamily: 'Fredoka',
         textTheme: const TextTheme(

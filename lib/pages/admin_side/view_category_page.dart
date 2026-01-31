@@ -9,6 +9,7 @@ class ViewCategoryScreen extends StatefulWidget {
   State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
 }
 class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
+  String searchText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +93,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                       title: "Table Category",
                       onSearchChanged: (value) {
                         setState(() {
-                          var searchText = value;
+                           searchText = value;
                         });
                       },
                       searchHint: "Search category...",
