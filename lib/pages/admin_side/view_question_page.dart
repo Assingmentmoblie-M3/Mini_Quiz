@@ -3,11 +3,13 @@ import 'package:mini_quiz/components/action_button.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/question_page.dart';
+
 class ViewQuestionScreen extends StatefulWidget {
   const ViewQuestionScreen({super.key});
   @override
   State<ViewQuestionScreen> createState() => _ViewQuestionScreenState();
 }
+
 class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
 
           Expanded(
             child: Padding(
-              padding:const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -82,16 +84,15 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
 
                   const SizedBox(height: 15),
                   Expanded(
-                    child: Row(
-                      children:const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Questions",
-                            child: QuestionsTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
+                    child: SectionCard(
+                      title: "Table Questions",
+                      onSearchChanged: (value) {
+                        setState(() {
+                          var searchText = value;
+                        });
+                      },
+                      searchHint: "Search questions...",
+                      child: const QuestionsTable(),
                     ),
                   ),
                 ],
@@ -103,10 +104,14 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
     );
   }
 }
-
-
-class QuestionsTable extends StatelessWidget {
+class QuestionsTable extends StatefulWidget {
   const QuestionsTable({super.key});
+
+  @override
+  State<QuestionsTable> createState() => _QuestionsTableState();
+}
+
+class _QuestionsTableState extends State<QuestionsTable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -114,22 +119,20 @@ class QuestionsTable extends StatelessWidget {
       child: DataTable(
         columns: const [
           DataColumn(
-            label: Padding(
-              padding:const EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
+            numeric: true,
+            label: Center(
+              child: Text(
+                "No.",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
                 ),
               ),
             ),
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Actions",
@@ -143,10 +146,10 @@ class QuestionsTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal:25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
-                  "Questions",
+                  "Question",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -157,7 +160,7 @@ class QuestionsTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal:60),
+              padding: EdgeInsets.symmetric(horizontal: 60),
               child: Center(
                 child: Text(
                   "Score",
@@ -171,7 +174,7 @@ class QuestionsTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
+              padding: EdgeInsets.symmetric(horizontal: 35),
               child: Center(
                 child: Text(
                   "Category",
@@ -185,7 +188,7 @@ class QuestionsTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Level",
@@ -198,16 +201,10 @@ class QuestionsTable extends StatelessWidget {
             ),
           ),
         ],
-
         rows: [
           DataRow(
             cells: [
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
+              DataCell(Center(child: Text("1"))),
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -215,24 +212,23 @@ class QuestionsTable extends StatelessWidget {
                     onEdit: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => QuestionScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const QuestionScreen(),
+                        ),
                       );
                     },
                     onDelete: () {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
+                          title: const Text("Are you sure deleting category?"),
                           actions: [
                             TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
+                              onPressed: () => Navigator.pop(context),
                               child: const Text("Cancel"),
                             ),
                             TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
+                              onPressed: () {},
                               child: const Text("Delete"),
                             ),
                           ],
@@ -244,25 +240,25 @@ class QuestionsTable extends StatelessWidget {
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("What is Flutter?")),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(child: Text("What is the capital of France?")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("1")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("English")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("Easy")),
                 ),
               ),

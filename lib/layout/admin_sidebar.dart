@@ -4,6 +4,9 @@ import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
+import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
+import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
+
 class Sidebar extends StatelessWidget {
   final String selected;
 
@@ -32,7 +35,8 @@ class Sidebar extends StatelessWidget {
               title,
               style: TextStyle(
                 color: active ? const Color(0xFF62FF6A) : Colors.white,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.5
               ),
             ),
           ],
@@ -57,19 +61,25 @@ class Sidebar extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'mini ',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontFamily: 'Fredoka',
+                    ),
                   ),
                   TextSpan(
                     text: 'Quiz\n',
-                    style: TextStyle(
-                      color: const Color(0xFF00D60B),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: const Color(0xFF00D60B), // override the color
                     ),
                   ),
                   TextSpan(
                     text: 'Dashboard',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Fredoka',
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),
@@ -123,6 +133,7 @@ class Sidebar extends StatelessWidget {
               ),
             ),
           ),
+
           _menuItem(
             icon: Icons.help_outline,
             title: "Questions",
@@ -138,13 +149,20 @@ class Sidebar extends StatelessWidget {
               ),
             ),
           ),
+
           _menuItem(
             icon: Icons.check_circle_outline,
             title: "Answers",
             active: selected == "Answers",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ViewAnswerScreen(),
+                transitionDuration: Duration.zero, // no animation
+                reverseTransitionDuration:
+                    Duration.zero, // no animation when back
+              ),
             ),
           ),
           _menuItem(
@@ -153,7 +171,13 @@ class Sidebar extends StatelessWidget {
             active: selected == "Users",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ViewUserScreen()),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ViewUserScreen(),
+                transitionDuration: Duration.zero, // no animation
+                reverseTransitionDuration:
+                    Duration.zero, // no animation when back
+              ),
             ),
           ),
           _menuItem(
@@ -162,7 +186,13 @@ class Sidebar extends StatelessWidget {
             active: selected == "Results",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ViewResultScreen(),
+                transitionDuration: Duration.zero, // no animation
+                reverseTransitionDuration:
+                    Duration.zero, // no animation when back
+              ),
             ),
           ),
         ],

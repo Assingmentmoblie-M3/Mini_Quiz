@@ -1,9 +1,15 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-class CategoryScreen extends StatelessWidget {
+
+class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
 
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,17 +25,18 @@ class CategoryScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
                         ),
                         TextSpan(
                           text: 'Category',
                           style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
+                            color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka'
                           ),
                         ),
                       ],
@@ -55,16 +62,19 @@ class CategoryScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ViewCategoryScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const ViewCategoryScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
+                            horizontal: 40,
                             vertical: 20,
                           ),
                         ),
@@ -79,20 +89,20 @@ class CategoryScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   Expanded(
                     child: Container(
+                      width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300),
+                        border: Border.all(color: Colors.grey),
                       ),
-                      width: double.infinity,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Add Category",
                             style: TextStyle(
-                              color: Colors.grey.shade600,
+                              color: Color(0xFF5C5C5C),
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -107,7 +117,7 @@ class CategoryScreen extends StatelessWidget {
                               isDense: true,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 15),
                           TextField(
                             decoration: InputDecoration(
                               labelText: "Description",
@@ -117,7 +127,7 @@ class CategoryScreen extends StatelessWidget {
                               isDense: true,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
@@ -127,7 +137,7 @@ class CategoryScreen extends StatelessWidget {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 25,
+                                    horizontal: 100,
                                     vertical: 20,
                                   ),
                                 ),

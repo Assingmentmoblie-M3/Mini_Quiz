@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'category_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-class ViewCategoryScreen extends StatelessWidget {
+class ViewCategoryScreen extends StatefulWidget {
   const ViewCategoryScreen({super.key});
+  @override
+  State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
+}
+class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,17 +24,18 @@ class ViewCategoryScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
                         ),
                         TextSpan(
                           text: 'Category',
                           style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
+                            color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka'
                           ),
                         ),
                       ],
@@ -56,16 +61,20 @@ class ViewCategoryScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CategoryScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const CategoryScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
+                  
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
+                            horizontal: 40,
                             vertical: 20,
                           ),
                         ),
@@ -79,16 +88,15 @@ class ViewCategoryScreen extends StatelessWidget {
 
                   const SizedBox(height: 15),
                   Expanded(
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Category",
-                            child: CategoryTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
+                    child: SectionCard(
+                      title: "Table Category",
+                      onSearchChanged: (value) {
+                        setState(() {
+                          var searchText = value;
+                        });
+                      },
+                      searchHint: "Search category...",
+                      child: const CategoryTable(),
                     ),
                   ),
                 ],
@@ -101,9 +109,14 @@ class ViewCategoryScreen extends StatelessWidget {
   }
 }
 
-class CategoryTable extends StatelessWidget {
+class CategoryTable extends StatefulWidget {
   const CategoryTable({super.key});
 
+  @override
+  State<CategoryTable> createState() => _CategoryTableState();
+}
+
+class _CategoryTableState extends State<CategoryTable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -112,22 +125,19 @@ class CategoryTable extends StatelessWidget {
         columns: const [
           DataColumn(
             numeric: true,
-            label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
+            label: Center(
+              child: Text(
+                "No.",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
                 ),
               ),
             ),
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Actions",
@@ -141,7 +151,7 @@ class CategoryTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Category Name",
@@ -155,7 +165,7 @@ class CategoryTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 60),
+              padding: EdgeInsets.symmetric(horizontal: 60),
               child: Center(
                 child: Text(
                   "Description",
@@ -169,7 +179,7 @@ class CategoryTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
+              padding: EdgeInsets.symmetric(horizontal: 35),
               child: Center(
                 child: Text(
                   "Status",
@@ -183,7 +193,7 @@ class CategoryTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Created At",
@@ -199,12 +209,7 @@ class CategoryTable extends StatelessWidget {
         rows: [
           DataRow(
             cells: [
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
+              DataCell(Center(child: Text("1"))),
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -212,7 +217,9 @@ class CategoryTable extends StatelessWidget {
                     onEdit: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => CategoryScreen()),
+                        MaterialPageRoute(
+                          builder: (_) => const CategoryScreen(),
+                        ),
                       );
                     },
                     onDelete: () {
@@ -231,20 +238,20 @@ class CategoryTable extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );  
+                      );
                     },
                   ),
-                ),  
-              ),  
+                ),
+              ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("Science")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("Science related quizzes")),
                 ),
               ),
@@ -257,10 +264,10 @@ class CategoryTable extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
+                      color: Color.fromRGBO(232, 248, 233, 1),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Active",
                       style: TextStyle(
                         color: Color(0xFF00D60B),
@@ -269,11 +276,10 @@ class CategoryTable extends StatelessWidget {
                     ),
                   ),
                 ),
-                
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("2026-01-01")),
                 ),
               ),

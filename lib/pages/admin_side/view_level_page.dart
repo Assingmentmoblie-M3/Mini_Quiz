@@ -3,8 +3,14 @@ import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import './levels_page.dart';
-class ViewLevelScreen extends StatelessWidget {
+class ViewLevelScreen extends StatefulWidget {
   const ViewLevelScreen({super.key});
+
+  @override
+  State<ViewLevelScreen> createState() => _ViewLevelScreenState();
+}
+
+class _ViewLevelScreenState extends State<ViewLevelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,16 +84,15 @@ class ViewLevelScreen extends StatelessWidget {
 
                   const SizedBox(height: 15),
                   Expanded(
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Levels",
-                            child: LevelsTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
+                    child: SectionCard(
+                      title: "Table Levels",
+                      onSearchChanged: (value) {
+                        setState(() {
+                          var searchText = value;
+                        });
+                      },
+                      searchHint: "Search levels...",
+                      child: const LevelsTable(),
                     ),
                   ),
                 ],
