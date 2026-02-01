@@ -1,29 +1,24 @@
-import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/section_card.dart';
-import 'category_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-<<<<<<< HEAD
+import 'package:mini_quiz/components/section_card.dart';
+import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/question_page.dart';
 
-class ViewCategoryScreen extends StatelessWidget {
-  const ViewCategoryScreen({super.key});
-
-=======
-class ViewCategoryScreen extends StatefulWidget {
-  const ViewCategoryScreen({super.key});
+class ViewQuestionScreen extends StatefulWidget {
+  const ViewQuestionScreen({super.key});
   @override
-  State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
+  State<ViewQuestionScreen> createState() => _ViewQuestionScreenState();
 }
-class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
+
+class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
   String searchText = "";
->>>>>>> main
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
+          const Sidebar(selected: "Questions"),
 
           Expanded(
             child: Padding(
@@ -32,31 +27,17 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-<<<<<<< HEAD
                     text: TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
                           style: TextStyle(color: Color(0xFF8C8C8C)),
-=======
-                    text: const TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
->>>>>>> main
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: 'Questions',
                           style: TextStyle(
-<<<<<<< HEAD
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-=======
-                            color: Color(0xFF5C5C5C),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
->>>>>>> main
                           ),
                         ),
                       ],
@@ -65,7 +46,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Questions",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -82,37 +63,20 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const CategoryScreen(),
-=======
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const CategoryScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
->>>>>>> main
+                              builder: (context) => const QuestionScreen(),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-<<<<<<< HEAD
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 25,
-=======
-                  
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
                         child: const Text(
-                          "Add New Category",
+                          "Add New Question",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -121,28 +85,15 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
 
                   const SizedBox(height: 15),
                   Expanded(
-<<<<<<< HEAD
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Category",
-                            child: CategoryTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
-=======
                     child: SectionCard(
-                      title: "Table Category",
+                      title: "Table Questions",
                       onSearchChanged: (value) {
                         setState(() {
                            searchText = value;
                         });
                       },
-                      searchHint: "Search category...",
-                      child: const CategoryTable(),
->>>>>>> main
+                      searchHint: "Search questions...",
+                      child: const QuestionsTable(),
                     ),
                   ),
                 ],
@@ -154,23 +105,15 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
     );
   }
 }
-
-<<<<<<< HEAD
-class CategoryTable extends StatelessWidget {
-  const CategoryTable({super.key});
+class QuestionsTable extends StatefulWidget {
+  const QuestionsTable({super.key});
 
   @override
-=======
-class CategoryTable extends StatefulWidget {
-  const CategoryTable({super.key});
-
-  @override
-  State<CategoryTable> createState() => _CategoryTableState();
+  State<QuestionsTable> createState() => _QuestionsTableState();
 }
 
-class _CategoryTableState extends State<CategoryTable> {
+class _QuestionsTableState extends State<QuestionsTable> {
   @override
->>>>>>> main
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -178,35 +121,19 @@ class _CategoryTableState extends State<CategoryTable> {
         columns: const [
           DataColumn(
             numeric: true,
-<<<<<<< HEAD
-            label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-=======
             label: Center(
               child: Text(
                 "No.",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF5E5E5E),
->>>>>>> main
                 ),
               ),
             ),
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Actions",
@@ -220,14 +147,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
-                  "Category Name",
+                  "Question",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -238,14 +161,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-=======
               padding: EdgeInsets.symmetric(horizontal: 60),
->>>>>>> main
               child: Center(
                 child: Text(
-                  "Description",
+                  "Score",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -256,14 +175,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-=======
               padding: EdgeInsets.symmetric(horizontal: 35),
->>>>>>> main
               child: Center(
                 child: Text(
-                  "Status",
+                  "Category",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -274,14 +189,10 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
-                  "Created At",
+                  "Level",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -294,16 +205,7 @@ class _CategoryTableState extends State<CategoryTable> {
         rows: [
           DataRow(
             cells: [
-<<<<<<< HEAD
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-=======
               DataCell(Center(child: Text("1"))),
->>>>>>> main
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -311,13 +213,9 @@ class _CategoryTableState extends State<CategoryTable> {
                     onEdit: () {
                       Navigator.push(
                         context,
-<<<<<<< HEAD
-                        MaterialPageRoute(builder: (_) => CategoryScreen()),
-=======
                         MaterialPageRoute(
-                          builder: (_) => const CategoryScreen(),
+                          builder: (_) => const QuestionScreen(),
                         ),
->>>>>>> main
                       );
                     },
                     onDelete: () {
@@ -336,16 +234,6 @@ class _CategoryTableState extends State<CategoryTable> {
                             ),
                           ],
                         ),
-<<<<<<< HEAD
-                      );  
-                    },
-                  ),
-                ),  
-              ),  
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
                       );
                     },
                   ),
@@ -354,61 +242,25 @@ class _CategoryTableState extends State<CategoryTable> {
               DataCell(
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
-                  child: Center(child: Text("Science")),
+                  child: Center(child: Text("What is the capital of France?")),
                 ),
-              ),
-              DataCell(
-                Padding(
-<<<<<<< HEAD
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
-                  padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
-                  child: Center(child: Text("Science related quizzes")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-<<<<<<< HEAD
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-=======
-                      color: Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Text(
->>>>>>> main
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
-                      ),
-                    ),
-                  ),
-                ),
-<<<<<<< HEAD
-                
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               ),
               DataCell(
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
-                  child: Center(child: Text("2026-01-01")),
+                  child: Center(child: Text("1")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(child: Text("English")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(child: Text("Easy")),
                 ),
               ),
             ],

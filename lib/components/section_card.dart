@@ -3,21 +3,77 @@ import 'package:flutter/material.dart';
 class SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
+<<<<<<< HEAD
 
   const SectionCard({super.key, required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+=======
+  final Widget? headerAction;
+  final Color? borderColor;
+
+  // New optional parameter for search
+  final String? searchHint;
+  final Function(String)? onSearchChanged;
+
+  const SectionCard({
+    super.key,
+    required this.title,
+    required this.child,
+    this.headerAction,
+    this.borderColor,
+    this.searchHint,
+    this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget? headerWidget = headerAction;
+
+    // If searchHint is provided, override headerAction with styled search field
+    if (searchHint != null && onSearchChanged != null) {
+      headerWidget = SizedBox(
+        width: 300,
+        child: TextField(
+          onChanged: onSearchChanged,
+          style: const TextStyle(color: Color(0xFF008DB3)),
+          decoration: InputDecoration(
+            hintText: searchHint,
+            hintStyle: const TextStyle(color: Color(0xFF008DB3)),
+            prefixIcon: const Icon(Icons.search, color: Color(0xFF008DB3)),
+            isDense: true,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(color: Color(0xFF008DB3)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFF008DB3)),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+>>>>>>> main
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
+<<<<<<< HEAD
         border: Border.all(color: Colors.grey.shade300),
+=======
+        border: Border.all(color: borderColor ?? Colors.grey.shade300),
+>>>>>>> main
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+<<<<<<< HEAD
           Text(
             title,
             style: const TextStyle(
@@ -25,6 +81,22 @@ class SectionCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Color(0xFF5E5E5E),
             ),
+=======
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
+                ),
+              ),
+              if (headerWidget != null) headerWidget,
+            ],
+>>>>>>> main
           ),
           const SizedBox(height: 12),
           Expanded(child: child),
@@ -34,7 +106,10 @@ class SectionCard extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD
 // ---------------- TABLES ----------------
+=======
+>>>>>>> main
 
 class RecentQuizTable extends StatelessWidget {
   const RecentQuizTable({super.key});
@@ -73,13 +148,40 @@ class RecentQuizTable extends StatelessWidget {
             ),
           ),
         ],
+<<<<<<< HEAD
         rows: const [
+=======
+        rows: [
+>>>>>>> main
           DataRow(
             cells: [
               DataCell(Text("Math")),
               DataCell(Text("Easy")),
               DataCell(
+<<<<<<< HEAD
                 Text("Active", style: TextStyle(color: Color(0xFF00D60B))),
+=======
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(232, 248, 233, 1),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: const Text(
+                      "Active",
+                      style: TextStyle(
+                        color: Color(0xFF00D60B),
+                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
+                      ),
+                    ),
+                  ),
+                ),
+>>>>>>> main
               ),
             ],
           ),

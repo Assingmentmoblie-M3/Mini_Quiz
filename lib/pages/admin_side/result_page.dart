@@ -1,26 +1,20 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-<<<<<<< HEAD
-class CategoryScreen extends StatelessWidget {
-=======
-
-class CategoryScreen extends StatefulWidget {
->>>>>>> main
-  const CategoryScreen({super.key});
+import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
+class ResultScreen extends StatefulWidget {
+  const ResultScreen({super.key});
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<ResultScreen> createState() => _ResultScreenState();
 }
-
-class _CategoryScreenState extends State<CategoryScreen> {
+class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
+          const Sidebar(selected: "Results"),
 
           Expanded(
             child: Padding(
@@ -29,16 +23,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
                           style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: 'Results',
                           style: TextStyle(
-                            color: Color(0xFF5C5C5C),
+                            color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Fredoka'
                           ),
@@ -49,7 +43,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Results",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -66,34 +60,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ViewCategoryScreen(),
-=======
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const ViewCategoryScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
->>>>>>> main
+                                      const ViewResultScreen(),
+                              transitionDuration: Duration.zero, // no animation
+                              reverseTransitionDuration:
+                                  Duration.zero, // no animation when back
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
-                            horizontal: 25,
-=======
                             horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
                         child: const Text(
-                          "View Category",
+                          "View Results",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -103,53 +88,62 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   const SizedBox(height: 15),
                   Expanded(
                     child: Container(
-                      width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
+                      width: double.infinity,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Add Category",
+                          Text(
+                            "Add Result",
                             style: TextStyle(
-                              color: Color(0xFF5C5C5C),
+                              color: const Color(0xFF5C5C5C),
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 20),
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              
+                              labelText: "Select User Email",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              isDense: true,
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: "Email1",
+                                child: Text("Email 1"),
+                              ),
+                              DropdownMenuItem(
+                                value: "Email2",
+                                child: Text("Email 2"),
+                              ),
+                              DropdownMenuItem(
+                                value: "Email3",
+                                child: Text("Email 3"),
+                              ),
+                            ],
+                            onChanged: (_) {},
+                          ),
+                          SizedBox(height: 15),
+                          
                           TextField(
                             decoration: InputDecoration(
-                              labelText: "Category Name",
+                              labelText: "Total Score:",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               isDense: true,
                             ),
                           ),
-<<<<<<< HEAD
-                          SizedBox(height: 10),
-=======
-                          const SizedBox(height: 15),
->>>>>>> main
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              isDense: true,
-                            ),
-                          ),
-<<<<<<< HEAD
-                          const SizedBox(height: 10),
-=======
                           const SizedBox(height: 20),
->>>>>>> main
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
@@ -159,20 +153,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
-                                    horizontal: 25,
-=======
                                     horizontal: 100,
->>>>>>> main
                                     vertical: 20,
                                   ),
                                 ),
                                 child: const Text(
-<<<<<<< HEAD
                                   "Save",
-=======
-                                  "Add Levels",
->>>>>>> main
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,

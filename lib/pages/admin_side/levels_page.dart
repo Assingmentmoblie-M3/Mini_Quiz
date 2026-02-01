@@ -1,62 +1,67 @@
-import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-<<<<<<< HEAD
-class CategoryScreen extends StatelessWidget {
-=======
+import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 
-class CategoryScreen extends StatefulWidget {
->>>>>>> main
-  const CategoryScreen({super.key});
+class LevelsScreen extends StatefulWidget {
+  const LevelsScreen({super.key});
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<LevelsScreen> createState() => _LevelsScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _LevelsScreenState extends State<LevelsScreen> {
+  String? selectedCategory;
+  final List<String> categories = [
+    'Math',
+    'Science',
+    'English',
+    'General Knowledge',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
+          const Sidebar(selected: "Levels"),
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          text: "Home > ",
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: "Levels",
                           style: TextStyle(
-                            color: Color(0xFF5C5C5C),
+                            color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
                           ),
                         ),
                       ],
                     ),
                   ),
-
+                  //Levels
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Levels",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
+                  //View Levels
                   const SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -66,29 +71,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const ViewCategoryScreen(),
-=======
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const ViewCategoryScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
->>>>>>> main
+                              builder: (context) => const ViewLevelScreen(),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
                             horizontal: 25,
-=======
-                            horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
@@ -99,57 +90,95 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     ),
                   ),
-
+                  //box of information
                   const SizedBox(height: 15),
                   Expanded(
                     child: Container(
-                      width: double.infinity,
                       padding: const EdgeInsets.all(16),
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey),
+                        border: Border.all(color: Colors.grey.shade300),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "Add Category",
+                          Text(
+                            "Add Levels",
                             style: TextStyle(
-                              color: Color(0xFF5C5C5C),
+                              color: Colors.grey.shade600,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 20),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Category Name",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                          //Filed Levels Name
+                          SizedBox(
+                            width:double.infinity,
+                            height: 40,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: "Levels Name",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                isDense: true,
                               ),
-                              isDense: true,
                             ),
                           ),
-<<<<<<< HEAD
-                          SizedBox(height: 10),
-=======
-                          const SizedBox(height: 15),
->>>>>>> main
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              isDense: true,
-                            ),
-                          ),
-<<<<<<< HEAD
+
+                          //Levels
                           const SizedBox(height: 10),
-=======
-                          const SizedBox(height: 20),
->>>>>>> main
+                          SizedBox(
+                            height: 40,
+                            width:double.infinity,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                labelText: "Description",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                isDense: true,
+                              ),
+                            ),
+                          ),
+                          //DropdownButtonForm
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 40,
+                            width:double.infinity,
+                            child: DropdownButtonFormField<String>(
+                              value: selectedCategory,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 14,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              hint: const Text('Choose category'),
+                              items: categories
+                                  .map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedCategory = value;
+                                });
+                              },
+                              validator: (value) => value == null
+                                  ? 'Please select category'
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
@@ -159,20 +188,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
                                     horizontal: 25,
-=======
-                                    horizontal: 100,
->>>>>>> main
                                     vertical: 20,
                                   ),
                                 ),
                                 child: const Text(
-<<<<<<< HEAD
-                                  "Save",
-=======
                                   "Add Levels",
->>>>>>> main
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
@@ -186,6 +207,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       ),
                     ),
                   ),
+                  //
                 ],
               ),
             ),
