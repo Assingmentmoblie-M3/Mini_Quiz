@@ -75,14 +75,14 @@ class _MultiAnswerState extends State<Multi_answer> {
       body: SafeArea(
         // ចំណុចសំខាន់៖ មិនប្រើ Center ដើម្បីឱ្យវា Full Screen
         child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(35),
-          ),
+          // width: double.infinity,
+          // height: double.infinity,
+          // margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          // decoration: BoxDecoration(
+          //   color: Colors.white,
+          //   borderRadius: BorderRadius.circular(35),
+          // ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

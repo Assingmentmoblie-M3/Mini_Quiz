@@ -3,12 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/pages/admin_side/user_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-<<<<<<< HEAD
-class ViewUserScreen extends StatelessWidget {
-  const ViewUserScreen({super.key});
-
-  @override
-=======
 
 class ViewUserScreen extends StatefulWidget {
   const ViewUserScreen({super.key});
@@ -20,7 +14,6 @@ class ViewUserScreen extends StatefulWidget {
 class _ViewUserScreenState extends State<ViewUserScreen> {
   String searchText = "";
   @override
->>>>>>> main
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
@@ -39,24 +32,17 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-<<<<<<< HEAD
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
-=======
                           style: TextStyle(
                             color: Color(0xFF8C8C8C),
                             fontFamily: 'Fredoka',
                           ),
->>>>>>> main
                         ),
                         TextSpan(
                           text: 'Users',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-<<<<<<< HEAD
-=======
                             fontFamily: 'Fredoka',
->>>>>>> main
                           ),
                         ),
                       ],
@@ -75,42 +61,26 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
 
                   const SizedBox(height: 5),
                   Padding(
-<<<<<<< HEAD
-                    padding: const EdgeInsets.only(top: 10),
-=======
                     padding: EdgeInsets.only(top: 10),
->>>>>>> main
                     child: Align(
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const UserScreen(),
-=======
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
                                       const UserScreen(),
-                              transitionDuration: Duration.zero, 
-                              reverseTransitionDuration:
-                                  Duration.zero, 
->>>>>>> main
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
-<<<<<<< HEAD
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-=======
                           padding: EdgeInsets.symmetric(
                             horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
@@ -124,18 +94,6 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
 
                   const SizedBox(height: 15),
                   Expanded(
-<<<<<<< HEAD
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Users",
-                            child: UserTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
-=======
                     child: SectionCard(
                       title: "Table Users",
                       onSearchChanged: (value) {
@@ -145,7 +103,6 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                       },
                       searchHint: "Search users...",
                       child: const UserTable(),
->>>>>>> main
                     ),
                   ),
                 ],
@@ -170,11 +127,7 @@ class UserTable extends StatelessWidget {
           DataColumn(
             numeric: true,
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-=======
               padding: EdgeInsets.symmetric(horizontal: 10),
->>>>>>> main
               child: Center(
                 child: Text(
                   "No.",
@@ -188,11 +141,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-=======
               padding: EdgeInsets.symmetric(horizontal: 10),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Actions",
@@ -206,11 +155,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-=======
               padding: EdgeInsets.symmetric(horizontal: 50),
->>>>>>> main
               child: Center(
                 child: Text(
                   "User Email",
@@ -224,11 +169,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-=======
               padding: EdgeInsets.symmetric(horizontal: 35),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Status",
@@ -242,11 +183,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Created At",
@@ -264,21 +201,13 @@ class UserTable extends StatelessWidget {
             cells: [
               DataCell(
                 Padding(
-<<<<<<< HEAD
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-=======
                   padding: EdgeInsets.symmetric(horizontal: 10),
->>>>>>> main
                   child: Center(child: Text("1")),
                 ),
               ),
               DataCell(
                 Padding(
-<<<<<<< HEAD
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
                   padding: EdgeInsets.symmetric(horizontal: 10),
->>>>>>> main
                   child: ActionButtons(
                     onEdit: () {
                       Navigator.push(
@@ -302,19 +231,11 @@ class UserTable extends StatelessWidget {
                             ),
                           ],
                         ),
-<<<<<<< HEAD
-                      );  
-                    },
-                  ),
-                ),  
-              ),  
-=======
                       );
                     },
                   ),
                 ),
               ),
->>>>>>> main
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -342,10 +263,6 @@ class UserTable extends StatelessWidget {
                     ),
                   ),
                 ),
-<<<<<<< HEAD
-                
-=======
->>>>>>> main
               ),
               DataCell(
                 Padding(

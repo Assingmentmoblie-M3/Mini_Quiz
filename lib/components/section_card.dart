@@ -3,14 +3,6 @@ import 'package:flutter/material.dart';
 class SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
-<<<<<<< HEAD
-
-  const SectionCard({super.key, required this.title, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-=======
   final Widget? headerAction;
   final Color? borderColor;
 
@@ -59,29 +51,15 @@ class SectionCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
->>>>>>> main
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-<<<<<<< HEAD
-        border: Border.all(color: Colors.grey.shade300),
-=======
         border: Border.all(color: borderColor ?? Colors.grey.shade300),
->>>>>>> main
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-<<<<<<< HEAD
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF5E5E5E),
-            ),
-=======
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,7 +74,6 @@ class SectionCard extends StatelessWidget {
               ),
               if (headerWidget != null) headerWidget,
             ],
->>>>>>> main
           ),
           const SizedBox(height: 12),
           Expanded(child: child),
@@ -106,10 +83,7 @@ class SectionCard extends StatelessWidget {
   }
 }
 
-<<<<<<< HEAD
 // ---------------- TABLES ----------------
-=======
->>>>>>> main
 
 class RecentQuizTable extends StatelessWidget {
   const RecentQuizTable({super.key});
@@ -148,26 +122,16 @@ class RecentQuizTable extends StatelessWidget {
             ),
           ),
         ],
-<<<<<<< HEAD
-        rows: const [
-=======
         rows: [
->>>>>>> main
           DataRow(
             cells: [
               DataCell(Text("Math")),
               DataCell(Text("Easy")),
               DataCell(
-<<<<<<< HEAD
-                Text("Active", style: TextStyle(color: Color(0xFF00D60B))),
-=======
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(232, 248, 233, 1),
                       borderRadius: BorderRadius.circular(15),
@@ -181,7 +145,6 @@ class RecentQuizTable extends StatelessWidget {
                     ),
                   ),
                 ),
->>>>>>> main
               ),
             ],
           ),

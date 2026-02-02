@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-<<<<<<< HEAD
-import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
-=======
 import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
 
->>>>>>> main
 class Sidebar extends StatelessWidget {
   final String selected;
 
@@ -39,12 +35,8 @@ class Sidebar extends StatelessWidget {
               title,
               style: TextStyle(
                 color: active ? const Color(0xFF62FF6A) : Colors.white,
-<<<<<<< HEAD
-                fontWeight: FontWeight.w600,
-=======
                 fontWeight: FontWeight.w900,
-                letterSpacing: 1.5
->>>>>>> main
+                letterSpacing: 1.5,
               ),
             ),
           ],
@@ -69,16 +61,6 @@ class Sidebar extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'mini ',
-<<<<<<< HEAD
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                  TextSpan(
-                    text: 'Quiz\n',
-                    style: TextStyle(
-                      color: const Color(0xFF00D60B),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-=======
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -89,20 +71,15 @@ class Sidebar extends StatelessWidget {
                     text: 'Quiz\n',
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       color: const Color(0xFF00D60B), // override the color
->>>>>>> main
                     ),
                   ),
                   TextSpan(
                     text: 'Dashboard',
-<<<<<<< HEAD
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-=======
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Fredoka',
                       fontSize: 18,
                     ),
->>>>>>> main
                   ),
                 ],
               ),
@@ -147,14 +124,9 @@ class Sidebar extends StatelessWidget {
             active: selected == "Levels",
             onTap: () => Navigator.push(
               context,
-<<<<<<< HEAD
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
-            ),
-          ),
-=======
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => 
-                const ViewLevelScreen(),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ViewLevelScreen(),
                 transitionDuration: Duration.zero, // no animation
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
@@ -162,19 +134,13 @@ class Sidebar extends StatelessWidget {
             ),
           ),
 
->>>>>>> main
           _menuItem(
             icon: Icons.help_outline,
             title: "Questions",
             active: selected == "Questions",
             onTap: () => Navigator.push(
               context,
-<<<<<<< HEAD
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
-            ),
-          ),
-=======
-             PageRouteBuilder(
+              PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const ViewQuestionScreen(),
                 transitionDuration: Duration.zero, // no animation
@@ -184,16 +150,12 @@ class Sidebar extends StatelessWidget {
             ),
           ),
 
->>>>>>> main
           _menuItem(
             icon: Icons.check_circle_outline,
             title: "Answers",
             active: selected == "Answers",
             onTap: () => Navigator.push(
               context,
-<<<<<<< HEAD
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
-=======
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const ViewAnswerScreen(),
@@ -201,7 +163,6 @@ class Sidebar extends StatelessWidget {
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
               ),
->>>>>>> main
             ),
           ),
           _menuItem(
@@ -210,9 +171,6 @@ class Sidebar extends StatelessWidget {
             active: selected == "Users",
             onTap: () => Navigator.push(
               context,
-<<<<<<< HEAD
-              MaterialPageRoute(builder: (context) => const ViewUserScreen()),
-=======
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const ViewUserScreen(),
@@ -220,7 +178,6 @@ class Sidebar extends StatelessWidget {
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
               ),
->>>>>>> main
             ),
           ),
           _menuItem(
@@ -229,9 +186,6 @@ class Sidebar extends StatelessWidget {
             active: selected == "Results",
             onTap: () => Navigator.push(
               context,
-<<<<<<< HEAD
-              MaterialPageRoute(builder: (context) => const DashboardScreen()),
-=======
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const ViewResultScreen(),
@@ -239,7 +193,6 @@ class Sidebar extends StatelessWidget {
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
               ),
->>>>>>> main
             ),
           ),
         ],

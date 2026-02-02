@@ -3,20 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'category_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-<<<<<<< HEAD
 
-class ViewCategoryScreen extends StatelessWidget {
-  const ViewCategoryScreen({super.key});
-
-=======
 class ViewCategoryScreen extends StatefulWidget {
   const ViewCategoryScreen({super.key});
   @override
   State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
 }
+
 class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   String searchText = "";
->>>>>>> main
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,31 +27,21 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-<<<<<<< HEAD
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
-=======
                     text: const TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
->>>>>>> main
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Category',
                           style: TextStyle(
-<<<<<<< HEAD
-                            color: const Color(0xFF5C5C5C),
-                            fontWeight: FontWeight.bold,
-=======
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
->>>>>>> main
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -82,32 +67,19 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CategoryScreen(),
-=======
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
                                       const CategoryScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
->>>>>>> main
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-<<<<<<< HEAD
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-=======
-                  
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
@@ -121,28 +93,15 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
 
                   const SizedBox(height: 15),
                   Expanded(
-<<<<<<< HEAD
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: SectionCard(
-                            title: "Table Category",
-                            child: CategoryTable(),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                      ],
-=======
                     child: SectionCard(
                       title: "Table Category",
                       onSearchChanged: (value) {
                         setState(() {
-                           searchText = value;
+                          searchText = value;
                         });
                       },
                       searchHint: "Search category...",
                       child: const CategoryTable(),
->>>>>>> main
                     ),
                   ),
                 ],
@@ -155,12 +114,6 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   }
 }
 
-<<<<<<< HEAD
-class CategoryTable extends StatelessWidget {
-  const CategoryTable({super.key});
-
-  @override
-=======
 class CategoryTable extends StatefulWidget {
   const CategoryTable({super.key});
 
@@ -170,7 +123,6 @@ class CategoryTable extends StatefulWidget {
 
 class _CategoryTableState extends State<CategoryTable> {
   @override
->>>>>>> main
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
@@ -178,35 +130,19 @@ class _CategoryTableState extends State<CategoryTable> {
         columns: const [
           DataColumn(
             numeric: true,
-<<<<<<< HEAD
-            label: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-=======
             label: Center(
               child: Text(
                 "No.",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF5E5E5E),
->>>>>>> main
                 ),
               ),
             ),
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Actions",
@@ -220,11 +156,7 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Category Name",
@@ -238,11 +170,7 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 60),
-=======
               padding: EdgeInsets.symmetric(horizontal: 60),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Description",
@@ -256,11 +184,7 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-=======
               padding: EdgeInsets.symmetric(horizontal: 35),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Status",
@@ -274,11 +198,7 @@ class _CategoryTableState extends State<CategoryTable> {
           ),
           DataColumn(
             label: Padding(
-<<<<<<< HEAD
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
               child: Center(
                 child: Text(
                   "Created At",
@@ -294,16 +214,7 @@ class _CategoryTableState extends State<CategoryTable> {
         rows: [
           DataRow(
             cells: [
-<<<<<<< HEAD
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-=======
               DataCell(Center(child: Text("1"))),
->>>>>>> main
               DataCell(
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -311,13 +222,9 @@ class _CategoryTableState extends State<CategoryTable> {
                     onEdit: () {
                       Navigator.push(
                         context,
-<<<<<<< HEAD
-                        MaterialPageRoute(builder: (_) => CategoryScreen()),
-=======
                         MaterialPageRoute(
                           builder: (_) => const CategoryScreen(),
                         ),
->>>>>>> main
                       );
                     },
                     onDelete: () {
@@ -336,16 +243,6 @@ class _CategoryTableState extends State<CategoryTable> {
                             ),
                           ],
                         ),
-<<<<<<< HEAD
-                      );  
-                    },
-                  ),
-                ),  
-              ),  
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
                       );
                     },
                   ),
@@ -354,40 +251,28 @@ class _CategoryTableState extends State<CategoryTable> {
               DataCell(
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
                   child: Center(child: Text("Science")),
                 ),
               ),
               DataCell(
                 Padding(
-<<<<<<< HEAD
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
                   padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
                   child: Center(child: Text("Science related quizzes")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-<<<<<<< HEAD
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-=======
                       color: Color.fromRGBO(232, 248, 233, 1),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Text(
->>>>>>> main
                       "Active",
                       style: TextStyle(
                         color: Color(0xFF00D60B),
@@ -396,18 +281,10 @@ class _CategoryTableState extends State<CategoryTable> {
                     ),
                   ),
                 ),
-<<<<<<< HEAD
-                
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-=======
               ),
               DataCell(
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
->>>>>>> main
                   child: Center(child: Text("2026-01-01")),
                 ),
               ),

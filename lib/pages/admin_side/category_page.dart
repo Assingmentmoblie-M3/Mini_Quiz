@@ -1,12 +1,8 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-<<<<<<< HEAD
-class CategoryScreen extends StatelessWidget {
-=======
 
 class CategoryScreen extends StatefulWidget {
->>>>>>> main
   const CategoryScreen({super.key});
 
   @override
@@ -33,14 +29,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Category',
                           style: TextStyle(
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -66,29 +65,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ViewCategoryScreen(),
-=======
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
                                       const ViewCategoryScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
->>>>>>> main
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
-                            horizontal: 25,
-=======
                             horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
@@ -131,11 +120,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               isDense: true,
                             ),
                           ),
-<<<<<<< HEAD
-                          SizedBox(height: 10),
-=======
                           const SizedBox(height: 15),
->>>>>>> main
                           TextField(
                             decoration: InputDecoration(
                               labelText: "Description",
@@ -145,11 +130,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               isDense: true,
                             ),
                           ),
-<<<<<<< HEAD
-                          const SizedBox(height: 10),
-=======
                           const SizedBox(height: 20),
->>>>>>> main
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
@@ -159,20 +140,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
-                                    horizontal: 25,
-=======
                                     horizontal: 100,
->>>>>>> main
                                     vertical: 20,
                                   ),
                                 ),
                                 child: const Text(
-<<<<<<< HEAD
-                                  "Save",
-=======
                                   "Add Levels",
->>>>>>> main
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,

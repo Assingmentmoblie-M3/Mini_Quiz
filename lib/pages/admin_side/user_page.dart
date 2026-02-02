@@ -1,12 +1,6 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
-<<<<<<< HEAD
-class UserScreen extends StatelessWidget {
-  const UserScreen({super.key});
-
-  @override
-=======
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -14,9 +8,9 @@ class UserScreen extends StatefulWidget {
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
+
 class _UserScreenState extends State<UserScreen> {
   @override
->>>>>>> main
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
@@ -35,21 +29,14 @@ class _UserScreenState extends State<UserScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-<<<<<<< HEAD
                           style: TextStyle(color: Color(0xFF8C8C8C)),
-=======
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
->>>>>>> main
                         ),
                         TextSpan(
                           text: 'Users',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-<<<<<<< HEAD
-=======
-                            fontFamily: 'Fredoka'
->>>>>>> main
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -75,11 +62,6 @@ class _UserScreenState extends State<UserScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-<<<<<<< HEAD
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ViewUserScreen(),
-=======
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
@@ -87,18 +69,13 @@ class _UserScreenState extends State<UserScreen> {
                               transitionDuration: Duration.zero, // no animation
                               reverseTransitionDuration:
                                   Duration.zero, // no animation when back
->>>>>>> main
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
-                            horizontal: 25,
-=======
                             horizontal: 40,
->>>>>>> main
                             vertical: 20,
                           ),
                         ),
@@ -126,11 +103,7 @@ class _UserScreenState extends State<UserScreen> {
                           Text(
                             "Add User",
                             style: TextStyle(
-<<<<<<< HEAD
-                              color: Colors.grey.shade600,
-=======
                               color: const Color(0xFF5C5C5C),
->>>>>>> main
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -145,15 +118,8 @@ class _UserScreenState extends State<UserScreen> {
                               isDense: true,
                             ),
                           ),
-<<<<<<< HEAD
-                          SizedBox(height: 10),
-                          
-                          const SizedBox(height: 10),
-=======
-                          
-
                           const SizedBox(height: 20),
->>>>>>> main
+
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
@@ -163,20 +129,12 @@ class _UserScreenState extends State<UserScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
-<<<<<<< HEAD
-                                    horizontal: 25,
-=======
                                     horizontal: 100,
->>>>>>> main
                                     vertical: 20,
                                   ),
                                 ),
                                 child: const Text(
-<<<<<<< HEAD
-                                  "Add User",
-=======
                                   "Save",
->>>>>>> main
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
