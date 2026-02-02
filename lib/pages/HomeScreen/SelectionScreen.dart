@@ -6,10 +6,10 @@ import 'package:mini_quiz/pages/HomeScreen/TopicCard.dart';
 
 class SelectionScreen extends StatelessWidget {
   final List<Map<String, dynamic>> topics = [
-    {'title': 'General Knowledge', 'color': Color(0xFFF4A1D2)},
-    {'title': 'Math', 'color': Color(0xFFD4CC46)},
-    {'title': 'English', 'color': Color(0xFFF7AC6F)},
-    {'title': 'Technology', 'color': Color(0xFFB5C0F9)},
+    {'title': 'General Knowledge', 'color': Color(0xFFFF98D2)},
+    {'title': 'Math', 'color': Color(0xFFDDCA00)},
+    {'title': 'English', 'color': Color(0xFFFFA158)},
+    {'title': 'Technology', 'color': Color(0xFFA8BEFF)},
   ];
 
   @override
@@ -38,7 +38,7 @@ class SelectionScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
-                color: Colors.green.shade400,
+                color: const Color(0xFF00D60B),
               ),
             ),
             Text(
@@ -46,7 +46,7 @@ class SelectionScreen extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
-                color: Colors.grey.shade800,
+                color: const Color(0xFF5C5C5C),
               ),
             ),
             SizedBox(height: 40),

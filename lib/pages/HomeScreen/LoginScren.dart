@@ -59,14 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Color(0xFF00D60B),
                       ),
                     ),
                     const SizedBox(height: 12),
                     const Text(
                       "We'll only use this to save your program!\nWe won't spam you.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                      style: TextStyle(fontSize: 15, color: Color(0xFF5C5C5C)),
                     ),
                     const SizedBox(height: 30),
                     TextFormField(
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: "Email Address",
                         prefixIcon: const Icon(
                           Icons.email_outlined,
-                          color: Colors.grey,
+                          color: Color(0xFF8C8C8C),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 20,
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: const BorderSide(
-                            color: Colors.blue,
+                            color: Color(0xFF40DCCA),
                             width: 2,
                           ),
                         ),
@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: const Color(0xFF00A408),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),

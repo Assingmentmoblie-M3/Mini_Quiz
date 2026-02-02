@@ -1,17 +1,16 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
-import 'package:mini_quiz/pages/admin_side/user_page.dart';
+import 'result_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
 
-class ViewUserScreen extends StatefulWidget {
-  const ViewUserScreen({super.key});
+class ViewResultScreen extends StatefulWidget {
+  const ViewResultScreen({super.key});
 
   @override
-  State<ViewUserScreen> createState() => _ViewUserScreenState();
+  State<ViewResultScreen> createState() => _ViewResultScreenState();
 }
-
-class _ViewUserScreenState extends State<ViewUserScreen> {
+class _ViewResultScreenState extends State<ViewResultScreen> {
   String searchText = "";
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Users"),
+          const Sidebar(selected: "Results"),
 
           Expanded(
             child: Padding(
@@ -32,17 +31,14 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(
-                            color: Color(0xFF8C8C8C),
-                            fontFamily: 'Fredoka',
-                          ),
+                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
                         ),
                         TextSpan(
-                          text: 'Users',
+                          text: 'Results',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka',
+                            fontFamily: 'Fredoka'
                           ),
                         ),
                       ],
@@ -51,7 +47,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Users",
+                    "Results",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -61,7 +57,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
 
                   const SizedBox(height: 5),
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Align(
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
@@ -71,9 +67,10 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const UserScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
+                                      const ResultScreen(),
+                              transitionDuration: Duration.zero, // no animation
+                              reverseTransitionDuration:
+                                  Duration.zero, // no animation when back
                             ),
                           );
                         },
@@ -85,7 +82,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                           ),
                         ),
                         child: const Text(
-                          "Add New User",
+                          "Add New Result",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -95,14 +92,14 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                   const SizedBox(height: 15),
                   Expanded(
                     child: SectionCard(
-                      title: "Table Users",
+                      title: "Table Results",
                       onSearchChanged: (value) {
                         setState(() {
                           searchText = value;
                         });
                       },
-                      searchHint: "Search users...",
-                      child: const UserTable(),
+                      searchHint: "Search...",
+                      child: const ResultTable(),
                     ),
                   ),
                 ],
@@ -115,8 +112,8 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
   }
 }
 
-class UserTable extends StatelessWidget {
-  const UserTable({super.key});
+class ResultTable extends StatelessWidget {
+  const ResultTable({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +124,7 @@ class UserTable extends StatelessWidget {
           DataColumn(
             numeric: true,
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "No.",
@@ -141,7 +138,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "Actions",
@@ -155,10 +152,24 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 25),
               child: Center(
                 child: Text(
                   "User Email",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 60),
+              child: Center(
+                child: Text(
+                  "Total Score",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -201,18 +212,18 @@ class UserTable extends StatelessWidget {
             cells: [
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: Center(child: Text("1")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: ActionButtons(
                     onEdit: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => UserScreen()),
+                        MaterialPageRoute(builder: (_) => ResultScreen()),
                       );
                     },
                     onDelete: () {
@@ -238,13 +249,19 @@ class UserTable extends StatelessWidget {
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Center(child: Text("hengmean@gmail.com")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(child: Text("100")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,

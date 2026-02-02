@@ -1,29 +1,27 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
-import 'package:mini_quiz/pages/admin_side/user_page.dart';
+import 'answer_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
 
-class ViewUserScreen extends StatefulWidget {
-  const ViewUserScreen({super.key});
+class ViewAnswerScreen extends StatefulWidget {
+  const ViewAnswerScreen({super.key});
 
   @override
-  State<ViewUserScreen> createState() => _ViewUserScreenState();
+  State<ViewAnswerScreen> createState() => _ViewAnswerScreenState();
 }
 
-class _ViewUserScreenState extends State<ViewUserScreen> {
-  String searchText = "";
+class _ViewAnswerScreenState extends State<ViewAnswerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Users"),
-
+          const Sidebar(selected: "Answers"),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -38,7 +36,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: 'Users',
+                          text: 'Answers',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
@@ -51,7 +49,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Users",
+                    "Answers",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -71,21 +69,22 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const UserScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
+                                      const AnswerScreen(),
+                              transitionDuration: Duration.zero, // no animation
+                              reverseTransitionDuration:
+                                  Duration.zero, // no animation when back
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 40,
                             vertical: 20,
                           ),
                         ),
                         child: const Text(
-                          "Add New User",
+                          "Add New Answer",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -95,14 +94,8 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                   const SizedBox(height: 15),
                   Expanded(
                     child: SectionCard(
-                      title: "Table Users",
-                      onSearchChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
-                      },
-                      searchHint: "Search users...",
-                      child: const UserTable(),
+                      title: "Table Answers",
+                      child: AnswerTable(),
                     ),
                   ),
                 ],
@@ -115,8 +108,8 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
   }
 }
 
-class UserTable extends StatelessWidget {
-  const UserTable({super.key});
+class AnswerTable extends StatelessWidget {
+  const AnswerTable({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +120,7 @@ class UserTable extends StatelessWidget {
           DataColumn(
             numeric: true,
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "No.",
@@ -141,7 +134,7 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "Actions",
@@ -155,10 +148,10 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
-                  "User Email",
+                  "Question",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -169,10 +162,10 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
-                  "Status",
+                  "Answer A",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -183,7 +176,49 @@ class UserTable extends StatelessWidget {
           ),
           DataColumn(
             label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: Center(
+                child: Text(
+                  "Answer B",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: Center(
+                child: Text(
+                  "Answer C",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              child: Center(
+                child: Text(
+                  "Answer C",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0),
               child: Center(
                 child: Text(
                   "Created At",
@@ -201,25 +236,25 @@ class UserTable extends StatelessWidget {
             cells: [
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Center(child: Text("1")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: ActionButtons(
                     onEdit: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => UserScreen()),
+                        MaterialPageRoute(builder: (_) => AnswerScreen()),
                       );
                     },
                     onDelete: () {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
+                          title: const Text("Are you sure deleting answer?"),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
@@ -238,35 +273,37 @@ class UserTable extends StatelessWidget {
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Center(child: Text("hengmean@gmail.com")),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Q1")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
-                      ),
-                    ),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer A")),
                 ),
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer B")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer C")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(child: Text("Answer D")),
+                ),
+              ),
+              DataCell(
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Center(child: Text("2026-01-01")),
                 ),
               ),

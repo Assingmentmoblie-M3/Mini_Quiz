@@ -20,7 +20,7 @@ class Homescreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey,
+                color: const Color(0xFF8C8C8C),
               ),
             ),
             RichText(
@@ -33,13 +33,14 @@ class Homescreen extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'mini ',
-                    style: TextStyle(color: Colors.blue, fontSize: 25),
+                    style: TextStyle(
+                      color: const Color(0xFF5C5C5C),
+                      fontSize: 25,
+                    ),
                   ),
                   TextSpan(
                     text: 'Quiz',
-                    style: TextStyle(
-                      color: const Color.fromARGB(255, 13, 210, 19),
-                    ), // Green
+                    style: TextStyle(color: const Color(0xFF00D60B)), // Green
                   ),
                 ],
               ),
@@ -64,7 +65,10 @@ class Homescreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     // color: Colors.white,
                     borderRadius: BorderRadius.circular(40),
-                    border: Border.all(color: Colors.blue, width: 4),
+                    border: Border.all(
+                      color: const Color(0xFF40DCCA),
+                      width: 4,
+                    ),
                   ),
                   child: Center(
                     child: Column(
@@ -76,7 +80,7 @@ class Homescreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700,
+                            color: const Color(0xFF5C5C5C),
                           ),
                         ),
                         Text(
@@ -85,7 +89,7 @@ class Homescreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 35, 173, 215),
+                            color: const Color(0xFF5EC0B5),
                           ),
                         ),
                       ],
@@ -114,11 +118,11 @@ class Homescreen extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 15, 156, 19),
+                        backgroundColor: const Color(0xFF009E08),
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
                           horizontal: 40,
-                          vertical: 15,
+                          vertical: 20,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

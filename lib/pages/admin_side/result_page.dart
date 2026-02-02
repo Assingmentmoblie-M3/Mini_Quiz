@@ -1,22 +1,20 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
-
-class UserScreen extends StatefulWidget {
-  const UserScreen({super.key});
+import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
+class ResultScreen extends StatefulWidget {
+  const ResultScreen({super.key});
 
   @override
-  State<UserScreen> createState() => _UserScreenState();
+  State<ResultScreen> createState() => _ResultScreenState();
 }
-
-class _UserScreenState extends State<UserScreen> {
+class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Users"),
+          const Sidebar(selected: "Results"),
 
           Expanded(
             child: Padding(
@@ -29,14 +27,14 @@ class _UserScreenState extends State<UserScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
                         ),
                         TextSpan(
-                          text: 'Users',
+                          text: 'Results',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka',
+                            fontFamily: 'Fredoka'
                           ),
                         ),
                       ],
@@ -45,7 +43,7 @@ class _UserScreenState extends State<UserScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Users",
+                    "Results",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -65,7 +63,7 @@ class _UserScreenState extends State<UserScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const ViewUserScreen(),
+                                      const ViewResultScreen(),
                               transitionDuration: Duration.zero, // no animation
                               reverseTransitionDuration:
                                   Duration.zero, // no animation when back
@@ -80,7 +78,7 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                         ),
                         child: const Text(
-                          "View Users",
+                          "View Results",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -101,7 +99,7 @@ class _UserScreenState extends State<UserScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Add User",
+                            "Add Result",
                             style: TextStyle(
                               color: const Color(0xFF5C5C5C),
                               fontSize: 20,
@@ -109,9 +107,36 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
+                          DropdownButtonFormField<String>(
+                            decoration: InputDecoration(
+                              
+                              labelText: "Select User Email",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              isDense: true,
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: "Email1",
+                                child: Text("Email 1"),
+                              ),
+                              DropdownMenuItem(
+                                value: "Email2",
+                                child: Text("Email 2"),
+                              ),
+                              DropdownMenuItem(
+                                value: "Email3",
+                                child: Text("Email 3"),
+                              ),
+                            ],
+                            onChanged: (_) {},
+                          ),
+                          SizedBox(height: 15),
+                          
                           TextField(
                             decoration: InputDecoration(
-                              labelText: "User Email",
+                              labelText: "Total Score:",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -119,7 +144,6 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
