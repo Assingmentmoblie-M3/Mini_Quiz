@@ -83,6 +83,7 @@ class SectionCard extends StatelessWidget {
   }
 }
 
+// ---------------- TABLES ----------------
 
 class RecentQuizTable extends StatelessWidget {
   const RecentQuizTable({super.key});
@@ -130,10 +131,7 @@ class RecentQuizTable extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(232, 248, 233, 1),
                       borderRadius: BorderRadius.circular(15),

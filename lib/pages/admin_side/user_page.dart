@@ -8,6 +8,7 @@ class UserScreen extends StatefulWidget {
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
+
 class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
@@ -28,14 +29,14 @@ class _UserScreenState extends State<UserScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(color: Color(0xFF8C8C8C)),
                         ),
                         TextSpan(
                           text: 'Users',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -117,9 +118,8 @@ class _UserScreenState extends State<UserScreen> {
                               isDense: true,
                             ),
                           ),
-                          
-
                           const SizedBox(height: 20),
+
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
