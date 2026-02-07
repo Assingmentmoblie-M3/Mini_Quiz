@@ -2,12 +2,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
-<<<<<<< Updated upstream
-import 'package:mini_quiz/pages/admin_side/category_page.dart';
-import 'package:mini_quiz/pages/admin_side/user_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-=======
->>>>>>> Stashed changes
 
 void main() {
 runApp(DevicePreview(builder: (context) => const MyApp()));
@@ -20,10 +14,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-<<<<<<< Updated upstream
-
-      home: const ViewCategoryScreen(),
-=======
       theme: ThemeData(
         fontFamily: 'Fredoka',
         textTheme: const TextTheme(
@@ -33,7 +23,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const DashboardScreen(),
->>>>>>> Stashed changes
     );
   }
 }
