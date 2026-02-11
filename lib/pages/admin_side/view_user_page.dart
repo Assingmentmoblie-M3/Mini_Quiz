@@ -72,9 +72,8 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
                                       const UserScreen(),
-                              transitionDuration: Duration.zero, 
-                              reverseTransitionDuration:
-                                  Duration.zero, 
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },

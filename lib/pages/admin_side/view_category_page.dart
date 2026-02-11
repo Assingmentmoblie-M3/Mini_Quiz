@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'category_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
+
 class ViewCategoryScreen extends StatefulWidget {
   const ViewCategoryScreen({super.key});
   @override
   State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
 }
+
 class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   String searchText = "";
   @override
@@ -29,14 +31,17 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Category',
                           style: TextStyle(
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -72,7 +77,6 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                  
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
@@ -93,7 +97,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                       title: "Table Category",
                       onSearchChanged: (value) {
                         setState(() {
-                           searchText = value;
+                          searchText = value;
                         });
                       },
                       searchHint: "Search category...",
@@ -258,7 +262,7 @@ class _CategoryTableState extends State<CategoryTable> {
               ),
               DataCell(
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,

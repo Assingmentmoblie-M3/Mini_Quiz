@@ -36,7 +36,7 @@ class Sidebar extends StatelessWidget {
               style: TextStyle(
                 color: active ? const Color(0xFF62FF6A) : Colors.white,
                 fontWeight: FontWeight.w900,
-                letterSpacing: 1.5
+                letterSpacing: 1.5,
               ),
             ),
           ],
@@ -125,8 +125,8 @@ class Sidebar extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => 
-                const ViewLevelScreen(),
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const ViewLevelScreen(),
                 transitionDuration: Duration.zero, // no animation
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back
@@ -140,7 +140,7 @@ class Sidebar extends StatelessWidget {
             active: selected == "Questions",
             onTap: () => Navigator.push(
               context,
-             PageRouteBuilder(
+              PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
                     const ViewQuestionScreen(),
                 transitionDuration: Duration.zero, // no animation

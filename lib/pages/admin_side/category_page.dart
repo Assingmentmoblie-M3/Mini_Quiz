@@ -29,14 +29,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Category',
                           style: TextStyle(
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
