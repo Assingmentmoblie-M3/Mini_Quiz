@@ -1,17 +1,75 @@
+import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
+import 'package:mini_quiz/provider/category_provider.dart';
+import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
 
 class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
-
+  final dynamic categoryId;
+  final String? name;
+  final String? description;
+  CategoryScreen({Key? key, this.categoryId, this.name, this.description})
+    : super(key: key);
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _nameController;
+  late TextEditingController _descController;
+  bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.name ?? "");
+    _descController = TextEditingController(text: widget.description ?? "");
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    final provider = Provider.of<CategoryProvider>(context, listen: false);
+
+    bool success;
+    if (widget.categoryId == null) {
+      success = await provider.createCategory(
+        _nameController.text,
+        _descController.text,
+      );
+    } else {
+      success = await provider.updateCategory(
+        widget.categoryId,
+        _nameController.text,
+        _descController.text,
+      );
+    }
+    setState(() {
+      _isSubmitting = false;
+    });
+    if (success) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isEdit = widget.categoryId != null;
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
@@ -68,7 +126,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const ViewCategoryScreen(),
+                                    ViewCategoryScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
@@ -110,24 +168,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Category Name",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              isDense: true,
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              isDense: true,
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                TextField(
+                                  controller: _nameController,
+                                  decoration: InputDecoration(
+                                    labelText: "Category Name",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    isDense: true,
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                TextField(
+                                  controller: _descController,
+                                  decoration: const InputDecoration(
+                                    labelText: "Description",
+                                    border: OutlineInputBorder(),
+                                    isDense: true,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -136,7 +200,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (!_isSubmitting) {
+                                    _submit();
+                                  }
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
@@ -144,12 +212,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     vertical: 20,
                                   ),
                                 ),
-                                child: const Text(
-                                  "Add Levels",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
+                                child: Text(
+                                  isEdit ? "Update Category" : "Add Category",
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                               ),
                             ),

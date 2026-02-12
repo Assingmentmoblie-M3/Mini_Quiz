@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/HomeScreen/SelectionScreen.dart';
-// import 'package:quiz_minidemo/SelectionScreen.dart';
-// import 'package:mini_quiz_demo/Screen/SelectionScreen.dart';
+import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
+import 'package:mini_quiz/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-
   String? _emailValidator(String? v) {
     if (v == null || v.isEmpty) return 'Email required';
     if (!v.contains('@')) return 'Invalid email';
@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //final authProvider = Provider.of<AuthProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -36,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          // Using the specific iOS chevron from your request
           icon: const Icon(CupertinoIcons.chevron_back),
           color: Colors.green,
           iconSize: 30,
@@ -48,11 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Column(
             children: [
-              // 1. This Expanded pushes everything below it to the bottom
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  // Centers text vertically
                   children: [
                     const Text(
                       "Enter Your Email",
@@ -97,20 +96,36 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              // 2. This part stays at the bottom of the screen
               SizedBox(
                 width: double.maxFinite,
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Navigator.push logic here
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SelectionScreen(),
-                        ),
+                      bool success = await authProvider.login(
+                        _emailController.text,
                       );
+                      if (success) {
+                        if (authProvider.isAdmin) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => DashboardScreen(),
+                            ),
+                          );
+                        } else if (authProvider.isUser) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) =>SelectionScreen()),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Login failed"),
+                          ),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -119,14 +134,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  child: const Text(
-                    "Continue",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: authProvider.isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Continue",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ],
