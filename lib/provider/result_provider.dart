@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../service//api_fetch.dart';
+import '../service/api_fetch.dart';
 
 class ResultProvider extends ChangeNotifier {
   List results = [];

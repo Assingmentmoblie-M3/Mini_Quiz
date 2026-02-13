@@ -1,26 +1,26 @@
-import 'package:mini_quiz/components/action_button.dart';
-import 'package:mini_quiz/provider/level_provider.dart';
+import 'package:mini_quiz/provider/category_provider.dart';
 import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
-import './levels_page.dart';
+import 'category_page.dart';
 
 class ViewLevelScreen extends StatefulWidget {
-  ViewLevelScreen({super.key});
-
+  const ViewCategoryScreen({super.key});
   @override
-  State<ViewLevelScreen> createState() => _ViewLevelScreenState();
+  State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
 }
 
-class _ViewLevelScreenState extends State<ViewLevelScreen> {
+class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   String searchText = "";
-
   @override
   void initState() {
     super.initState();
     Future.microtask(
-      ()=> Provider.of<LevelProvider>(context,listen: false).fetchLevel(),
+      () => Provider.of<CategoryProvider>(
+        context,
+        listen: false,
+      ).fetchCategories(),
     );
   }
 
@@ -30,7 +30,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Levels"),
+          const Sidebar(selected: "Category"),
 
           Expanded(
             child: Padding(
@@ -39,17 +39,21 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
-                          text: 'Levels',
+                          text: 'Category',
                           style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
+                            color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -58,7 +62,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Levels",
+                    "Category",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -77,7 +81,8 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                             context,
                             PageRouteBuilder(
                               pageBuilder:
-                              (context, animation, secondaryAnimation) => LevelsScreen(),
+                                  (context, animation, secondaryAnimation) =>
+                                      CategoryScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
@@ -86,12 +91,12 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF007F06),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
+                            horizontal: 40,
                             vertical: 20,
                           ),
                         ),
                         child: const Text(
-                          "Add New Level",
+                          "Add New Category",
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ),
@@ -101,14 +106,14 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                   const SizedBox(height: 15),
                   Expanded(
                     child: SectionCard(
-                      title: "Table Levels",
+                      title: "Table Category",
                       onSearchChanged: (value) {
                         setState(() {
                           searchText = value;
                         });
                       },
-                      searchHint: "Search levels...",
-                      child: const LevelsTable(),
+                      searchHint: "Search category...",
+                      child: LevelTable(),
                     ),
                   ),
                 ],
@@ -121,183 +126,102 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
   }
 }
 
-class LevelsTable extends StatefulWidget {
-  const LevelsTable({super.key});
+
+class LevelTable extends StatefulWidget {
+  const LevelTable({super.key});
+
   @override
-  State<LevelsTable> createState() => _LevelsTableState();
+  State<LevelTable> createState() => _LevelTableState();
 }
 
-class _LevelsTableState extends State<LevelsTable> {
-  @override
+class _LevelTableState extends State<LevelTable> {
+@override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        //const LevelSearchBox(),
-        SizedBox(
-          width: double.infinity,
-          child: DataTable(
-            columns: const [
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(
-                    child: Text(
-                      "No.",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Actions",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Level Name",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60),
-                  child: Center(
-                    child: Text(
-                      "Description",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35),
-                  child: Center(
-                    child: Text(
-                      "Category",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Created Date",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-            rows: [
-              DataRow(
-                cells: [
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: Center(child: Text("1")),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: ActionButtons(
-                        onEdit: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => LevelsScreen()),
-                          );
-                        },
-                        onDelete: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const Text(
-                                "Are you sure deleting category?",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Cancel"),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Delete"),
-                                ),
-                              ],
+    return Scaffold(
+      body: Row(
+        children: [
+          const Sidebar(selected: "Levels"),
+          Expanded(
+            child: Consumer<LevelProvider>(
+              builder: (context, provider, child) {
+                if (provider.isloading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (provider.level.isEmpty) {
+                  return const Center(child: Text("No Levels Found"));
+                }
+
+                return SingleChildScrollView(
+                  child: DataTable(
+                    columns: const [
+                      DataColumn(label: Text("No.")),
+                      DataColumn(label: Text("Level Name")),
+                      DataColumn(label: Text("Description")),
+                      DataColumn(label: Text("Actions")),
+                    ],
+                    rows: List.generate(provider.level.length, (index) {
+                      final level = provider.level[index];
+                      return DataRow(cells: [
+                        DataCell(Text("${index + 1}")),
+                        DataCell(Text(level['level_name'] ?? "")),
+                        DataCell(Text(level['description'] ?? "")),
+                        DataCell(Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => LevelsScreen(
+                                      levelId: level['level_id'],
+                                      levelName: level['level_name'],
+                                      description: level['description'],
+                                      categoryId: level['category']['id'],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () async {
+                                bool? confirm = await showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: const Text(
+                                        "Are you sure you want to delete?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: const Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: const Text("Delete"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (confirm == true) {
+                                  await provider
+                                      .deleteLevel(level['level_id']);
+                                }
+                              },
+                            ),
+                          ],
+                        )),
+                      ]);
+                    }),
                   ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("Beginner")),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 60),
-                      child: Center(child: Text("Basic level for beginners")),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
-                      child: Center(child: Text("English")),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("2024-01-15")),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-}

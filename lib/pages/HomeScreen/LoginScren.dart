@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/HomeScreen/SelectionScreen.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
-import 'package:mini_quiz/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
+import '../../provider/auth_provider.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   @override
@@ -24,8 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    //final authProvider = Provider.of<AuthProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context);
+   // final authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

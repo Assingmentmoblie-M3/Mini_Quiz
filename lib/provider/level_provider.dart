@@ -6,18 +6,20 @@ class LevelProvider extends ChangeNotifier {
   bool isloading = false;
   //fetch from api
   Future<void> fetchLevel() async {
-    isloading = true;
-    notifyListeners();
-    final response = await ApiService.get("level");
-    if (response != null && response['result'] == true) {
-      level = response['data'];
-    } else {
-      level = [];
-      print(response?['message']);
-    }
-    isloading = false;
-    notifyListeners();
+  isloading = true;
+  notifyListeners();
+
+  final response = await ApiService.get("levels"); // GET is now valid
+  if (response != null && response['result'] == true) {
+    level = response['data'];
+  } else {
+    level = [];
+    print(response?['message']);
   }
+
+  isloading = false;
+  notifyListeners();
+}
 
   //create api
   Future<bool> createLevel(
@@ -49,18 +51,22 @@ class LevelProvider extends ChangeNotifier {
     return false;
   }
 
-  //upadte
-  Future<bool> updateLevel(int Id, String name, String description) async {
-    final response = await ApiService.patch("level/$Id", {
-      "name": name,
-      "description": description,
-    });
-    if (response != null && response['result'] == true) {
-      await fetchLevel();
-      return true;
-    } else {
-      print(response?["message"]);
-      return false;
-    }
+  Future<bool> updateLevel(
+    int id, String name, String description, int? categoryId) async {
+  final response = await ApiService.patch("level/$id", {
+    "name": name,
+    "description": description,
+    "category_id": categoryId,
+  });
+
+  if (response != null && response['result'] == true) {
+    await fetchLevel(); // refresh list
+    return true;
+  } else {
+    print(response?["message"]);
+    return false;
   }
+}
+
+
 }

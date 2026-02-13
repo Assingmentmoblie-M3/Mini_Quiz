@@ -1,68 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
-import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 import 'package:mini_quiz/provider/category_provider.dart';
 import 'package:mini_quiz/provider/level_provider.dart';
-import 'package:provider/provider.dart';
 
 class LevelsScreen extends StatefulWidget {
   final int? levelId;
-  final String? name;
+  final String? levelName;
   final String? description;
-  const LevelsScreen({this.levelId, this.name, this.description, super.key});
+  final int? categoryId;
+
+  const LevelsScreen({
+    this.levelId,
+    this.levelName,
+    this.description,
+    this.categoryId,
+    super.key,
+  });
+
   @override
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
 
 class _LevelsScreenState extends State<LevelsScreen> {
-  final _FormKey = GlobalKey<FormState>();
-  late TextEditingController _levelName;
-  late TextEditingController _levelDescr;
-  bool _isSubmitting = false;
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _levelNameController;
+  late TextEditingController _descriptionController;
   int? selectedCategoryId;
-  final List<String> categories = [
-    'Math',
-    'Science',
-    'English',
-    'General Knowledge',
-  ];
+  bool _isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
-    _levelName = TextEditingController(text: widget.name ?? "");
-    _levelDescr = TextEditingController(text: widget.description ?? "");
-    Future.microtask(() {
-      Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
-    });
+    _levelNameController =
+        TextEditingController(text: widget.levelName ?? "");
+    _descriptionController =
+        TextEditingController(text: widget.description ?? "");
+    selectedCategoryId = widget.categoryId;
+
+    // Fetch categories
+    Future.microtask(() =>
+        Provider.of<CategoryProvider>(context, listen: false)
+            .fetchCategories());
   }
 
   @override
   void dispose() {
-    _levelName.dispose();
-    _levelDescr.dispose();
+    _levelNameController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
-    if (!_FormKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
+    if (selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please select a category")));
+      return;
+    }
 
     setState(() => _isSubmitting = true);
 
     final provider = Provider.of<LevelProvider>(context, listen: false);
-
     bool success;
 
     if (widget.levelId == null) {
+      // Add new level
       success = await provider.createLevel(
-        _levelName.text,
-        _levelDescr.text,
-        selectedCategoryId
+        _levelNameController.text.trim(),
+        _descriptionController.text.trim(),
+        selectedCategoryId,
       );
     } else {
+      // Update existing level
       success = await provider.updateLevel(
         widget.levelId!,
-        _levelName.text,
-        _levelDescr.text,
+        _levelNameController.text.trim(),
+        _descriptionController.text.trim(),
+        selectedCategoryId,
       );
     }
 
@@ -71,9 +86,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
     if (success) {
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Something went wrong")));
     }
   }
 
@@ -84,35 +98,12 @@ class _LevelsScreenState extends State<LevelsScreen> {
       body: Row(
         children: [
           const Sidebar(selected: "Levels"),
-
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Home > ",
-                          style: TextStyle(
-                            color: Color(0xFF8C8C8C),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "Levels",
-                          style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //Levels
-                  const SizedBox(height: 10),
                   const Text(
                     "Levels",
                     style: TextStyle(
@@ -121,171 +112,119 @@ class _LevelsScreenState extends State<LevelsScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  //View Levels
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewLevelScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 20,
-                          ),
-                        ),
-                        child: const Text(
-                          "View Category",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                  //box of information
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.all(16),
-                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Add Levels",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          //add Form
-                          Form(
-                            key: _FormKey,
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 15),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 40,
-                                  child: TextField(
-                                    controller: _levelName,
-                                    decoration: InputDecoration(
-                                      labelText: "Levels Name",
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  height: 40,
-                                  width: double.infinity,
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      labelText: "Description",
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 15),
-                                Consumer<CategoryProvider>(
-                                  builder: (context, provider, child) {
-                                    if (provider.isLoading) {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-
-                                    return DropdownButtonFormField<int>(
-                                      value: selectedCategoryId,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 14,
-                                            ),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                      ),
-                                      hint: const Text('Choose category'),
-                                      items: provider.categories
-                                          .map<DropdownMenuItem<int>>((
-                                            category,
-                                          ) {
-                                            return DropdownMenuItem<int>(
-                                              value:
-                                                  category['category_id'], // 👈 important
-                                              child: Text(category['name']),
-                                            );
-                                          })
-                                          .toList(),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedCategoryId = value;
-                                        });
-                                      },
-                                      validator: (value) => value == null
-                                          ? 'Please select category'
-                                          : null,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 25,
-                                    vertical: 20,
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Add Levels",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
+                      child: Form(
+                        key: _formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.levelId == null
+                                    ? "Add Level"
+                                    : "Edit Level",
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 20),
+                              TextFormField(
+                                controller: _levelNameController,
+                                decoration: const InputDecoration(
+                                  labelText: "Level Name",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Please enter level name";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 15),
+                              TextFormField(
+                                controller: _descriptionController,
+                                decoration: const InputDecoration(
+                                  labelText: "Description",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Please enter description";
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 15),
+                              Consumer<CategoryProvider>(
+                                builder: (context, provider, child) {
+                                  if (provider.isLoading) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  return DropdownButtonFormField<int>(
+                                    value: selectedCategoryId,
+                                    hint: const Text("Choose Category"),
+                                    items: provider.categories
+                                        .map<DropdownMenuItem<int>>((cat) {
+                                      return DropdownMenuItem<int>(
+                                        value: cat['category_id'],
+                                        child: Text(cat['category_name'] ?? ""),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedCategoryId = value;
+                                      });
+                                    },
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return "Please select a category";
+                                      }
+                                      return null;
+                                    },
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 25),
+                              SizedBox(
+                                width: 180,
+                                height: 50,
+                                child: ElevatedButton(
+                                  onPressed: _isSubmitting ? null : _submit,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF007F06),
+                                  ),
+                                  child: _isSubmitting
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : Text(
+                                          widget.levelId == null
+                                              ? "Add Level"
+                                              : "Update Level",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 20),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                  //
                 ],
               ),
             ),
