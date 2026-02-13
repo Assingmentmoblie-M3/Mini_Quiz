@@ -1,22 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
+import 'package:mini_quiz/provider/category_provider.dart';
+import 'package:mini_quiz/provider/level_provider.dart';
+import 'package:provider/provider.dart';
 
 class LevelsScreen extends StatefulWidget {
-  const LevelsScreen({super.key});
-
+  final int? levelId;
+  final String? name;
+  final String? description;
+  const LevelsScreen({this.levelId, this.name, this.description, super.key});
   @override
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
 
 class _LevelsScreenState extends State<LevelsScreen> {
-  String? selectedCategory;
+  final _FormKey = GlobalKey<FormState>();
+  late TextEditingController _levelName;
+  late TextEditingController _levelDescr;
+  bool _isSubmitting = false;
+  int? selectedCategoryId;
   final List<String> categories = [
     'Math',
     'Science',
     'English',
     'General Knowledge',
   ];
+  @override
+  void initState() {
+    super.initState();
+    _levelName = TextEditingController(text: widget.name ?? "");
+    _levelDescr = TextEditingController(text: widget.description ?? "");
+    Future.microtask(() {
+      Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
+    });
+  }
+
+  @override
+  void dispose() {
+    _levelName.dispose();
+    _levelDescr.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_FormKey.currentState!.validate()) return;
+
+    setState(() => _isSubmitting = true);
+
+    final provider = Provider.of<LevelProvider>(context, listen: false);
+
+    bool success;
+
+    if (widget.levelId == null) {
+      success = await provider.createLevel(
+        _levelName.text,
+        _levelDescr.text,
+        selectedCategoryId
+      );
+    } else {
+      success = await provider.updateLevel(
+        widget.levelId!,
+        _levelName.text,
+        _levelDescr.text,
+      );
+    }
+
+    setState(() => _isSubmitting = false);
+
+    if (success) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +132,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ViewLevelScreen(),
+                              builder: (context) => ViewLevelScreen(),
                             ),
                           );
                         },
@@ -113,69 +173,87 @@ class _LevelsScreenState extends State<LevelsScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          //Filed Levels Name
-                          SizedBox(
-                            width:double.infinity,
-                            height: 40,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: "Levels Name",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                isDense: true,
-                              ),
-                            ),
-                          ),
-
-                          //Levels
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 40,
-                            width:double.infinity,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: "Description",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                isDense: true,
-                              ),
-                            ),
-                          ),
-                          //DropdownButtonForm
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 40,
-                            width:double.infinity,
-                            child: DropdownButtonFormField<String>(
-                              value: selectedCategory,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              hint: const Text('Choose category'),
-                              items: categories
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
+                          //add Form
+                          Form(
+                            key: _FormKey,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 15),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 40,
+                                  child: TextField(
+                                    controller: _levelName,
+                                    decoration: InputDecoration(
+                                      labelText: "Levels Name",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      isDense: true,
                                     ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedCategory = value;
-                                });
-                              },
-                              validator: (value) => value == null
-                                  ? 'Please select category'
-                                  : null,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  height: 40,
+                                  width: double.infinity,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      labelText: "Description",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      isDense: true,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                Consumer<CategoryProvider>(
+                                  builder: (context, provider, child) {
+                                    if (provider.isLoading) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+
+                                    return DropdownButtonFormField<int>(
+                                      value: selectedCategoryId,
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 14,
+                                            ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      hint: const Text('Choose category'),
+                                      items: provider.categories
+                                          .map<DropdownMenuItem<int>>((
+                                            category,
+                                          ) {
+                                            return DropdownMenuItem<int>(
+                                              value:
+                                                  category['category_id'], // 👈 important
+                                              child: Text(category['name']),
+                                            );
+                                          })
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedCategoryId = value;
+                                        });
+                                      },
+                                      validator: (value) => value == null
+                                          ? 'Please select category'
+                                          : null,
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 10),

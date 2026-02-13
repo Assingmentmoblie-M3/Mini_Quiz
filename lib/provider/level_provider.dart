@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/service/api_fetch.dart';
+import '../service/api_fetch.dart';
 
 class LevelProvider extends ChangeNotifier {
   List level = [];
@@ -40,25 +40,25 @@ class LevelProvider extends ChangeNotifier {
   }
 
   //delete
-  Future<void> deleteLevel(int id) async {
+  Future<bool> deleteLevel(int id) async {
     final response = await ApiService.delete("level", id);
     if (response != null && response['result'] == true) {
       await fetchLevel();
-    } else {
-      print(response?["message"]);
+      return true;
     }
+    return false;
   }
 
   //upadte
-  Future<bool> updateLevel(int levelId, String name, String description) async {
-    final response = await ApiService.patch("level/$levelId", {
+  Future<bool> updateLevel(int Id, String name, String description) async {
+    final response = await ApiService.patch("level/$Id", {
       "name": name,
       "description": description,
     });
     if (response != null && response['result'] == true) {
       await fetchLevel();
       return true;
-    }else{
+    } else {
       print(response?["message"]);
       return false;
     }

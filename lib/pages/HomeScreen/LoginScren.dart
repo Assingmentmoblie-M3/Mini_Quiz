@@ -4,14 +4,11 @@ import 'package:mini_quiz/pages/HomeScreen/SelectionScreen.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -20,13 +17,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!v.contains('@')) return 'Invalid email';
     return null;
   }
-
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     //final authProvider = Provider.of<AuthProvider>(context);
@@ -113,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               builder: (_) => DashboardScreen(),
                             ),
                           );
-                        } else if (authProvider.isUser) {
+                        } else if(authProvider.isUser){
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (_) =>SelectionScreen()),

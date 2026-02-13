@@ -9,7 +9,6 @@ class UserProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     final response = await ApiService.get("user");
-
     if (response != null && response['result'] == true) {
       users = response['data'];
     }

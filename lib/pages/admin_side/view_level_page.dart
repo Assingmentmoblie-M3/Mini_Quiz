@@ -1,10 +1,13 @@
 import 'package:mini_quiz/components/action_button.dart';
+import 'package:mini_quiz/provider/level_provider.dart';
+import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import './levels_page.dart';
+
 class ViewLevelScreen extends StatefulWidget {
-  const ViewLevelScreen({super.key});
+  ViewLevelScreen({super.key});
 
   @override
   State<ViewLevelScreen> createState() => _ViewLevelScreenState();
@@ -12,6 +15,15 @@ class ViewLevelScreen extends StatefulWidget {
 
 class _ViewLevelScreenState extends State<ViewLevelScreen> {
   String searchText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      ()=> Provider.of<LevelProvider>(context,listen: false).fetchLevel(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +75,11 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const LevelsScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                              (context, animation, secondaryAnimation) => LevelsScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
@@ -89,7 +104,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                       title: "Table Levels",
                       onSearchChanged: (value) {
                         setState(() {
-                           searchText = value;
+                          searchText = value;
                         });
                       },
                       searchHint: "Search levels...",
@@ -230,7 +245,9 @@ class _LevelsTableState extends State<LevelsTable> {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: const Text("Are you sure deleting category?"),
+                              title: const Text(
+                                "Are you sure deleting category?",
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () {

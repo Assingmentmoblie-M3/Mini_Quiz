@@ -9,10 +9,10 @@ import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:mini_quiz/provider/result_provider.dart';
 import 'package:mini_quiz/provider/user_provider.dart';
 import 'package:provider/provider.dart';
-
 void main() {
   runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

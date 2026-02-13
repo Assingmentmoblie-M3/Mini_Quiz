@@ -231,7 +231,6 @@ class _CategoryTableState extends State<CategoryTable> {
                       ),
                     ),
                   ),
-
                   // Actions: Edit / Delete
                   DataCell(
                     Padding(
