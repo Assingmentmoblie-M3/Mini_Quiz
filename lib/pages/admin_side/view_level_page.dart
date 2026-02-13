@@ -1,27 +1,26 @@
-import 'package:mini_quiz/provider/category_provider.dart';
-import 'package:provider/provider.dart';
-import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/admin_side/levels_page.dart';
+import 'package:provider/provider.dart';
+import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/provider/level_provider.dart';
 import 'package:mini_quiz/components/section_card.dart';
-import 'category_page.dart';
+import 'package:mini_quiz/components/action_button.dart';
 
 class ViewLevelScreen extends StatefulWidget {
-  const ViewCategoryScreen({super.key});
+  const ViewLevelScreen({super.key});
+
   @override
-  State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
+  State<ViewLevelScreen> createState() => _ViewLevelScreenState();
 }
 
-class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
+class _ViewLevelScreenState extends State<ViewLevelScreen> {
   String searchText = "";
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => Provider.of<CategoryProvider>(
-        context,
-        listen: false,
-      ).fetchCategories(),
-    );
+    Future.microtask(() =>
+        Provider.of<LevelProvider>(context, listen: false).fetchLevel());
   }
 
   @override
@@ -30,7 +29,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Category"),
+          const Sidebar(selected: "Levels"),
 
           Expanded(
             child: Padding(
@@ -43,17 +42,13 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(
-                            color: Color(0xFF8C8C8C),
-                            fontFamily: 'Fredoka',
-                          ),
+                          style: TextStyle(color: Color(0xFF8C8C8C)),
                         ),
                         TextSpan(
-                          text: 'Category',
+                          text: 'Levels',
                           style: TextStyle(
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -62,7 +57,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Category",
+                    "Levels",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
@@ -70,35 +65,25 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      CategoryScreen(),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 20,
-                          ),
-                        ),
-                        child: const Text(
-                          "Add New Category",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const LevelsScreen()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF007F06),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 20),
+                      ),
+                      child: const Text(
+                        "Add New Level",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
@@ -106,14 +91,14 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                   const SizedBox(height: 15),
                   Expanded(
                     child: SectionCard(
-                      title: "Table Category",
+                      title: "Table Levels",
                       onSearchChanged: (value) {
                         setState(() {
                           searchText = value;
                         });
                       },
-                      searchHint: "Search category...",
-                      child: LevelTable(),
+                      searchHint: "Search levels...",
+                      child: const LevelsTable(),
                     ),
                   ),
                 ],
@@ -126,102 +111,92 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   }
 }
 
-
-class LevelTable extends StatefulWidget {
-  const LevelTable({super.key});
+class LevelsTable extends StatefulWidget {
+  const LevelsTable({super.key});
 
   @override
-  State<LevelTable> createState() => _LevelTableState();
+  State<LevelsTable> createState() => _LevelsTableState();
 }
 
-class _LevelTableState extends State<LevelTable> {
-@override
+class _LevelsTableState extends State<LevelsTable> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          const Sidebar(selected: "Levels"),
-          Expanded(
-            child: Consumer<LevelProvider>(
-              builder: (context, provider, child) {
-                if (provider.isloading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+    return Consumer<LevelProvider>(
+      builder: (context, provider, child) {
+        if (provider.isloading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-                if (provider.level.isEmpty) {
-                  return const Center(child: Text("No Levels Found"));
-                }
+        if (provider.level.isEmpty) {
+          return const Center(child: Text("No Levels Found"));
+        }
 
-                return SingleChildScrollView(
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(label: Text("No.")),
-                      DataColumn(label: Text("Level Name")),
-                      DataColumn(label: Text("Description")),
-                      DataColumn(label: Text("Actions")),
-                    ],
-                    rows: List.generate(provider.level.length, (index) {
-                      final level = provider.level[index];
-                      return DataRow(cells: [
-                        DataCell(Text("${index + 1}")),
-                        DataCell(Text(level['level_name'] ?? "")),
-                        DataCell(Text(level['description'] ?? "")),
-                        DataCell(Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => LevelsScreen(
-                                      levelId: level['level_id'],
-                                      levelName: level['level_name'],
-                                      description: level['description'],
-                                      categoryId: level['category']['id'],
-                                    ),
-                                  ),
-                                );
-                              },
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text("No.")),
+              DataColumn(label: Text("Actions")),
+              DataColumn(label: Text("Level Name")),
+              DataColumn(label: Text("Description")),
+              DataColumn(label: Text("Category")),
+              DataColumn(label: Text("Created Date")),
+            ],
+            rows: List.generate(provider.level.length, (index) {
+              final level = provider.level[index];
+              return DataRow(
+                cells: [
+                  DataCell(Text("${index + 1}")),
+                  DataCell(ActionButtons(
+                    onEdit: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LevelsScreen(
+                            levelId: level['level_id'],
+                            levelName: level['level_name'],
+                            description: level['description'],
+                            categoryId: level['category']?['id'],
+                          ),
+                        ),
+                      );
+                    },
+                    onDelete: () async {
+                      bool? confirm = await showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title:
+                              const Text("Are you sure you want to delete?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pop(context, false),
+                              child: const Text("Cancel"),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () async {
-                                bool? confirm = await showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                    title: const Text(
-                                        "Are you sure you want to delete?"),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, false),
-                                        child: const Text("Cancel"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, true),
-                                        child: const Text("Delete"),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                if (confirm == true) {
-                                  await provider
-                                      .deleteLevel(level['level_id']);
-                                }
-                              },
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pop(context, true),
+                              child: const Text("Delete"),
                             ),
                           ],
-                        )),
-                      ]);
-                    }),
-                  ),
-                );
-              },
-            ),
+                        ),
+                      );
+
+                      if (confirm == true) {
+                        await provider.deleteLevel(level['level_id']);
+                      }
+                    },
+                  )),
+                  DataCell(Text(level['level_name'] ?? "")),
+                  DataCell(Text(level['description'] ?? "")),
+                  DataCell(Text(level['category']?['name'] ?? "")),
+                  DataCell(Text(level['created_at'] ?? "")),
+                ],
+              );
+            }),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
+}
