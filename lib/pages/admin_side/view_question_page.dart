@@ -3,6 +3,8 @@ import 'package:mini_quiz/components/action_button.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/question_page.dart';
+import 'package:mini_quiz/provider/qusetion_provider.dart';
+import 'package:provider/provider.dart';
 
 class ViewQuestionScreen extends StatefulWidget {
   const ViewQuestionScreen({super.key});
@@ -12,6 +14,17 @@ class ViewQuestionScreen extends StatefulWidget {
 
 class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
   String searchText = "";
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<QuestionProvider>(
+        context,
+        listen: false,
+      ).fetchQuestions(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +77,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const QuestionScreen(),
+                              builder: (context) => QuestionScreen(),
                             ),
                           );
                         },
@@ -89,7 +102,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                       title: "Table Questions",
                       onSearchChanged: (value) {
                         setState(() {
-                           searchText = value;
+                          searchText = value;
                         });
                       },
                       searchHint: "Search questions...",
@@ -105,6 +118,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
     );
   }
 }
+
 class QuestionsTable extends StatefulWidget {
   const QuestionsTable({super.key});
 
@@ -115,7 +129,181 @@ class QuestionsTable extends StatefulWidget {
 class _QuestionsTableState extends State<QuestionsTable> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Consumer<QuestionProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (provider.questions.isEmpty) {
+          return const Center(child: Text("No Question Fount"));
+        }
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: const [
+              DataColumn(
+                numeric: true,
+                label: Center(
+                  child: Text(
+                    "No.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "Question",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 60),
+                  child: Center(
+                    child: Text(
+                      "Score",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 35),
+                  child: Center(
+                    child: Text(
+                      "Category",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "Level",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            rows: List.generate(provider.questions.length, (index) {
+              final questions = provider.questions[index];
+              return DataRow(
+                cells: [
+                  DataCell(
+                    Text(
+                      "${index + 1}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    ActionButtons(
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => QuestionScreen(
+                              questionId: questions['question_id'],
+                              questionText: questions['question'],
+                              score: questions['score'],
+                              categoryId: questions['category']?['category_id'],
+                              levelId: questions['level']?['level_id'],
+                            ),
+                          ),
+                        );
+                      },
+                      onDelete: () async {
+                        bool? confirm = await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text(
+                              "Are you sure you want to delete?",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true) {
+                          await provider.deleteQuestion(
+                            questions['question_id'],
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                  DataCell(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Center(
+                        child: Text("What is the capital of France?"),
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Center(child: Text("1")),
+                    ),
+                  ),
+                  DataCell(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Center(child: Text("English")),
+                    ),
+                  ),
+                  DataCell(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Center(child: Text("Easy")),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/* SizedBox(
       width: double.infinity,
       child: DataTable(
         columns: const [
@@ -269,4 +457,4 @@ class _QuestionsTableState extends State<QuestionsTable> {
       ),
     );
   }
-}
+}*/
