@@ -67,6 +67,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Fredoka',
                     ),
                   ),
 

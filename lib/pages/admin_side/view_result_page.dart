@@ -1,17 +1,25 @@
+import 'package:mini_quiz/provider/result_provider.dart';
+import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'result_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-
 class ViewResultScreen extends StatefulWidget {
   const ViewResultScreen({super.key});
-
   @override
   State<ViewResultScreen> createState() => _ViewResultScreenState();
 }
+
 class _ViewResultScreenState extends State<ViewResultScreen> {
   String searchText = "";
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<ResultProvider>(context, listen: false).fetchResults(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,14 +39,17 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Results',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -67,7 +78,7 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const ResultScreen(),
+                                      ResultScreen(),
                               transitionDuration: Duration.zero, // no animation
                               reverseTransitionDuration:
                                   Duration.zero, // no animation when back
@@ -99,7 +110,7 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
                         });
                       },
                       searchHint: "Search...",
-                      child: const ResultTable(),
+                      child: ResultTable(),
                     ),
                   ),
                 ],
@@ -117,180 +128,143 @@ class ResultTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Actions",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "User Email",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              child: Center(
-                child: Text(
-                  "Total Score",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
-                child: Text(
-                  "Status",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Created At",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ResultScreen()),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("hengmean@gmail.com")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("100")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+    return Consumer<ResultProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (provider.results.isEmpty) {
+          return const Center(child: Text("No result found"));
+        }
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: const [
+              DataColumn(
+                numeric: true,
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Center(
                     child: Text(
-                      "Active",
+                      "No.",
                       style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
                       ),
                     ),
                   ),
                 ),
               ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("2026-01-01")),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "Actions",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "User Email",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 60),
+                  child: Center(
+                    child: Text(
+                      "Total Score",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 35),
+                  child: Center(
+                    child: Text(
+                      "Status",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "Created At",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
+                                  rows: List.generate(provider.results.length, (index) {
+                        final result = provider.results[index];
+                        return DataRow(
+                          cells: [
+                            DataCell(Text("${index + 1}")),
+                            DataCell(Text(result.userEmail)),
+                            DataCell(Text(result.categoryName)),
+                            DataCell(Text(result.totalScore.toString())),
+                            DataCell(Text(result.status)),
+                            DataCell(Text(result.createdAt)),
+                          ],
+                        );
+                      }),
+           /* rows: List.generate(provider.results.length, (index) {
+              final result = provider.results[index];
+              return DataRow(
+                cells: [
+                  DataCell(Text("${index + 1}")),
+                  DataCell(
+                    ActionButtons(
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => ResultScreen()),
+                        );
+                      },
+                      onDelete: () {},
+                    ),
+                  ),
+                  DataCell(Text(result.userEmail)),
+                  DataCell(Text(result.totalScore.toString())),
+                  DataCell(Text(result.status)),
+                  DataCell(Text(result.createdAt)),
+                ],
+              );
+            }),*/
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

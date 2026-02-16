@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/provider/category_provider.dart';
@@ -98,12 +99,36 @@ class _LevelsScreenState extends State<LevelsScreen> {
       body: Row(
         children: [
           const Sidebar(selected: "Levels"),
+
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  RichText(
+                    text: const TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Home > ',
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Levels',
+                          style: TextStyle(
+                            color: Color(0xFF5C5C5C),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height:10,),
                   const Text(
                     "Levels",
                     style: TextStyle(
@@ -112,7 +137,38 @@ class _LevelsScreenState extends State<LevelsScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) =>
+                                  ViewLevelScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF007F06),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40,
+                            vertical: 20,
+                          ),
+                        ),
+                        child: const Text(
+                          "View Level",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height:15),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -172,6 +228,9 @@ class _LevelsScreenState extends State<LevelsScreen> {
                                         child: CircularProgressIndicator());
                                   }
                                   return DropdownButtonFormField<int>(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
                                     value: selectedCategoryId,
                                     hint: const Text("Choose Category"),
                                     items: provider.categories
@@ -219,6 +278,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                                         ),
                                 ),
                               ),
+                              const SizedBox(height:20,),
                             ],
                           ),
                         ),

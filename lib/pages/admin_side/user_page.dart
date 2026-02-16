@@ -1,15 +1,64 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:mini_quiz/provider/user_provider.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 
 class UserScreen extends StatefulWidget {
-  const UserScreen({super.key});
+  final int? id;
+  final String? email;
+  final int? roleId;
+  final int? status;
+
+  const UserScreen({
+    this.id,
+    this.email,
+    this.roleId,
+    this.status,
+    super.key,
+  });
 
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
 
 class _UserScreenState extends State<UserScreen> {
+  final _emailController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveUser() async {
+    if (_emailController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter user email")),
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    bool success = await provider.addUser(email: _emailController.text.trim());
+
+    setState(() => _isSubmitting = false);
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User added successfully")),
+      );
+      _emailController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to add user")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,16 +74,16 @@ class _UserScreenState extends State<UserScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C)),
+                          style: TextStyle(color: Color(0xFF8C8C8C),fontFamily: 'Fredoka',),
                         ),
                         TextSpan(
                           text: 'Users',
                           style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
+                            color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Fredoka',
                           ),
@@ -42,7 +91,6 @@ class _UserScreenState extends State<UserScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 10),
                   const Text(
                     "Users",
@@ -52,7 +100,6 @@ class _UserScreenState extends State<UserScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
@@ -63,12 +110,10 @@ class _UserScreenState extends State<UserScreen> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const ViewUserScreen(),
-                              transitionDuration: Duration.zero, // no animation
-                              reverseTransitionDuration:
-                                  Duration.zero, // no animation when back
+                              pageBuilder: (context, animation, secondaryAnimation) =>
+                                  ViewUserScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
@@ -86,7 +131,6 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 15),
                   Expanded(
                     child: Container(
@@ -100,16 +144,17 @@ class _UserScreenState extends State<UserScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Add User",
                             style: TextStyle(
-                              color: const Color(0xFF5C5C5C),
+                              color: Color(0xFF5C5C5C),
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 20),
                           TextField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                               labelText: "User Email",
                               border: OutlineInputBorder(
@@ -119,31 +164,33 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
                               alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 100,
-                                    vertical: 20,
+                              child: SizedBox(
+                                width: 150,
+                                height: 50,
+                                child: ElevatedButton(
+                                  onPressed: _isSubmitting ? null : _saveUser,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF007F06),
                                   ),
-                                ),
-                                child: const Text(
-                                  "Save",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
+                                  child: _isSubmitting
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : const Text(
+                                          "Save",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),

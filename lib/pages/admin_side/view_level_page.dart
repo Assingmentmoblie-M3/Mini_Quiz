@@ -49,6 +49,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                           style: TextStyle(
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -62,6 +63,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Fredoka',
                     ),
                   ),
 
@@ -73,7 +75,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => const LevelsScreen()),
+                              builder: (_) => LevelsScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(

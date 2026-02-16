@@ -1,3 +1,5 @@
+import 'package:mini_quiz/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
@@ -13,6 +15,14 @@ class ViewUserScreen extends StatefulWidget {
 
 class _ViewUserScreenState extends State<ViewUserScreen> {
   String searchText = "";
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => Provider.of<UserProvider>(context, listen: false).fetchUsers(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +81,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const UserScreen(),
+                                      UserScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
@@ -102,7 +112,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                         });
                       },
                       searchHint: "Search users...",
-                      child: const UserTable(),
+                      child:UserTable(),
                     ),
                   ),
                 ],
@@ -120,160 +130,153 @@ class UserTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Center(
-                child: Text(
-                  "Actions",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Center(
-                child: Text(
-                  "User Email",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
-                child: Text(
-                  "Status",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Created At",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(
-                Padding(
+    return Consumer<UserProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (provider.users.isEmpty) {
+          return const Center(child: Text("No users found"));
+        }
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columns: const [
+              DataColumn(
+                numeric: true,
+                label: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => UserScreen()),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Center(child: Text("hengmean@gmail.com")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+                  child: Center(
                     child: Text(
-                      "Active",
+                      "No.",
                       style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
                       ),
                     ),
                   ),
                 ),
               ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("2026-01-01")),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Center(
+                    child: Text(
+                      "Actions",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50),
+                  child: Center(
+                    child: Text(
+                      "User Email",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 35),
+                  child: Center(
+                    child: Text(
+                      "Status",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "Created At",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
+            rows: List.generate(provider.users.length, (index) {
+              final user = provider.users[index];
+              return DataRow(
+                cells: [
+                  DataCell(
+                    Text(
+                      "${index + 1}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    ActionButtons(
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => UserScreen(
+                              email: user['email'],
+                              roleId: user['role_id'],
+                              status: user['status'],
+                              id: user['user_id'],
+                            ),
+                          ),
+                        );
+                      },
+                      onDelete: () async {
+                        bool confirmed = await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text("Are you sure to delete user?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed) {
+                          await Provider.of<UserProvider>(
+                            context,
+                            listen: false,
+                          ).deleteUser(user['user_id']);
+                        }
+                      },
+                    ),
+                  ),
+                  DataCell(Text(user['email'] ?? "")),
+                  DataCell(Text(user['status'] == 1 ? "Active" : "Inactive")),
+                  DataCell(Text(user['created_at'] ?? "")),
+                ],
+              );
+            }),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

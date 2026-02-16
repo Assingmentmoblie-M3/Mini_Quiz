@@ -4,11 +4,11 @@ import '../service/api_fetch.dart';
 class UserProvider extends ChangeNotifier {
   List users = [];
   bool isLoading = false;
-  
+
   Future<void> fetchUsers() async {
     isLoading = true;
     notifyListeners();
-    final response = await ApiService.get("user");
+    final response = await ApiService.get("users");
     if (response != null && response['result'] == true) {
       users = response['data'];
     }
@@ -16,17 +16,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addUser({
-    required String email,
-    required String password,
-    required int roleId,
-  }) async {
-    final response = await ApiService.post("user", {
-      "email": email,
-      "password": password,
-      "role_id": roleId,
-      "status": 1,
-    });
+  Future<bool> addUser({required String email}) async {
+    final response = await ApiService.post("user", {"email": email});
     if (response != null && response['result'] == true) {
       await fetchUsers();
       return true;

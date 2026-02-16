@@ -106,7 +106,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                         });
                       },
                       searchHint: "Search questions...",
-                      child: const QuestionsTable(),
+                      child: QuestionsTable(),
                     ),
                   ),
                 ],
@@ -140,15 +140,27 @@ class _QuestionsTableState extends State<QuestionsTable> {
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
+            columnSpacing: 30,
             columns: const [
               DataColumn(
-                numeric: true,
                 label: Center(
                   child: Text(
                     "No.",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Text(
+                    "Actions",
+                    style: TextStyle(
+                      color: Color(0xFF5E5E5E),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -209,9 +221,21 @@ class _QuestionsTableState extends State<QuestionsTable> {
                   ),
                 ),
               ),
+              DataColumn(
+                label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Center(
+                    child: Text(
+                      "Created_at",
+                      style: TextStyle(color: Color(0XFF5E5E5E)),
+                    ),
+                  ),
+                ),
+              ),
             ],
             rows: List.generate(provider.questions.length, (index) {
-              final questions = provider.questions[index];
+              final q = provider.questions[index];
+              print("testing ${q}");
               return DataRow(
                 cells: [
                   DataCell(
@@ -230,11 +254,11 @@ class _QuestionsTableState extends State<QuestionsTable> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => QuestionScreen(
-                              questionId: questions['question_id'],
-                              questionText: questions['question'],
-                              score: questions['score'],
-                              categoryId: questions['category']?['category_id'],
-                              levelId: questions['level']?['level_id'],
+                              questionId: q['question_id'],
+                              questionText: q['question'],
+                              score: q['score'],
+                              categoryId: q['category']?['category_id'],
+                              levelId: q['level']?['level_id'],
                             ),
                           ),
                         );
@@ -260,9 +284,7 @@ class _QuestionsTableState extends State<QuestionsTable> {
                         );
 
                         if (confirm == true) {
-                          await provider.deleteQuestion(
-                            questions['question_id'],
-                          );
+                          await provider.deleteQuestion(q['question_id']);
                         }
                       },
                     ),
@@ -270,29 +292,28 @@ class _QuestionsTableState extends State<QuestionsTable> {
                   DataCell(
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25),
+                      child: Center(child: Text(q['question'] ?? "")),
+                    ),
+                  ),
+
+                  DataCell(Text(q['score']?.toString() ?? "")),
+                  DataCell(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25),
                       child: Center(
-                        child: Text("What is the capital of France?"),
+                        child: Text(q['category']?['category_name'] ?? ""),
                       ),
                     ),
                   ),
                   DataCell(
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("1")),
+                      child: Center(
+                        child: Text(q['level']?['level_name'] ?? ""),
+                      ),
                     ),
                   ),
-                  DataCell(
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("English")),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("Easy")),
-                    ),
-                  ),
+                  DataCell(Center(child: Text(q['created_at'] ?? ""))),
                 ],
               );
             }),
@@ -302,159 +323,3 @@ class _QuestionsTableState extends State<QuestionsTable> {
     );
   }
 }
-
-/* SizedBox(
-      width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Center(
-              child: Text(
-                "No.",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF5E5E5E),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Actions",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Question",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              child: Center(
-                child: Text(
-                  "Score",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
-                child: Text(
-                  "Category",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Level",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Center(child: Text("1"))),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const QuestionScreen(),
-                        ),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("What is the capital of France?")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("English")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Easy")),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}*/

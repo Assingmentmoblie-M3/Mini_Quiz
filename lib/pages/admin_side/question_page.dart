@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
@@ -39,19 +40,19 @@ class _QuestionScreenState extends State<QuestionScreen> {
   void initState() {
     super.initState();
 
-    _questionController =
-        TextEditingController(text: widget.questionText ?? "");
-    _scoreController =
-        TextEditingController(text: widget.score?.toString() ?? "");
+    _questionController = TextEditingController(
+      text: widget.questionText ?? "",
+    );
+    _scoreController = TextEditingController(
+      text: widget.score?.toString() ?? "",
+    );
 
     selectedCategoryId = widget.categoryId;
     selectedLevelId = widget.levelId;
 
     Future.microtask(() {
-      Provider.of<CategoryProvider>(context, listen: false)
-          .fetchCategories();
-      Provider.of<LevelProvider>(context, listen: false)
-          .fetchLevel();
+      Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
+      Provider.of<LevelProvider>(context, listen: false).fetchLevel();
     });
   }
 
@@ -74,8 +75,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
     setState(() => _isSubmitting = true);
 
-    final provider =
-        Provider.of<QuestionProvider>(context, listen: false);
+    final provider = Provider.of<QuestionProvider>(context, listen: false);
 
     bool success;
 
@@ -103,9 +103,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
     if (success) {
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Something went wrong")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
 
@@ -122,12 +122,62 @@ class _QuestionScreenState extends State<QuestionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                                    RichText(
+                    text: const TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Home > ',
+                          style: TextStyle(color: Color(0xFF8C8C8C),fontFamily: 'Fredoka',),
+                        ),
+                        TextSpan(
+                          text: 'Users',
+                          style: TextStyle(
+                            color: Color(0xFF5C5C5C),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Fredoka',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height:5,),
                   const Text(
                     "Questions",
                     style: TextStyle(
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                                    const SizedBox(height: 5),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) =>
+                                  ViewUserScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF007F06),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40,
+                            vertical: 20,
+                          ),
+                        ),
+                        child: const Text(
+                          "View Questions",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -197,16 +247,27 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 builder: (context, provider, child) {
                                   return DropdownButtonFormField<int>(
                                     value: selectedCategoryId,
-                                    hint:
-                                        const Text("Choose Category"),
+                                    hint: const Text("Choose Category"),
                                     items: provider.categories
+                                        .map<DropdownMenuItem<int>>((cat) {
+                                          return DropdownMenuItem<int>(
+                                            value:
+                                                cat['category_id'], // from API
+                                            child: Text(
+                                              cat['category_name'] ?? "",
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
+
+                                    /* items: provider.categories
                                         .map<DropdownMenuItem<int>>((cat) {
                                       return DropdownMenuItem<int>(
                                         value: cat['category_id'],
                                         child: Text(
                                             cat['category_name'] ?? ""),
                                       );
-                                    }).toList(),
+                                    }).toList(), */
                                     onChanged: (value) {
                                       setState(() {
                                         selectedCategoryId = value;
@@ -224,14 +285,26 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                   return DropdownButtonFormField<int>(
                                     value: selectedLevelId,
                                     hint: const Text("Choose Level"),
-                                    items: provider.level
+                                    /* items: provider.level
                                         .map<DropdownMenuItem<int>>((level) {
                                       return DropdownMenuItem<int>(
                                         value: level['level_id'],
                                         child: Text(
                                             level['level_name'] ?? ""),
                                       );
-                                    }).toList(),
+                                    }).toList(),*/
+                                    items: provider.level
+                                        .map<DropdownMenuItem<int>>((level) {
+                                          return DropdownMenuItem<int>(
+                                            value:
+                                                level['level_id'], // ⚠️ note key
+                                            child: Text(
+                                              level['level_name'] ?? "",
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
+
                                     onChanged: (value) {
                                       setState(() {
                                         selectedLevelId = value;
@@ -247,11 +320,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 width: 200,
                                 height: 50,
                                 child: ElevatedButton(
-                                  onPressed:
-                                      _isSubmitting ? null : _submit,
+                                  onPressed: _isSubmitting ? null : _submit,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color(0xFF007F06),
+                                    backgroundColor: const Color(0xFF007F06),
                                   ),
                                   child: _isSubmitting
                                       ? const CircularProgressIndicator(
@@ -283,258 +354,3 @@ class _QuestionScreenState extends State<QuestionScreen> {
   }
 }
 
-/*import 'package:flutter/material.dart';
-import 'package:mini_quiz/layout/admin_sidebar.dart';
-import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
-
-class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({super.key});
-  @override
-  State<QuestionScreen> createState() => _LevelsScreenState();
-}
-
-class _LevelsScreenState extends State<QuestionScreen> {
-  
-  String? selectedCategory;
-  String? selectLevels;
-  final List<String> categories = [
-    'Math',
-    'Science',
-    'English',
-    'General Knowledge',
-  ];
-  //for select levels
-  final List<String> levels = ['Level 1', 'Level 2'];
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF1F1F1),
-      body: Row(
-        children: [
-          const Sidebar(selected: "Questions"),
-
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Home > ",
-                          style: TextStyle(
-                            color: Color(0xFF8C8C8C),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "Questions",
-                          style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //Questions
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Questions",
-                    style: TextStyle(
-                      color: Color(0xFF009E08),
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  //View Questions
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ViewQuestionScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 20,
-                          ),
-                        ),
-                        child: const Text(
-                          "View Category",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                  //box of information
-                  const SizedBox(height: 15),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Add Questions",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          //Filed
-                          SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: "Questions",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                isDense: true,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          //Score
-                          SizedBox(
-                            width: double.infinity,
-                            height: 40,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                labelText: "Score",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                isDense: true,
-                              ),
-                            ),
-                          ),
-                          //DropdownButtonForm
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 40,
-                            width: double.infinity,
-                            child: DropdownButtonFormField<String>(
-                              value: selectedCategory,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              hint: const Text('Select category'),
-                              items: categories
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedCategory = value;
-                                });
-                              },
-                              validator: (value) => value == null
-                                  ? 'Please select category'
-                                  : null,
-                            ),
-                          ),
-                          //
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 40,
-                            width: double.infinity,
-                            child: DropdownButtonFormField<String>(
-                              value: selectLevels,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              hint: const Text('Select Levels'),
-                              items: levels
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectLevels = value;
-                                });
-                              },
-                              validator: (value) =>
-                                  value == null ? 'Please select Levels' : null,
-                            ),
-                          ),
-                          //
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 25,
-                                    vertical: 20,
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Add Question",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  //
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/
