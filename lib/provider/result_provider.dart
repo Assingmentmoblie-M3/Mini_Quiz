@@ -73,7 +73,6 @@ class ResultProvider extends ChangeNotifier {
 
     return false;
   }
-
   Future<bool> deleteResult(int id) async {
     final response = await ApiService.delete("result", id);
 

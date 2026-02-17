@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
 import '../service/api_fetch.dart';
-
 class QuestionProvider extends ChangeNotifier {
-  // store questions as List of Map
   List<Map<String, dynamic>> questions = [];
-  //List questions = [];
   bool isLoading = false;
-
-  // fetch all questions
   Future<void> fetchQuestions() async {
     isLoading = true;
     notifyListeners();
-
     try {
-      final response = await ApiService.get("questions"); // ✅ use plural
+      final response = await ApiService.get("questions");
       print("Fetch Questions Response: $response");
-
       if (response != null && response['result'] == true) {
-        // cast to List<Map<String, dynamic>>
         questions = List<Map<String, dynamic>>.from(response['data']);
       } else {
         questions = [];
@@ -26,12 +18,9 @@ class QuestionProvider extends ChangeNotifier {
       print("Error fetching questions: $e");
       questions = [];
     }
-
     isLoading = false;
     notifyListeners();
   }
-
-  // add new question
   Future<bool> addQuestion({
     required String question,
     required int score,
@@ -56,7 +45,6 @@ class QuestionProvider extends ChangeNotifier {
     return false;
   }
 
-  // update existing question
   Future<bool> updateQuestion({
     required int id,
     required String question,
@@ -73,7 +61,7 @@ class QuestionProvider extends ChangeNotifier {
       });
 
       if (response != null && response['result'] == true) {
-        await fetchQuestions(); // refresh list
+        await fetchQuestions();
         return true;
       }
     } catch (e) {
@@ -82,16 +70,11 @@ class QuestionProvider extends ChangeNotifier {
     return false;
   }
 
-  // delete question
   Future<bool> deleteQuestion(int id) async {
     try {
-      final response = await ApiService.delete(
-        "question",
-        id,
-      ); // singular with id
-
+      final response = await ApiService.delete("question", id);
       if (response != null && response['result'] == true) {
-        await fetchQuestions(); // refresh list
+        await fetchQuestions();
         return true;
       }
     } catch (e) {

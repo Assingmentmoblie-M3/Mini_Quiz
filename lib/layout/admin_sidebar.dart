@@ -9,9 +9,7 @@ import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
 
 class Sidebar extends StatelessWidget {
   final String selected;
-
   const Sidebar({super.key, required this.selected});
-
   Widget _menuItem({
     required IconData icon,
     required String title,

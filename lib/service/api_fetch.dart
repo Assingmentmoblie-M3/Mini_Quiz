@@ -41,7 +41,6 @@ class ApiService {
       return {"result": false, "message": "Connection error"};
     }
   }
-
   static Future<dynamic> delete(String endpoint, int id) async {
     try {
       final response = await http.delete(
