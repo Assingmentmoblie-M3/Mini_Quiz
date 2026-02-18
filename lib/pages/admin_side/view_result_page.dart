@@ -1,17 +1,13 @@
-import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/section_card.dart';
-import 'result_page.dart';
-import 'package:mini_quiz/components/action_button.dart';
+import 'package:get/get.dart';
+import '../../layout/admin_sidebar.dart';
+import '../../components/section_card.dart';
+import 'controller/result_controller.dart';
 
-class ViewResultScreen extends StatefulWidget {
-  const ViewResultScreen({super.key});
+class ViewResultScreen extends StatelessWidget {
+  ViewResultScreen({super.key});
+  final ResultController controller = Get.put(ResultController());
 
-  @override
-  State<ViewResultScreen> createState() => _ViewResultScreenState();
-}
-class _ViewResultScreenState extends State<ViewResultScreen> {
-  String searchText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +15,6 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
       body: Row(
         children: [
           const Sidebar(selected: "Results"),
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -31,21 +26,22 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Results',
                           style: TextStyle(
                             color: const Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
                     ),
                   ),
-
-                  const SizedBox(height: 10),
                   const Text(
                     "Results",
                     style: TextStyle(
@@ -54,52 +50,18 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      const ResultScreen(),
-                              transitionDuration: Duration.zero, // no animation
-                              reverseTransitionDuration:
-                                  Duration.zero, // no animation when back
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 20,
-                          ),
-                        ),
-                        child: const Text(
-                          "Add New Result",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-
+                  const SizedBox(height: 10),
                   const SizedBox(height: 15),
+                  // TABLE
                   Expanded(
                     child: SectionCard(
                       title: "Table Results",
-                      onSearchChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
+                      onSearchChanged: (val) {
+                        controller.search.value = val;
+                        controller.fetchResults();
                       },
                       searchHint: "Search...",
-                      child: const ResultTable(),
+                      child: ResultTable(),
                     ),
                   ),
                 ],
@@ -112,20 +74,21 @@ class _ViewResultScreenState extends State<ViewResultScreen> {
   }
 }
 
-class ResultTable extends StatelessWidget {
-  const ResultTable({super.key});
+final resultController = Get.find<ResultController>();
 
+class ResultTable extends StatelessWidget {
+  ResultTable({super.key});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
+      child: Obx(
+        () => DataTable(
+          sortColumnIndex: 3,
+          sortAscending: resultController.sortDirection.value == "asc",
+          columns: [
+            const DataColumn(
+              label: Center(
                 child: Text(
                   "No.",
                   style: TextStyle(
@@ -135,25 +98,10 @@ class ResultTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Actions",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            const DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "User Email",
                   style: TextStyle(
@@ -163,13 +111,11 @@ class ResultTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              child: Center(
+            const DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
-                  "Total Score",
+                  "Category Name",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF5E5E5E),
@@ -177,119 +123,64 @@ class ResultTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
-                child: Text(
-                  "Status",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+            DataColumn(
+              onSort: (columnIndex, ascending) {
+                resultController.sortColumn.value = "total_score";
+                resultController.sortDirection.value =
+                    resultController.sortDirection.value == "asc"
+                    ? "desc"
+                    : "asc";
+
+                resultController.fetchResults();
+              },
+              label: Row(
+                children: [
+                  const Text(
+                    "Total Score",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 5),
+                  Icon(
+                    resultController.sortDirection.value == "asc"
+                        ? Icons.arrow_upward
+                        : Icons.arrow_downward,
+                    size: 16,
+                    color: Colors.orange, // your custom color
+                  ),
+                ],
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
-                child: Text(
-                  "Created At",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+          ],
+          rows: resultController.results.map((result) {
+            final index = resultController.results.indexOf(result) + 1;
+            return DataRow(
+              cells: [
+                DataCell(Text(index.toString())),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(result.user.userEmail),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ResultScreen()),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(result.category.categoryName),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("hengmean@gmail.com")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("100")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
-                      ),
-                    ),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(result.totalScore.toString()),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("2026-01-01")),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

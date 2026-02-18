@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mini_quiz/components/action_button.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/controller/question_controller.dart';
 import 'package:mini_quiz/pages/admin_side/question_page.dart';
 
 class ViewQuestionScreen extends StatefulWidget {
@@ -61,10 +63,16 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
+                          questionController.resetForm();
+                          questionController.cancelEdit();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const QuestionScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const QuestionScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
@@ -88,9 +96,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                     child: SectionCard(
                       title: "Table Questions",
                       onSearchChanged: (value) {
-                        setState(() {
-                           searchText = value;
-                        });
+                        questionController.searchQuestions(value);
                       },
                       searchHint: "Search questions...",
                       child: const QuestionsTable(),
@@ -105,6 +111,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
     );
   }
 }
+
 class QuestionsTable extends StatefulWidget {
   const QuestionsTable({super.key});
 
@@ -112,17 +119,18 @@ class QuestionsTable extends StatefulWidget {
   State<QuestionsTable> createState() => _QuestionsTableState();
 }
 
+final questionController = Get.put(QuestionController());
+
 class _QuestionsTableState extends State<QuestionsTable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Center(
-              child: Text(
+      child: Obx(
+        () => DataTable(
+          columns: const [
+            DataColumn(
+              label: Text(
                 "No.",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -130,11 +138,10 @@ class _QuestionsTableState extends State<QuestionsTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Actions",
                   style: TextStyle(
@@ -144,11 +151,10 @@ class _QuestionsTableState extends State<QuestionsTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Question",
                   style: TextStyle(
@@ -158,11 +164,10 @@ class _QuestionsTableState extends State<QuestionsTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Score",
                   style: TextStyle(
@@ -172,11 +177,10 @@ class _QuestionsTableState extends State<QuestionsTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Category",
                   style: TextStyle(
@@ -186,11 +190,10 @@ class _QuestionsTableState extends State<QuestionsTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Level",
                   style: TextStyle(
@@ -200,72 +203,88 @@ class _QuestionsTableState extends State<QuestionsTable> {
                 ),
               ),
             ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Center(child: Text("1"))),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const QuestionScreen(),
-                        ),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
+          ],
+          rows: questionController.filteredQuestions.map((question) {
+            final index =
+                questionController.filteredQuestions.indexOf(question) + 1;
+            return DataRow(
+              cells: [
+                DataCell(Text(index.toString())),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: ActionButtons(
+                      onEdit: () {
+                        questionController.startEdit(
+                          question.questionId,
+                          question.question,
+                          question.score,
+                          question.category.categoryId,
+                          question.level.levelId,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const QuestionScreen(),
+                          ),
+                        );
+                      },
+                      onDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text(
+                              "Are you sure deleting category?",
                             ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  questionController.deleteQuestion(
+                                    question.questionId,
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("What is the capital of France?")),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(question.question),
+                  ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("1")),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(question.score.toString()),
+                  ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("English")),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(question.category.categoryName),
+                  ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Easy")),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(question.level.levelName),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

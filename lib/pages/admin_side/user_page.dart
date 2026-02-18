@@ -1,17 +1,20 @@
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
-
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
 
   @override
   State<UserScreen> createState() => _UserScreenState();
 }
-
+final emailController = TextEditingController();
 class _UserScreenState extends State<UserScreen> {
+  
   @override
   Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
@@ -110,6 +113,7 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                           const SizedBox(height: 20),
                           TextField(
+                            controller: emailController,
                             decoration: InputDecoration(
                               labelText: "User Email",
                               border: OutlineInputBorder(
@@ -124,20 +128,52 @@ class _UserScreenState extends State<UserScreen> {
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
                               alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 100,
-                                    vertical: 20,
+                              child: Obx(
+                                () => ElevatedButton(
+                                  onPressed: () {
+                                    final email = emailController.text
+                                        .trim();
+                                    if (email.isEmpty) {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Please fill in this fields',
+                                      );
+                                      return;
+                                    }
+
+                                    if (userController.isEditing.value) {
+                                      // UPDATE
+                                      userController.updateUser(
+                                        userController.editingUserId!,
+                                        email,
+                                      );
+                                    } else {
+                                      // SAVE
+                                      userController.addUser(email);
+                                    }
+
+                                    // Reset
+                                    emailController.clear();
+                                    userController.cancelEdit();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        userController.isEditing.value
+                                        ? Colors.orange
+                                        : const Color(0xFF007F06),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 100,
+                                      vertical: 20,
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  "Save",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
+                                  child: Text(
+                                    userController.isEditing.value
+                                        ? "Update"
+                                        : "Save",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),

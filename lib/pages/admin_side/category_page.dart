@@ -1,3 +1,7 @@
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:mini_quiz/pages/admin_side/controller/category_controller.dart';
+
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
@@ -9,9 +13,13 @@ class CategoryScreen extends StatefulWidget {
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
+final categoryNameController = TextEditingController();
+final descriptionController = TextEditingController();
+
 class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
+    final categoryController = Get.put(CategoryController());
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
@@ -112,6 +120,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           ),
                           const SizedBox(height: 20),
                           TextField(
+                            controller: categoryNameController,
                             decoration: InputDecoration(
                               labelText: "Category Name",
                               border: OutlineInputBorder(
@@ -122,6 +131,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           ),
                           const SizedBox(height: 15),
                           TextField(
+                            controller: descriptionController,
                             decoration: InputDecoration(
                               labelText: "Description",
                               border: OutlineInputBorder(
@@ -135,26 +145,65 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             padding: const EdgeInsets.only(top: 16),
                             child: Align(
                               alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 100,
-                                    vertical: 20,
+                              child: Obx(
+                                () => ElevatedButton(
+                                  onPressed: () {
+                                    final name = categoryNameController.text
+                                        .trim();
+                                    final description = descriptionController
+                                        .text
+                                        .trim();
+
+                                    if (name.isEmpty || description.isEmpty) {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Please fill in all fields',
+                                      );
+                                      return;
+                                    }
+
+                                    if (categoryController.isEditing.value) {
+                                      // UPDATE
+                                      categoryController.updateCategory(
+                                        categoryController.editingCategoryId!,
+                                        name,
+                                        description,
+                                      );
+                                    } else {
+                                      // SAVE
+                                      categoryController.addCategory(
+                                        name,
+                                        description,
+                                      );
+                                    }
+
+                                    // Reset
+                                    categoryController.resetForm();
+                                    categoryController.cancelEdit();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        categoryController.isEditing.value
+                                        ? Colors.orange
+                                        : const Color(0xFF007F06),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 100,
+                                      vertical: 20,
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  "Add Levels",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
+                                  child: Text(
+                                    categoryController.isEditing.value
+                                        ? "Update"
+                                        : "Save",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),

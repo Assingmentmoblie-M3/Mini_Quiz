@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/answer_controller.dart';
+
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
@@ -10,6 +13,8 @@ class ViewAnswerScreen extends StatefulWidget {
   @override
   State<ViewAnswerScreen> createState() => _ViewAnswerScreenState();
 }
+
+final answerController = Get.put(AnswerController());
 
 class _ViewAnswerScreenState extends State<ViewAnswerScreen> {
   @override
@@ -64,6 +69,7 @@ class _ViewAnswerScreenState extends State<ViewAnswerScreen> {
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
+                          answerController.resetForm();
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -115,201 +121,219 @@ class AnswerTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+      child: Obx(
+        () => DataTable(
+          columns: const [
+            DataColumn(
+              
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "No.",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "Actions",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                ),
+              
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "Question",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "Answer A",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "Answer B",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "Answer C",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                
+                  child: Text(
+                    "Answer D",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
+                  ),
+                
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                child: Center(
+                  child: Text(
+                    "Is Correct",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5E5E5E),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Actions",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+          ],
+          rows: answerController.answers.map((answer) {
+            final index =
+                answerController.answers.indexOf(answer) + 1;
+            return DataRow(
+              cells: [
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(index.toString()),
                   ),
                 ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Question",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: ActionButtons(
+                      onEdit: () {
+                        // print(answer.questions);
+                        answerController.startEdit(
+                            answer.answerId,
+                              answer.questions?.questionId ?? 0,
+                              answer.answerA,
+                              answer.answerB,
+                              answer.answerC,
+                              answer.answerD,
+                              answer.isCorrect,  
+                            );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => AnswerScreen()),
+                        );
+                      },
+                      onDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text("Are you sure deleting answer?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  answerController.deleteAnswer(answer.answerId);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Answer A",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(answer.questions?.questionName ?? "No Question"),
                   ),
                 ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Answer B",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child:  Text(answer.answerA),
                   ),
                 ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Answer C",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(answer.answerB),
                   ),
                 ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Answer C",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(answer.answerC),
                   ),
                 ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Center(
-                child: Text(
-                  "Created At",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(answer.answerD),
                   ),
                 ),
-              ),
-            ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => AnswerScreen()),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting answer?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(answer.isCorrect, style: TextStyle(color: Color(0xFF009E08)),
+                  ),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("Q1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("Answer A")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("Answer B")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("Answer C")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("Answer D")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(child: Text("2026-01-01")),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

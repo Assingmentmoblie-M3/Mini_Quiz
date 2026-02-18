@@ -3,7 +3,10 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/HomeScreen/HomeScreen.dart';
-
+import 'package:mini_quiz/pages/user_side/quiz_QCM1.dart';
+import 'package:mini_quiz/pages/user_side/quiz_QCM2.dart';
+import 'package:mini_quiz/pages/user_side/quiz_multi_answer.dart';
+ 
 void main() {
   runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
 }
@@ -22,8 +25,8 @@ class MyApp extends StatelessWidget {
         
         ),
       ),
-      home: const DashboardScreen(),
-      // home: const Homescreen(),
+       home: const DashboardScreen(),
+      // home: const Quiz_QCM1(),
 
       // home: const ViewCategoryScreen(),
       // theme: ThemeData(

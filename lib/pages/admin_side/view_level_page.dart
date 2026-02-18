@@ -1,8 +1,12 @@
+import 'package:get/get.dart';
 import 'package:mini_quiz/components/action_button.dart';
+import 'package:mini_quiz/pages/admin_side/answer_page.dart';
+import 'package:mini_quiz/pages/admin_side/controller/level_controller.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import './levels_page.dart';
+
 class ViewLevelScreen extends StatefulWidget {
   const ViewLevelScreen({super.key});
 
@@ -61,10 +65,15 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
+                          levelController.resetForm();
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const LevelsScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const LevelsScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
@@ -88,9 +97,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                     child: SectionCard(
                       title: "Table Levels",
                       onSearchChanged: (value) {
-                        setState(() {
-                           searchText = value;
-                        });
+                        levelController.searchLevels(value);
                       },
                       searchHint: "Search levels...",
                       child: const LevelsTable(),
@@ -106,6 +113,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
   }
 }
 
+final levelController = Get.put(LevelController());
 class LevelsTable extends StatefulWidget {
   const LevelsTable({super.key});
   @override
@@ -120,164 +128,179 @@ class _LevelsTableState extends State<LevelsTable> {
         //const LevelSearchBox(),
         SizedBox(
           width: double.infinity,
-          child: DataTable(
-            columns: const [
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(
-                    child: Text(
-                      "No.",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
+          child: Obx(
+            () => DataTable(
+              columns: const [
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    
+                      child: Text(
+                        "No.",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
+                      
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Actions",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
+                    
+                  ),
+                ),
+                DataColumn(
+                  label: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    
+                      child: Text(
+                        "Level",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
+                      ),
+                    
+                  ),
+                ),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    
+                      child: Text(
+                        "Description",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
+                      
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Level Name",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    
+                      child: Text(
+                        "Category",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
+                      
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 60),
-                  child: Center(
-                    child: Text(
-                      "Description",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
+                DataColumn(
+                  label: Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 0),
+                    
+                      child: Text(
+                        "Created At",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
+                      
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35),
-                  child: Center(
-                    child: Text(
-                      "Category",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+              ],
+              rows: levelController.filteredLevels.map((level) {
+                final index = levelController.filteredLevels.indexOf(level) + 1;
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: Text(index.toString()),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Created Date",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-            rows: [
-              DataRow(
-                cells: [
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: Center(child: Text("1")),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: ActionButtons(
-                        onEdit: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => LevelsScreen()),
-                          );
-                        },
-                        onDelete: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const Text("Are you sure deleting category?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Cancel"),
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: ActionButtons(
+                          onEdit: () {
+                            levelController.startEdit(
+                              level.levelId,
+                              level.levelName,
+                              level.description,
+                              level.category.categoryId,
+                            );
+                            
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => LevelsScreen()),
+                            );
+                          },
+                          onDelete: () {
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text(
+                                  "Are you sure deleting level?",
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Delete"),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      levelController.deleteLevel(level.levelId);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Delete"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("Beginner")),
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child:  Text(level.levelName),
+                      ),
                     ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 60),
-                      child: Center(child: Text("Basic level for beginners")),
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: Text(level.description),
+                      ),
                     ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
-                      child: Center(child: Text("English")),
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: Text(level.category.categoryName),
+                      ),
                     ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text("2024-01-15")),
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+
+                        child: Text(level.createdAt.toIso8601String().split('T')[0]),
+
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],

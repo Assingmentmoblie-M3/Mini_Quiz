@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/category_controller.dart';
+
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
@@ -65,6 +68,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
+                          categoryController.resetForm();
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -96,9 +100,7 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
                     child: SectionCard(
                       title: "Table Category",
                       onSearchChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
+                        categoryController.searchCategories(value);
                       },
                       searchHint: "Search category...",
                       child: const CategoryTable(),
@@ -121,17 +123,18 @@ class CategoryTable extends StatefulWidget {
   State<CategoryTable> createState() => _CategoryTableState();
 }
 
+final categoryController = Get.put(CategoryController());
+
 class _CategoryTableState extends State<CategoryTable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Center(
-              child: Text(
+      child: Obx(
+        () => DataTable(
+          columns: const [
+            DataColumn(
+              label: Text(
                 "No.",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -139,11 +142,10 @@ class _CategoryTableState extends State<CategoryTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Actions",
                   style: TextStyle(
@@ -153,11 +155,10 @@ class _CategoryTableState extends State<CategoryTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Category Name",
                   style: TextStyle(
@@ -167,11 +168,10 @@ class _CategoryTableState extends State<CategoryTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Description",
                   style: TextStyle(
@@ -181,25 +181,11 @@ class _CategoryTableState extends State<CategoryTable> {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
-                child: Text(
-                  "Status",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+
                 child: Text(
                   "Created At",
                   style: TextStyle(
@@ -209,88 +195,98 @@ class _CategoryTableState extends State<CategoryTable> {
                 ),
               ),
             ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Center(child: Text("1"))),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const CategoryScreen(),
-                        ),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
+          ],
+
+          rows: categoryController.filteredCategories.map((category) {
+            // print(category);
+            final index =
+                categoryController.filteredCategories.indexOf(category) + 1;
+            return DataRow(
+              cells: [
+                // ID
+                DataCell(Text(index.toString())),
+
+                // Action buttons
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: ActionButtons(
+                      onEdit: () {
+                        categoryController.startEdit(
+                          category.categoryId,
+                          category.categoryName,
+                          category.description,
+                        );
+
+                        categoryNameController.text = category.categoryName;
+                        descriptionController.text = category.description;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CategoryScreen(
+                              // pass category if needed
                             ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Science")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("Science related quizzes")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
-                      ),
+                          ),
+                        );
+                      },
+                      onDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text("Are you sure deleting category?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // print(category.categoryId);
+                                  categoryController.deleteCategory(
+                                    category.categoryId,
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("2026-01-01")),
+
+                // Category name
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(category.categoryName),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+
+                // Description
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(category.description),
+                  ),
+                ),
+
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(
+                      category.createdAt.toIso8601String().split('T')[0],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

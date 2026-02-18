@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/controller/question_controller.dart';
 import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
+
   @override
-  State<QuestionScreen> createState() => _LevelsScreenState();
+  State<QuestionScreen> createState() => _QuestionScreenState();
 }
 
-class _LevelsScreenState extends State<QuestionScreen> {
-  String? selectedCategory;
-  String? selectLevels;
-  final List<String> categories = [
-    'Math',
-    'Science',
-    'English',
-    'General Knowledge',
-  ];
-  //for select levels
-  final List<String> levels = ['Level 1', 'Level 2'];
+// final questionController = Get.put(QuestionController());
+final nameQuestionController = TextEditingController();
+final scoreController = TextEditingController();
+
+class _QuestionScreenState extends State<QuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,15 +23,14 @@ class _LevelsScreenState extends State<QuestionScreen> {
       body: Row(
         children: [
           const Sidebar(selected: "Questions"),
-
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
-                    text: TextSpan(
+                    text: const TextSpan(
                       children: [
                         TextSpan(
                           text: "Home > ",
@@ -46,14 +42,13 @@ class _LevelsScreenState extends State<QuestionScreen> {
                         TextSpan(
                           text: "Questions",
                           style: TextStyle(
-                            color: const Color(0xFF5C5C5C),
+                            color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  //Questions
                   const SizedBox(height: 10),
                   const Text(
                     "Questions",
@@ -63,36 +58,35 @@ class _LevelsScreenState extends State<QuestionScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  //View Questions
                   const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const ViewQuestionScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const ViewQuestionScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF007F06),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 20,
-                          ),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF007F06),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 20,
                         ),
-                        child: const Text(
-                          "View Category",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
+                      ),
+                      child: const Text(
+                        "View Category",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
-                  //box of information
                   const SizedBox(height: 15),
                   Expanded(
                     child: Container(
@@ -115,13 +109,13 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          //Filed
                           SizedBox(
                             width: double.infinity,
-                            height: 40,
+                            height: 50,
                             child: TextField(
+                              controller: nameQuestionController,
                               decoration: InputDecoration(
-                                labelText: "Questions",
+                                hintText: "Enter question",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -130,13 +124,13 @@ class _LevelsScreenState extends State<QuestionScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          //Score
                           SizedBox(
                             width: double.infinity,
-                            height: 40,
+                            height: 50,
                             child: TextField(
+                              controller: scoreController,
                               decoration: InputDecoration(
-                                labelText: "Score",
+                                hintText: "Enter score",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -144,96 +138,115 @@ class _LevelsScreenState extends State<QuestionScreen> {
                               ),
                             ),
                           ),
-                          //DropdownButtonForm
                           const SizedBox(height: 10),
                           SizedBox(
-                            height: 40,
+                            height: 50,
                             width: double.infinity,
-                            child: DropdownButtonFormField<String>(
-                              value: selectedCategory,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
+                            child: Obx(
+                              () => DropdownButtonFormField<int>(
+                                value: questionController.selectedCategoryId.value,
+                                items: questionController.categories
+                                    .map(
+                                      (category) => DropdownMenuItem<int>(
+                                        value: category.categoryId,
+                                        child: Text(category.categoryName),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (value) {
+                                  questionController.selectedCategoryId.value = value;
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                hint: const Text('Choose category'),
                               ),
-                              hint: const Text('Select category'),
-                              items: categories
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedCategory = value;
-                                });
-                              },
-                              validator: (value) => value == null
-                                  ? 'Please select category'
-                                  : null,
                             ),
                           ),
-                          //
                           const SizedBox(height: 10),
                           SizedBox(
-                            height: 40,
+                            height: 50,
                             width: double.infinity,
-                            child: DropdownButtonFormField<String>(
-                              value: selectLevels,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
+                            child: Obx(
+                              () => DropdownButtonFormField<int>(
+                                value: questionController.selectedLevelId.value,
+                                items: questionController.levels
+                                    .map(
+                                      (level) => DropdownMenuItem<int>(
+                                        value: level.levelId,
+                                        child: Text(level.levelName),
+                                      ),
+                                    )
+                                    .toList(), 
+                                onChanged: (value) {
+                                  questionController.selectedLevelId.value = value;
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                hint: const Text('Choose level'),
                               ),
-                              hint: const Text('Select Levels'),
-                              items: levels
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectLevels = value;
-                                });
-                              },
-                              validator: (value) =>
-                                  value == null ? 'Please select Levels' : null,
                             ),
                           ),
-                          //
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 25,
-                                    vertical: 20,
-                                  ),
+                          const SizedBox(height: 16),
+                          Obx(
+                            () => ElevatedButton(
+                              onPressed: () {
+                                final nameQuestion = nameQuestionController.text.trim();
+                                final score = scoreController.text.trim();
+                                final categoryId = questionController.selectedCategoryId.value;
+                                final levelId = questionController.selectedLevelId.value;
+
+                                if (nameQuestion.isEmpty ||
+                                    score.isEmpty ||
+                                     categoryId == null ||
+                                    levelId == null) {
+                                  Get.snackbar(
+                                    'Error',
+                                    'Please fill in all fields',
+                                  );
+                                  return;
+                                }
+
+                                if (questionController.isEditing.value) {
+                                  questionController.updateQuestion(
+                                    questionController.editingQuestionId!,
+                                    nameQuestion,
+                                    int.parse(score),
+                                    categoryId,
+                                    levelId,
+                                  );
+                                } else {
+                                  questionController.addQuestion(
+                                    nameQuestion,
+                                    int.parse(score),
+                                    categoryId,
+                                    levelId,
+                                  );
+                                  
+                                }
+                                // Reset fields
+                                questionController.resetForm();
+                                questionController.cancelEdit();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: questionController.isEditing.value
+                                    ? Colors.orange
+                                    : const Color(0xFF007F06),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 100,
+                                  vertical: 20,
                                 ),
-                                child: const Text(
-                                  "Add Question",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
+                              ),
+                              child: Text(
+                                questionController.isEditing.value ? "Update" : "Save",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -242,7 +255,6 @@ class _LevelsScreenState extends State<QuestionScreen> {
                       ),
                     ),
                   ),
-                  //
                 ],
               ),
             ),

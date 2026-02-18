@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/components/stat_card.dart';
+import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -56,18 +58,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   // Top statistics
                   Row(
-                    children: const [
-                      StatCard(
+                    children: [
+                      Obx(() => StatCard(
                         title: "Total Users",
-                        value: "25",
+                        value: userController.users.length.toString(),
                         color: Colors.green,
                       ),
-                      SizedBox(width: 16),
-                      StatCard(
-                        title: "Total Quizzes",
-                        value: "20",
-                        color: Colors.orange,
                       ),
+                      SizedBox(width: 16),
+                      Obx(() => userController.status.value == false
+    ? StatCard(
+        title: "Total Quizzes",
+        value: userController.totalQuizzes.value.toString(),
+        color: Colors.orange,
+      )
+    : const SizedBox(),
+),
+
                       SizedBox(width: 16),
                       StatCard(
                         title: "Average Score",

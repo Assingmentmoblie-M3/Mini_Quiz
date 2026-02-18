@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
+import 'package:mini_quiz/pages/admin_side/controller/level_controller.dart';
+import 'package:mini_quiz/pages/admin_side/model/category_model.dart';
 import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
 
 class LevelsScreen extends StatefulWidget {
@@ -9,16 +12,14 @@ class LevelsScreen extends StatefulWidget {
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
 
+final levelNameController = TextEditingController();
+final descriptionController = TextEditingController();
+final categoryIdController = TextEditingController();
+
 class _LevelsScreenState extends State<LevelsScreen> {
-  String? selectedCategory;
-  final List<String> categories = [
-    'Math',
-    'Science',
-    'English',
-    'General Knowledge',
-  ];
   @override
   Widget build(BuildContext context) {
+    final levelController = Get.put(LevelController());
     return Scaffold(
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
@@ -71,8 +72,12 @@ class _LevelsScreenState extends State<LevelsScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const ViewLevelScreen(),
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const ViewLevelScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
                             ),
                           );
                         },
@@ -115,11 +120,12 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           const SizedBox(height: 20),
                           //Filed Levels Name
                           SizedBox(
-                            width:double.infinity,
-                            height: 40,
+                            width: double.infinity,
+                            height: 50,
                             child: TextField(
+                              controller: levelNameController,
                               decoration: InputDecoration(
-                                labelText: "Levels Name",
+                                hintText: "Enter levels name",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -131,11 +137,12 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           //Levels
                           const SizedBox(height: 10),
                           SizedBox(
-                            height: 40,
-                            width:double.infinity,
+                            height: 50,
+                            width: double.infinity,
                             child: TextField(
+                              controller: descriptionController,
                               decoration: InputDecoration(
-                                labelText: "Description",
+                                hintText: "Enter description",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -146,55 +153,88 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           //DropdownButtonForm
                           const SizedBox(height: 10),
                           SizedBox(
-                            height: 40,
-                            width:double.infinity,
-                            child: DropdownButtonFormField<String>(
-                              value: selectedCategory,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
+                            height: 50,
+                            width: double.infinity,
+                            child: Obx(
+                              () => DropdownButtonFormField<int>(
+                                value: levelController.selectedCategoryId.value,
+                                items: levelController.categories
+                                    .map(
+                                      (category) => DropdownMenuItem<int>(
+                                        value: category.categoryId,
+                                        child: Text(category.categoryName),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (value) {
+                                  levelController.selectedCategoryId.value =
+                                      value;
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                hint: const Text('Choose category'),
                               ),
-                              hint: const Text('Choose category'),
-                              items: categories
-                                  .map(
-                                    (e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedCategory = value;
-                                });
-                              },
-                              validator: (value) => value == null
-                                  ? 'Please select category'
-                                  : null,
                             ),
                           ),
                           const SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: ElevatedButton(
-                                onPressed: () {},
+                            child: Obx(
+                              () => ElevatedButton(
+                                onPressed: () {
+                                  final name = levelNameController.text.trim();
+                                  final description = descriptionController.text
+                                      .trim();
+                                  final categoryId =
+                                      levelController.selectedCategoryId.value;
+
+                                  if (name.isEmpty ||
+                                      description.isEmpty ||
+                                      categoryId == null) {
+                                    Get.snackbar(
+                                      'Error',
+                                      'Please fill in all fields',
+                                    );
+                                    return;
+                                  }
+
+                                  if (levelController.isEditing.value) {
+                                    levelController.updateLevel(
+                                      levelController.editingLevelId!,
+                                      name,
+                                      description,
+                                      categoryId,
+                                    );
+                                  } else {
+                                    levelController.addLevel(
+                                      name,
+                                      description,
+                                      categoryId,
+                                    );
+                                  }
+
+                                  // Reset
+                                  levelController.resetForm();
+                                  levelController.cancelEdit();
+                                },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF007F06),
+                                  backgroundColor:
+                                      levelController.isEditing.value
+                                      ? Colors.orange
+                                      : const Color(0xFF007F06),
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 25,
+                                    horizontal: 100,
                                     vertical: 20,
                                   ),
                                 ),
-                                child: const Text(
-                                  "Add Levels",
-                                  style: TextStyle(
+                                child: Text(
+                                  levelController.isEditing.value
+                                      ? "Update"
+                                      : "Save",
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
                                   ),

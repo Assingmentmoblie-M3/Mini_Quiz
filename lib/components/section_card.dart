@@ -51,7 +51,7 @@ class SectionCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -66,7 +66,7 @@ class SectionCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF5E5E5E),
@@ -93,7 +93,7 @@ class RecentQuizTable extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: DataTable(
-        columns: const [
+        columns: [
           DataColumn(
             label: Text(
               "Topic",
@@ -136,7 +136,7 @@ class RecentQuizTable extends StatelessWidget {
                       color: Color.fromRGBO(232, 248, 233, 1),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Active",
                       style: TextStyle(
                         color: Color(0xFF00D60B),

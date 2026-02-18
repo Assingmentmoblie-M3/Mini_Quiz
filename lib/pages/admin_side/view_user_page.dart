@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
+
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
@@ -66,6 +69,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                       alignment: Alignment.topRight,
                       child: ElevatedButton(
                         onPressed: () {
+                          emailController.clear();
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -97,9 +101,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                     child: SectionCard(
                       title: "Table Users",
                       onSearchChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
+                        userController.searchUsers(value);
                       },
                       searchHint: "Search users...",
                       child: const UserTable(),
@@ -115,20 +117,26 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
   }
 }
 
-class UserTable extends StatelessWidget {
+final userController = Get.put(UserController());
+
+class UserTable extends StatefulWidget {
   const UserTable({super.key});
 
+  @override
+  State<UserTable> createState() => _UserTableState();
+}
+
+class _UserTableState extends State<UserTable> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            numeric: true,
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Center(
+      child: Obx(
+        () => DataTable(
+          columns: const [
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
                   "No.",
                   style: TextStyle(
@@ -138,11 +146,9 @@ class UserTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
                   "Actions",
                   style: TextStyle(
@@ -152,11 +158,9 @@ class UserTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
                   "User Email",
                   style: TextStyle(
@@ -166,11 +170,21 @@ class UserTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 35),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                child: Text(
+                  "Role ID",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF5E5E5E),
+                  ),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
                   "Status",
                   style: TextStyle(
@@ -180,11 +194,9 @@ class UserTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Center(
+            DataColumn(
+              label: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
                 child: Text(
                   "Created At",
                   style: TextStyle(
@@ -194,85 +206,96 @@ class UserTable extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Center(child: Text("1")),
-                ),
-              ),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => UserScreen()),
-                      );
-                    },
-                    onDelete: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text("Are you sure deleting category?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+          ],
+          rows: userController.filteredUsers.map((user) {
+            return DataRow(
+              cells: [
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(user.userId.toString()),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Center(child: Text("hengmean@gmail.com")),
+                DataCell(
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: ActionButtons(
+                      onEdit: () {
+                        userController.startEdit(user.userId, user.email);
+                        emailController.text = user.email;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => UserScreen()),
+                        );
+                      },
+                      onDelete: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text("Are you sure deleting user?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  userController.deleteUser(user.userId);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
+                DataCell(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(user.email),
+                  ),
+                ),
+                DataCell(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(user.roleId.toString()),
+                  ),
+                ),
+                DataCell(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(232, 248, 233, 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        user.status ? "Active" : "Inactive",
+                        style: TextStyle(
+                          color: Color(0xFF00D60B),
+                          backgroundColor: Color.fromRGBO(232, 248, 233, 1),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataCell(
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(child: Text("2026-01-01")),
+                DataCell(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Text(user.createdAt.toIso8601String().split('T')[0]),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }
