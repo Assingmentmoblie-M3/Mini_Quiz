@@ -1,8 +1,18 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/provider/quiz1_provider.dart';
+import 'package:provider/provider.dart';
 
 class Quiz_QCM1 extends StatefulWidget {
-  const Quiz_QCM1({super.key});
+    final int categoryId;
+  final int levelId;
+
+  const Quiz_QCM1({
+    super.key,
+    required this.categoryId,
+    required this.levelId,
+  });
+  //const Quiz_QCM1({super.key, required int categoryId, required int levelId});
 
   @override
   State<Quiz_QCM1> createState() => _QuizScreen1State();
@@ -27,7 +37,12 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
   void initState() {
     super.initState();
     startTimer();
+      Future.microtask(() =>
+    context.read<QuizProvider>()
+      .fetchQuestions(widget.categoryId, widget.levelId)
+  );
   }
+
 
   void startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -191,6 +206,132 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
             color: primaryGreen,
           ),
         ),
+      ),
+    );
+  }
+}
+*/
+
+import 'package:flutter/material.dart';
+import 'package:mini_quiz/provider/quiz1_provider.dart';
+import 'package:provider/provider.dart';
+
+class Quiz_QCM1 extends StatefulWidget {
+  final int categoryId;
+  final int levelId;
+
+  const Quiz_QCM1({super.key, required this.categoryId, required this.levelId});
+
+  @override
+  State<Quiz_QCM1> createState() => _Quiz_QCM1State();
+}
+
+class _Quiz_QCM1State extends State<Quiz_QCM1> {
+  int currentIndex = 0;
+  int? selectedIndex;
+
+   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<QuizProvider>().fetchQuestions(
+        widget.categoryId,
+        widget.levelId,
+      );
+    });
+  }
+  void nextQuestion(QuizProvider provider) {
+    if (currentIndex < provider.questions.length - 1) {
+      setState(() {
+        currentIndex++;
+        selectedIndex = null;
+      });
+    } else {
+      Navigator.pushReplacementNamed(context, '/result');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF2F2F2),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.green),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Consumer<QuizProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (provider.questions.isEmpty) {
+            return const Center(child: Text("No questions found"));
+          }
+
+          if (currentIndex >= provider.questions.length) {
+            currentIndex = 0;
+          }
+
+          final question = provider.questions[currentIndex];
+
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text(
+                  "Question ${currentIndex + 1}/${provider.questions.length}",
+                  style: const TextStyle(fontSize: 18),
+                ),
+
+                const SizedBox(height: 20),
+
+                Text(
+                  question.question,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                ...List.generate(
+                  question.answers.length,
+                  (index) => GestureDetector(
+                    onTap: () => setState(() => selectedIndex = index),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: selectedIndex == index
+                              ? Colors.green
+                              : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(question.answers[index]),
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+
+                ElevatedButton(
+                  onPressed: selectedIndex == null
+                      ? null
+                      : () => nextQuestion(provider),
+                  child: const Text("Next"),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

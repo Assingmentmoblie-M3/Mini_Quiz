@@ -1,17 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/HomeScreen/HomeScreen.dart';
 import 'package:mini_quiz/pages/HomeScreen/TopicCard.dart';
+import 'package:mini_quiz/pages/user_side/levelpage.dart';
 import 'package:mini_quiz/provider/selectionScreen_provider.dart';
 import 'package:provider/provider.dart';
-// import 'package:quiz_minidemo/TopicCard.dart';
-// import 'package:mini_quiz_demo/Screen/TopicCard.dart';
 
 class SelectionScreen extends StatefulWidget {
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
 }
-
 class _SelectionScreenState extends State<SelectionScreen> {
   @override
   void initState() {
@@ -19,6 +16,16 @@ class _SelectionScreenState extends State<SelectionScreen> {
     Future.microtask(
       () => context.read<SelectionscreenProvider>().fetchCategories(),
     );
+  }
+
+  Color _getColor(int index) {
+    List<Color> colors = [
+      Color(0xFFE88BC3), // pink
+      Color(0xFFE0C300), // yellow
+      Color(0xFFF39A4D), // orange
+      Color(0xFF9BAFE3), // blue
+    ];
+    return colors[index % colors.length];
   }
 
   @override
@@ -63,32 +70,32 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   ),
                   SizedBox(height: 40),
                   Expanded(
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                        childAspectRatio: 1.1,
-                      ),
-                      itemCount: provider.categories.length,
-                      itemBuilder: (context, index) {
-                        final category = provider.categories[index];
-                        return Topiccard(
-                          title: category.name,
-                          color: Colors.green,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => Homescreen(
-                                  /*categoryId: category.id,
-                                  categoryName: category.name,*/
-                                ),
+                    child: SingleChildScrollView(
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 20,
+                        runSpacing: 20,
+                        children: provider.categories.map((category) {
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 2 - 40,
+                            height: MediaQuery.of(context).size.width / 2 - 40,
+                            child: Topiccard(
+                              title: category.name,
+                              color: _getColor(
+                                provider.categories.indexOf(category),
                               ),
-                            );
-                          },
-                        );
-                      },
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => LevelPage(catagoryId: category.id),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],

@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import '../service/api_fetch.dart';
+
 class CategoryModel {
   final int id;
   final String name;
-  CategoryModel({
-    required this.id,
-    required this.name,
-  });
+  CategoryModel({required this.id, required this.name});
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
-    return CategoryModel(
-      id: json['category_id'],
-      name: json['category_name'],
-    );
+    return CategoryModel(id: json['category_id'], name: json['category_name']);
   }
 }
+
 class SelectionscreenProvider extends ChangeNotifier {
   List<CategoryModel> categories = [];
   bool isLoading = false;
