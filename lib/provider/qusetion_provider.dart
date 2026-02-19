@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../service/api_fetch.dart';
+
 class QuestionProvider extends ChangeNotifier {
   List<Map<String, dynamic>> questions = [];
   bool isLoading = false;
@@ -21,6 +22,7 @@ class QuestionProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+
   Future<bool> addQuestion({
     required String question,
     required int score,

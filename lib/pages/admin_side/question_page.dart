@@ -122,12 +122,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                                    RichText(
+                  RichText(
                     text: const TextSpan(
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C),fontFamily: 'Fredoka',),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Users',
@@ -140,7 +143,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height:5,),
+                  const SizedBox(height: 5),
                   const Text(
                     "Questions",
                     style: TextStyle(
@@ -149,7 +152,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                                    const SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Align(
@@ -159,8 +162,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) =>
-                                  ViewUserScreen(),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      ViewUserScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
@@ -353,4 +357,3 @@ class _QuestionScreenState extends State<QuestionScreen> {
     );
   }
 }
-

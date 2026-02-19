@@ -3,12 +3,13 @@ import 'package:mini_quiz/provider/category_provider.dart';
 import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
+
 class CategoryScreen extends StatefulWidget {
   final dynamic categoryId;
   final String? name;
   final String? description;
   CategoryScreen({Key? key, this.categoryId, this.name, this.description})
-    :super(key: key);
+    : super(key: key);
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
@@ -124,7 +125,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                    ViewCategoryScreen(),
+                                      ViewCategoryScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),

@@ -46,7 +46,11 @@ class CategoryProvider extends ChangeNotifier {
   }
 
   //UPDATE
-  Future<bool> updateCategory(int categoryId, String name, String? description) async {
+  Future<bool> updateCategory(
+    int categoryId,
+    String name,
+    String? description,
+  ) async {
     final response = await ApiService.patch("category/$categoryId", {
       "name": name,
       "description": description,

@@ -11,7 +11,6 @@ class Topiccard extends StatelessWidget {
     required this.color,
     this.onTap,
   });
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector( 

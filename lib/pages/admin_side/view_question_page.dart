@@ -5,13 +5,11 @@ import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/question_page.dart';
 import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:provider/provider.dart';
-
 class ViewQuestionScreen extends StatefulWidget {
   const ViewQuestionScreen({super.key});
   @override
   State<ViewQuestionScreen> createState() => _ViewQuestionScreenState();
 }
-
 class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
   String searchText = "";
   @override

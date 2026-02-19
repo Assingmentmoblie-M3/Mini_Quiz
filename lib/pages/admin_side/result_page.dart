@@ -12,7 +12,6 @@ class ResultScreen extends StatefulWidget {
   final String? userEmail;
   final int? totalScore;
   final String? status;
-
   const ResultScreen({
     this.id,
     this.userEmail,

@@ -10,13 +10,7 @@ class UserScreen extends StatefulWidget {
   final int? roleId;
   final int? status;
 
-  const UserScreen({
-    this.id,
-    this.email,
-    this.roleId,
-    this.status,
-    super.key,
-  });
+  const UserScreen({this.id, this.email, this.roleId, this.status, super.key});
 
   @override
   State<UserScreen> createState() => _UserScreenState();
@@ -34,9 +28,9 @@ class _UserScreenState extends State<UserScreen> {
 
   Future<void> _saveUser() async {
     if (_emailController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter user email")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please enter user email")));
       return;
     }
 
@@ -48,14 +42,14 @@ class _UserScreenState extends State<UserScreen> {
     setState(() => _isSubmitting = false);
 
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("User added successfully")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("User added successfully")));
       _emailController.clear();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to add user")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Failed to add user")));
     }
   }
 
@@ -78,7 +72,10 @@ class _UserScreenState extends State<UserScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C),fontFamily: 'Fredoka',),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Users',
@@ -110,8 +107,9 @@ class _UserScreenState extends State<UserScreen> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) =>
-                                  ViewUserScreen(),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      ViewUserScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),

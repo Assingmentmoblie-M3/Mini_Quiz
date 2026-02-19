@@ -112,7 +112,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                         });
                       },
                       searchHint: "Search users...",
-                      child:UserTable(),
+                      child: UserTable(),
                     ),
                   ),
                 ],

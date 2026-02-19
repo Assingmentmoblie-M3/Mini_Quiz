@@ -34,14 +34,17 @@ class _AnswerScreenState extends State<AnswerScreen> {
                       children: [
                         TextSpan(
                           text: 'Home > ',
-                          style: TextStyle(color: Color(0xFF8C8C8C), fontFamily: 'Fredoka'),
+                          style: TextStyle(
+                            color: Color(0xFF8C8C8C),
+                            fontFamily: 'Fredoka',
+                          ),
                         ),
                         TextSpan(
                           text: 'Answers',
                           style: TextStyle(
                             color: Color(0xFF5C5C5C),
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Fredoka'
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                       ],
@@ -114,7 +117,6 @@ class _AnswerScreenState extends State<AnswerScreen> {
 
                           DropdownButtonFormField<String>(
                             decoration: InputDecoration(
-                              
                               labelText: "Select Question",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -193,8 +195,10 @@ class _AnswerScreenState extends State<AnswerScreen> {
                             ),
                             child: const Text(
                               "Save",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
@@ -210,6 +214,7 @@ class _AnswerScreenState extends State<AnswerScreen> {
     );
   }
 }
+
 class AnswerInput extends StatelessWidget {
   final String label;
   final bool isCorrect;
@@ -230,7 +235,6 @@ class AnswerInput extends StatelessWidget {
           value: isCorrect,
           onChanged: onChanged,
           activeColor: const Color(0xFF007F06),
-          
         ),
         Expanded(
           child: TextField(

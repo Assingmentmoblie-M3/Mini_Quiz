@@ -10,7 +10,6 @@ class ViewAnswerScreen extends StatefulWidget {
   @override
   State<ViewAnswerScreen> createState() => _ViewAnswerScreenState();
 }
-
 class _ViewAnswerScreenState extends State<ViewAnswerScreen> {
   @override
   Widget build(BuildContext context) {

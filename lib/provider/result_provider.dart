@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../service/api_fetch.dart';
+
 class Result {
   final int resultId;
   final int userId;
@@ -34,7 +35,6 @@ class Result {
     );
   }
 }
-
 
 class ResultProvider extends ChangeNotifier {
   List<Result> results = [];
@@ -73,6 +73,7 @@ class ResultProvider extends ChangeNotifier {
 
     return false;
   }
+
   Future<bool> deleteResult(int id) async {
     final response = await ApiService.delete("result", id);
 

@@ -9,7 +9,9 @@ class AuthProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final response = await ApiService.post("auth/login", {"email": emailInput});
+      final response = await ApiService.post("auth/login", {
+        "email": emailInput,
+      });
       if (response["result"] == true) {
         email = response["data"]["email"];
         roleId = response["data"]["role_id"];
@@ -28,6 +30,7 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
   bool get isAdmin => roleId == 1;
   bool get isUser => roleId == 0;
 }

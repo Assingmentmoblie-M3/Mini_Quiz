@@ -8,7 +8,6 @@ class LevelProvider extends ChangeNotifier {
   Future<void> fetchLevel() async {
     isloading = true;
     notifyListeners();
-
     final response = await ApiService.get("levels");
     if (response != null && response['result'] == true) {
       level = response['data'];

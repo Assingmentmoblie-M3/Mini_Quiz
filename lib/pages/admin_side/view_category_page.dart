@@ -10,7 +10,6 @@ class ViewCategoryScreen extends StatefulWidget {
   @override
   State<ViewCategoryScreen> createState() => _ViewCategoryScreenState();
 }
-
 class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
   String searchText = "";
   @override
@@ -23,7 +22,6 @@ class _ViewCategoryScreenState extends State<ViewCategoryScreen> {
       ).fetchCategories(),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

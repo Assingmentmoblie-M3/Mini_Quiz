@@ -4,17 +4,17 @@ import 'package:mini_quiz/pages/HomeScreen/HomeScreen.dart';
 import 'package:mini_quiz/provider/answer_provider.dart';
 import 'package:mini_quiz/provider/auth_provider.dart';
 import 'package:mini_quiz/provider/category_provider.dart';
+import 'package:mini_quiz/provider/fetchlevel_provider.dart';
 import 'package:mini_quiz/provider/level_provider.dart';
+import 'package:mini_quiz/provider/quiz1_provider.dart';
 import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:mini_quiz/provider/result_provider.dart';
 import 'package:mini_quiz/provider/selectionScreen_provider.dart';
 import 'package:mini_quiz/provider/user_provider.dart';
 import 'package:provider/provider.dart';
-
 void main() {
   runApp(DevicePreview(builder: (_) => const MyApp()));
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_)=> ResultProvider()),
         //selection topic form database
         ChangeNotifierProvider(create: (_) => SelectionscreenProvider()),
-
+        ChangeNotifierProvider(create: (_) => LevelProviders()),
+        ChangeNotifierProvider(create: (_) => QuizProvider()),
       ],
       child:  MaterialApp(
       debugShowCheckedModeBanner: false,

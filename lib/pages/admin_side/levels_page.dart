@@ -33,16 +33,19 @@ class _LevelsScreenState extends State<LevelsScreen> {
   @override
   void initState() {
     super.initState();
-    _levelNameController =
-        TextEditingController(text: widget.levelName ?? "");
-    _descriptionController =
-        TextEditingController(text: widget.description ?? "");
+    _levelNameController = TextEditingController(text: widget.levelName ?? "");
+    _descriptionController = TextEditingController(
+      text: widget.description ?? "",
+    );
     selectedCategoryId = widget.categoryId;
 
     // Fetch categories
-    Future.microtask(() =>
-        Provider.of<CategoryProvider>(context, listen: false)
-            .fetchCategories());
+    Future.microtask(
+      () => Provider.of<CategoryProvider>(
+        context,
+        listen: false,
+      ).fetchCategories(),
+    );
   }
 
   @override
@@ -55,8 +58,9 @@ class _LevelsScreenState extends State<LevelsScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please select a category")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please select a category")));
       return;
     }
 
@@ -87,8 +91,9 @@ class _LevelsScreenState extends State<LevelsScreen> {
     if (success) {
       Navigator.pop(context);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Something went wrong")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
 
@@ -128,7 +133,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height:10,),
+                  const SizedBox(height: 10),
                   const Text(
                     "Levels",
                     style: TextStyle(
@@ -147,8 +152,9 @@ class _LevelsScreenState extends State<LevelsScreen> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) =>
-                                  ViewLevelScreen(),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      ViewLevelScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),
@@ -168,7 +174,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height:15),
+                  const SizedBox(height: 15),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -225,7 +231,8 @@ class _LevelsScreenState extends State<LevelsScreen> {
                                 builder: (context, provider, child) {
                                   if (provider.isLoading) {
                                     return const Center(
-                                        child: CircularProgressIndicator());
+                                      child: CircularProgressIndicator(),
+                                    );
                                   }
                                   return DropdownButtonFormField<int>(
                                     decoration: InputDecoration(
@@ -235,11 +242,14 @@ class _LevelsScreenState extends State<LevelsScreen> {
                                     hint: const Text("Choose Category"),
                                     items: provider.categories
                                         .map<DropdownMenuItem<int>>((cat) {
-                                      return DropdownMenuItem<int>(
-                                        value: cat['category_id'],
-                                        child: Text(cat['category_name'] ?? ""),
-                                      );
-                                    }).toList(),
+                                          return DropdownMenuItem<int>(
+                                            value: cat['category_id'],
+                                            child: Text(
+                                              cat['category_name'] ?? "",
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
                                     onChanged: (value) {
                                       setState(() {
                                         selectedCategoryId = value;
@@ -278,7 +288,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                                         ),
                                 ),
                               ),
-                              const SizedBox(height:20,),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),

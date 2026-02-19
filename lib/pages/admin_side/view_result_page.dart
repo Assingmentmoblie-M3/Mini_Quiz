@@ -4,7 +4,6 @@ import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'result_page.dart';
-import 'package:mini_quiz/components/action_button.dart';
 class ViewResultScreen extends StatefulWidget {
   const ViewResultScreen({super.key});
   @override

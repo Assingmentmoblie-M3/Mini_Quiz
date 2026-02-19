@@ -19,8 +19,9 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<LevelProvider>(context, listen: false).fetchLevel());
+    Future.microtask(
+      () => Provider.of<LevelProvider>(context, listen: false).fetchLevel(),
+    );
   }
 
   @override
@@ -74,14 +75,15 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (_) => LevelsScreen()),
+                          MaterialPageRoute(builder: (_) => LevelsScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF007F06),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 20),
+                          horizontal: 25,
+                          vertical: 20,
+                        ),
                       ),
                       child: const Text(
                         "Add New Level",
@@ -149,46 +151,47 @@ class _LevelsTableState extends State<LevelsTable> {
               return DataRow(
                 cells: [
                   DataCell(Text("${index + 1}")),
-                  DataCell(ActionButtons(
-                    onEdit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LevelsScreen(
-                            levelId: level['level_id'],
-                            levelName: level['level_name'],
-                            description: level['description'],
-                            categoryId: level['category']?['id'],
+                  DataCell(
+                    ActionButtons(
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => LevelsScreen(
+                              levelId: level['level_id'],
+                              levelName: level['level_name'],
+                              description: level['description'],
+                              categoryId: level['category']?['id'],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    onDelete: () async {
-                      bool? confirm = await showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title:
-                              const Text("Are you sure you want to delete?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.pop(context, false),
-                              child: const Text("Cancel"),
+                        );
+                      },
+                      onDelete: () async {
+                        bool? confirm = await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text(
+                              "Are you sure you want to delete?",
                             ),
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.pop(context, true),
-                              child: const Text("Delete"),
-                            ),
-                          ],
-                        ),
-                      );
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text("Delete"),
+                              ),
+                            ],
+                          ),
+                        );
 
-                      if (confirm == true) {
-                        await provider.deleteLevel(level['level_id']);
-                      }
-                    },
-                  )),
+                        if (confirm == true) {
+                          await provider.deleteLevel(level['level_id']);
+                        }
+                      },
+                    ),
+                  ),
                   DataCell(Text(level['level_name'] ?? "")),
                   DataCell(Text(level['description'] ?? "")),
                   DataCell(Text(level['category']?['name'] ?? "")),

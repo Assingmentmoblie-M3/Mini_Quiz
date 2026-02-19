@@ -1,8 +1,7 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/HomeScreen/LoginScren.dart';
-// import 'package:quiz_minidemo/LoginScren.dart';
-// import 'package:mini_quiz_demo/Screen/LoginScreen.dart';
+
 
 class Homescreen extends StatelessWidget {
   const Homescreen({super.key});
