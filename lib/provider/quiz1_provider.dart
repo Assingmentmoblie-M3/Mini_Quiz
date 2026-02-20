@@ -35,13 +35,11 @@ class QuizProvider extends ChangeNotifier {
   List<QuestionModel> questions = [];
   bool isLoading = false;
 
-  // GET method version
   Future<void> fetchQuestions(int categoryId, int levelId) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      // ❌ ពេលនេះប្រើ GET និង pass query parameters
       final response = await ApiService.get(
         "question?category_id=$categoryId&level_id=$levelId",
       );

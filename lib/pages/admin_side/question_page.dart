@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/components/action_button.dart';
+import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
 import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:provider/provider.dart';
@@ -101,8 +103,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
     setState(() => _isSubmitting = false);
 
     if (success) {
+      if (!mounted) return;
       Navigator.pop(context);
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
@@ -164,7 +168,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      ViewUserScreen(),
+                                      ViewQuestionScreen(),
                               transitionDuration: Duration.zero,
                               reverseTransitionDuration: Duration.zero,
                             ),

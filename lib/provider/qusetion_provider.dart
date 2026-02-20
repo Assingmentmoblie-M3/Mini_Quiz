@@ -4,24 +4,29 @@ import '../service/api_fetch.dart';
 class QuestionProvider extends ChangeNotifier {
   List<Map<String, dynamic>> questions = [];
   bool isLoading = false;
-  Future<void> fetchQuestions() async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      final response = await ApiService.get("questions");
-      print("Fetch Questions Response: $response");
-      if (response != null && response['result'] == true) {
-        questions = List<Map<String, dynamic>>.from(response['data']);
-      } else {
-        questions = [];
-      }
-    } catch (e) {
-      print("Error fetching questions: $e");
+Future<void> fetchQuestions() async {
+  isLoading = true;
+  notifyListeners();
+  try {
+    final response = await ApiService.get("questions"); // ពិនិត្យ 's' កន្លែងនេះ
+    
+    // បន្ថែមការ print ដើម្បីដឹងថា data មកដល់ឬអត់
+    print("Full Response: $response");
+
+    if (response != null && response['result'] == true) {
+      // ត្រូវប្រាកដថា Backend បញ្ជូន response['data'] មកជា List
+      questions = List<Map<String, dynamic>>.from(response['data']);
+      print("Total Questions Loaded: ${questions.length}");
+    } else {
       questions = [];
     }
-    isLoading = false;
-    notifyListeners();
+  } catch (e) {
+    print("Error fetching questions: $e");
+    questions = [];
   }
+  isLoading = false;
+  notifyListeners();
+}
 
   Future<bool> addQuestion({
     required String question,

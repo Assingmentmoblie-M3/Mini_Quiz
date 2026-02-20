@@ -124,7 +124,7 @@ class Sidebar extends StatelessWidget {
               context,
               PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                     ViewLevelScreen(),
+                    const ViewLevelScreen(),
                 transitionDuration: Duration.zero, // no animation
                 reverseTransitionDuration:
                     Duration.zero, // no animation when back

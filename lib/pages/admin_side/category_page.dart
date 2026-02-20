@@ -59,8 +59,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
       _isSubmitting = false;
     });
     if (success) {
+      if (!mounted) return;
       Navigator.pop(context);
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));

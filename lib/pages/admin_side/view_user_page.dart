@@ -125,9 +125,14 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
   }
 }
 
-class UserTable extends StatelessWidget {
+class UserTable extends StatefulWidget {
   const UserTable({super.key});
 
+  @override
+  State<UserTable> createState() => _UserTableState();
+}
+
+class _UserTableState extends State<UserTable> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
@@ -141,7 +146,7 @@ class UserTable extends StatelessWidget {
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            columns: const [
+            columns: [
               DataColumn(
                 numeric: true,
                 label: Padding(
@@ -234,16 +239,16 @@ class UserTable extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (_) => UserScreen(
+                              id: user['user_id'], // 🔥 Pass this!
                               email: user['email'],
                               roleId: user['role_id'],
                               status: user['status'],
-                              id: user['user_id'],
                             ),
                           ),
                         );
                       },
                       onDelete: () async {
-                        bool confirmed = await showDialog(
+                        bool? confirmed = await showDialog<bool>(
                           context: context,
                           builder: (_) => AlertDialog(
                             title: const Text("Are you sure to delete user?"),
@@ -259,7 +264,8 @@ class UserTable extends StatelessWidget {
                             ],
                           ),
                         );
-                        if (confirmed) {
+
+                        if (confirmed == true) {
                           await Provider.of<UserProvider>(
                             context,
                             listen: false,

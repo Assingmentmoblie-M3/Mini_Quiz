@@ -4,88 +4,63 @@ import '../service/api_fetch.dart';
 class AnswerProvider extends ChangeNotifier {
   List answers = [];
   bool isLoading = false;
+  List questions = [];
 
+  // FETCH
   Future<void> fetchAnswers() async {
     isLoading = true;
     notifyListeners();
-
-    final response = await ApiService.get("answer");
-
-    if (response != null && response['result'] == true) {
-      answers = response['data'];
+    final response = await ApiService.get("answers");
+    if (response != null && response["result"] == true) {
+      answers = response["data"];
+    } else {
+      answers = [];
     }
-
     isLoading = false;
     notifyListeners();
   }
 
-  Future<Map?> getAnswerByQuestion(int questionId) async {
-    final response = await ApiService.get("answer/question/$questionId");
-
-    if (response != null && response['result'] == true) {
-      return response['data'];
+  Future<void> fetchQuestions() async {
+    final response = await ApiService.get(
+      "questions",
+    ); // ផ្លូវទៅកាន់ API Questions របស់អ្នក
+    if (response != null && response["result"] == true) {
+      questions = response["data"];
+      notifyListeners();
     }
-
-    return null;
   }
 
-  Future<bool> addAnswer({
-    required int questionId,
-    required String answerA,
-    required String answerB,
-    required String answerC,
-    required String answerD,
-    required String correctOption,
-  }) async {
-    final response = await ApiService.post("answer", {
-      "question_id": questionId,
-      "answer_a": answerA,
-      "answer_b": answerB,
-      "answer_c": answerC,
-      "answer_d": answerD,
-      "correct_option": correctOption,
-    });
+  // CREATE / UPDATE (ប្រើ Map ដើម្បីផ្ញើទិន្នន័យច្រើន column)
+  Future<bool> saveAnswer(Map<String, dynamic> data, {int? id}) async {
+    final response = id == null
+        ? await ApiService.post("answer", data)
+        : await ApiService.patch("answer/$id", data);
 
-    if (response != null && response['result'] == true) {
+    if (response != null && response["result"] == true) {
       await fetchAnswers();
       return true;
     }
-
     return false;
   }
 
-  Future<bool> updateAnswer({
-    required int id,
-    required String answerA,
-    required String answerB,
-    required String answerC,
-    required String answerD,
-    required String correctOption,
-  }) async {
-    final response = await ApiService.patch("answer/$id", {
-      "answer_a": answerA,
-      "answer_b": answerB,
-      "answer_c": answerC,
-      "answer_d": answerD,
-      "correct_option": correctOption,
-    });
-
-    if (response != null && response['result'] == true) {
-      await fetchAnswers();
-      return true;
-    }
-
-    return false;
-  }
-
-  Future<bool> deleteAnswer(int id) async {
+  // DELETE
+  Future<void> deleteAnswer(int id) async {
     final response = await ApiService.delete("answer", id);
-
-    if (response != null && response['result'] == true) {
+    if (response != null && response["result"] == true) {
       await fetchAnswers();
-      return true;
     }
+  }
 
-    return false;
+  // សម្រាប់កែប្រែទិន្នន័យ (Update)
+  Future<bool> updateAnswer(int id, Map<String, dynamic> data) async {
+    final response = await ApiService.patch("answer/$id", data);
+
+    if (response != null && response["result"] == true) {
+      await fetchAnswers(); // refresh តារាងឡើងវិញ
+      return true;
+    } else {
+      print("Update Error: ${response?["message"]}");
+      return false;
+    }
   }
 }

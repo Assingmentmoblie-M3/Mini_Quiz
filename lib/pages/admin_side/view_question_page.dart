@@ -5,11 +5,13 @@ import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/question_page.dart';
 import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:provider/provider.dart';
+
 class ViewQuestionScreen extends StatefulWidget {
   const ViewQuestionScreen({super.key});
   @override
   State<ViewQuestionScreen> createState() => _ViewQuestionScreenState();
 }
+
 class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
   String searchText = "";
   @override
@@ -135,7 +137,9 @@ class _QuestionsTableState extends State<QuestionsTable> {
         if (provider.questions.isEmpty) {
           return const Center(child: Text("No Question Fount"));
         }
-        return SingleChildScrollView(
+        return LayoutBuilder(
+          builder: (context, constraints){
+           return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columnSpacing: 30,
@@ -317,7 +321,77 @@ class _QuestionsTableState extends State<QuestionsTable> {
             }),
           ),
         );
+          },
+        );
       },
     );
   }
 }
+
+/*class _QuestionsTableState extends State<QuestionsTable> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<QuestionProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (provider.questions.isEmpty) {
+          return const Center(child: Text("No Question Found"));
+        }
+
+        return LayoutBuilder( // ប្រើ LayoutBuilder ដើម្បីដឹងពីទទឹងអេក្រង់
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              scrollDirection: Axis.vertical, // ឱ្យ Scroll ចុះក្រោមបាន
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal, // ឱ្យ Scroll ទៅឆ្វេងស្ដាំបាន
+                child: DataTable(
+                  columnSpacing: 20,
+                  columns: const [
+                    DataColumn(label: Text("No.", style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text("Actions", style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text("Question", style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text("Score", style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text("Category", style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text("Level", style: TextStyle(fontWeight: FontWeight.bold))),
+                    DataColumn(label: Text("Created_at", style: TextStyle(fontWeight: FontWeight.bold))),
+                  ],
+                  rows: List.generate(provider.questions.length, (index) {
+                    final q = provider.questions[index];
+                    return DataRow(
+                      cells: [
+                        DataCell(Text("${index + 1}")),
+                        DataCell(
+                          ActionButtons(
+                            onEdit: () { /* កូដ Edit របស់អ្នក */ },
+                            onDelete: () async { /* កូដ Delete របស់អ្នក */ },
+                          ),
+                        ),
+                        DataCell(
+                          Container(
+                            width: 300, // កំណត់ទទឹងសំណួរ កុំឱ្យវាវែងពេក
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              q['question'] ?? "",
+                              softWrap: true,
+                            ),
+                          ),
+                        ),
+                        DataCell(Text(q['score']?.toString() ?? "")),
+                        DataCell(Text(q['category']?['category_name'] ?? "")),
+                        DataCell(Text(q['level']?['level_name'] ?? "")),
+                        DataCell(Text(q['created_at'] ?? "")),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+*/

@@ -89,8 +89,10 @@ class _LevelsScreenState extends State<LevelsScreen> {
     setState(() => _isSubmitting = false);
 
     if (success) {
+      if (!mounted) return;
       Navigator.pop(context);
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));

@@ -4,6 +4,7 @@ import '../service/api_fetch.dart';
 class UserProvider extends ChangeNotifier {
   List users = [];
   bool isLoading = false;
+  
 
   Future<void> fetchUsers() async {
     isLoading = true;
@@ -25,23 +26,37 @@ class UserProvider extends ChangeNotifier {
     return false;
   }
 
-  Future<bool> updateUser({
-    required int id,
-    required String email,
-    required int roleId,
-    required int status,
-  }) async {
-    final response = await ApiService.patch("user/$id", {
+Future<bool> updateUser({
+  required int id,
+  required String email,
+  required int roleId,
+  required int status,
+}) async {
+  final response = await ApiService.patch(
+    "user/$id",
+    {
       "email": email,
       "role_id": roleId,
       "status": status,
-    });
-    if (response != null && response['result'] == true) {
-      await fetchUsers();
-      return true;
+    },
+  );
+
+  if (response != null && response['result'] == true) {
+    int index = users.indexWhere((u) => u['user_id'] == id);
+
+    if (index != -1) {
+      users[index] = {
+        ...users[index],
+        "email": email,
+        "role_id": roleId,
+        "status": status,
+      };
     }
-    return false;
+    return true;
   }
+
+  return false;
+}
 
   Future<bool> deleteUser(int id) async {
     final response = await ApiService.delete("user", id);
