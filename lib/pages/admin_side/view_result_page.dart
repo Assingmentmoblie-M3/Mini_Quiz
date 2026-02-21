@@ -135,132 +135,134 @@ class ResultTable extends StatelessWidget {
         if (provider.results.isEmpty) {
           return const Center(child: Text("No result found"));
         }
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const [
-              DataColumn(
-                numeric: true,
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Center(
-                    child: Text(
-                      "No.",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+        return Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(
+                  numeric: true,
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: Center(
+                      child: Text(
+                        "No.",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Actions",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Center(
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "User Email",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Center(
+                      child: Text(
+                        "User Email",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60),
-                  child: Center(
-                    child: Text(
-                      "Total Score",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: Center(
+                      child: Text(
+                        "Total Score",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
-                  child: Center(
-                    child: Text(
-                      "Status",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35),
+                    child: Center(
+                      child: Text(
+                        "Status",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Created At",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Center(
+                      child: Text(
+                        "Created At",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-                                  rows: List.generate(provider.results.length, (index) {
-                        final result = provider.results[index];
-                        return DataRow(
-                          cells: [
-                            DataCell(Text("${index + 1}")),
-                            DataCell(Text(result.userEmail)),
-                            DataCell(Text(result.categoryName)),
-                            DataCell(Text(result.totalScore.toString())),
-                            DataCell(Text(result.status)),
-                            DataCell(Text(result.createdAt)),
-                          ],
-                        );
-                      }),
-           /* rows: List.generate(provider.results.length, (index) {
-              final result = provider.results[index];
-              return DataRow(
-                cells: [
-                  DataCell(Text("${index + 1}")),
-                  DataCell(
-                    ActionButtons(
-                      onEdit: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => ResultScreen()),
-                        );
-                      },
-                      onDelete: () {},
+              ],
+                                    rows: List.generate(provider.results.length, (index) {
+                          final result = provider.results[index];
+                          return DataRow(
+                            cells: [
+                              DataCell(Text("${index + 1}")),
+                              DataCell(Text(result.userEmail)),
+                              DataCell(Text(result.categoryName)),
+                              DataCell(Text(result.totalScore.toString())),
+                              DataCell(Text(result.status)),
+                              DataCell(Text(result.createdAt)),
+                            ],
+                          );
+                        }),
+             /* rows: List.generate(provider.results.length, (index) {
+                final result = provider.results[index];
+                return DataRow(
+                  cells: [
+                    DataCell(Text("${index + 1}")),
+                    DataCell(
+                      ActionButtons(
+                        onEdit: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => ResultScreen()),
+                          );
+                        },
+                        onDelete: () {},
+                      ),
                     ),
-                  ),
-                  DataCell(Text(result.userEmail)),
-                  DataCell(Text(result.totalScore.toString())),
-                  DataCell(Text(result.status)),
-                  DataCell(Text(result.createdAt)),
-                ],
-              );
-            }),*/
+                    DataCell(Text(result.userEmail)),
+                    DataCell(Text(result.totalScore.toString())),
+                    DataCell(Text(result.status)),
+                    DataCell(Text(result.createdAt)),
+                  ],
+                );
+              }),*/
+            ),
           ),
         );
       },

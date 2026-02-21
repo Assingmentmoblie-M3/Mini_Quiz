@@ -1,4 +1,4 @@
-/*import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/provider/quiz1_provider.dart';
 import 'package:provider/provider.dart';
@@ -210,9 +210,9 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
     );
   }
 }
-*/
 
-import 'package:flutter/material.dart';
+
+/*import 'package:flutter/material.dart';
 import 'package:mini_quiz/provider/quiz1_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -336,3 +336,4 @@ class _Quiz_QCM1State extends State<Quiz_QCM1> {
     );
   }
 }
+*/

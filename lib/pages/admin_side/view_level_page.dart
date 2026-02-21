@@ -135,70 +135,72 @@ class _LevelsTableState extends State<LevelsTable> {
           return const Center(child: Text("No Levels Found"));
         }
 
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const [
-              DataColumn(label: Text("No.")),
-              DataColumn(label: Text("Actions")),
-              DataColumn(label: Text("Level Name")),
-              DataColumn(label: Text("Description")),
-              DataColumn(label: Text("Category")),
-              DataColumn(label: Text("Created Date")),
-            ],
-            rows: List.generate(provider.level.length, (index) {
-              final level = provider.level[index];
-              return DataRow(
-                cells: [
-                  DataCell(Text("${index + 1}")),
-                  DataCell(
-                    ActionButtons(
-                      onEdit: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => LevelsScreen(
-                              levelId: level['level_id'],
-                              levelName: level['level_name'],
-                              description: level['description'],
-                              categoryId: level['category']?['id'],
-                            ),
-                          ),
-                        );
-                      },
-                      onDelete: () async {
-                        bool? confirm = await showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text(
-                              "Are you sure you want to delete?",
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: const Text("Cancel"),
+        return Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text("No.")),
+                DataColumn(label: Text("Actions")),
+                DataColumn(label: Text("Level Name")),
+                DataColumn(label: Text("Description")),
+                DataColumn(label: Text("Category")),
+                DataColumn(label: Text("Created Date")),
+              ],
+              rows: List.generate(provider.level.length, (index) {
+                final level = provider.level[index];
+                return DataRow(
+                  cells: [
+                    DataCell(Text("${index + 1}")),
+                    DataCell(
+                      ActionButtons(
+                        onEdit: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => LevelsScreen(
+                                levelId: level['level_id'],
+                                levelName: level['level_name'],
+                                description: level['description'],
+                                categoryId: level['category']?['id'],
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: const Text("Delete"),
+                            ),
+                          );
+                        },
+                        onDelete: () async {
+                          bool? confirm = await showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text(
+                                "Are you sure you want to delete?",
                               ),
-                            ],
-                          ),
-                        );
-
-                        if (confirm == true) {
-                          await provider.deleteLevel(level['level_id']);
-                        }
-                      },
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text("Delete"),
+                                ),
+                              ],
+                            ),
+                          );
+          
+                          if (confirm == true) {
+                            await provider.deleteLevel(level['level_id']);
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  DataCell(Text(level['level_name'] ?? "")),
-                  DataCell(Text(level['description'] ?? "")),
-                  DataCell(Text(level['category']?['name'] ?? "")),
-                  DataCell(Text(level['created_at'] ?? "")),
-                ],
-              );
-            }),
+                    DataCell(Text(level['level_name'] ?? "")),
+                    DataCell(Text(level['description'] ?? "")),
+                    DataCell(Text(level['category']?['name'] ?? "")),
+                    DataCell(Text(level['created_at'] ?? "")),
+                  ],
+                );
+              }),
+            ),
           ),
         );
       },

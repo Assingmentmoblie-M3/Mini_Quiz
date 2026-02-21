@@ -143,229 +143,231 @@ class _CategoryTableState extends State<CategoryTable> {
         if (provider.categories.isEmpty) {
           return const Center(child: Text("No Categories Found"));
         }
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: const [
-              DataColumn(
-                label: Text(
-                  "No.",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5E5E5E),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text(
-                    "Actions",
+        return Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(
+                  label: Text(
+                    "No.",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF5E5E5E),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text(
-                    "Category Name",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF5E5E5E),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60),
-                  child: Text(
-                    "Description",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF5E5E5E),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
-                  child: Text(
-                    "Status",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF5E5E5E),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text(
-                    "Created At",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF5E5E5E),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-            rows: List.generate(provider.categories.length, (index) {
-              final category = provider.categories[index];
-              return DataRow(
-                cells: [
-                  DataCell(
-                    Text(
-                      "${index + 1}",
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Text(
+                      "Actions",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF5E5E5E),
                       ),
                     ),
                   ),
-                  // Actions: Edit / Delete
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              // Open Edit Category screen with existing data
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => CategoryScreen(
-                                    categoryId: category["category_id"],
-                                    name: category["category_name"],
-                                    description: category["description"],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () async {
-                              final confirm = await showDialog<bool>(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: const Text("Delete Category"),
-                                  content: const Text(
-                                    "Are you sure you want to delete this category?",
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, false),
-                                      child: const Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF5E5E5E),
-                                        ),
-                                      ),
+                ),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Text(
+                      "Category Name",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 60),
+                    child: Text(
+                      "Description",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35),
+                    child: Text(
+                      "Status",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Text(
+                      "Created At",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5E5E5E),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              rows: List.generate(provider.categories.length, (index) {
+                final category = provider.categories[index];
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        "${index + 1}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
+                      ),
+                    ),
+                    // Actions: Edit / Delete
+                    DataCell(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () {
+                                // Open Edit Category screen with existing data
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => CategoryScreen(
+                                      categoryId: category["category_id"],
+                                      name: category["category_name"],
+                                      description: category["description"],
                                     ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, true),
-                                      child: const Text(
-                                        "Delete",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF5E5E5E),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-
-                              if (confirm == true) {
-                                await provider.deleteCategory(
-                                  category["category_id"],
+                                  ),
                                 );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Text(
-                        category["category_name"] ?? "",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF5E5E5E),
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: const Text("Delete Category"),
+                                    content: const Text(
+                                      "Are you sure you want to delete this category?",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: const Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF5E5E5E),
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: const Text(
+                                          "Delete",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF5E5E5E),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+          
+                                if (confirm == true) {
+                                  await provider.deleteCategory(
+                                    category["category_id"],
+                                  );
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Text(
-                        category["description"] ?? "",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF5E5E5E),
-                        ),
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: (category["status"] == 1)
-                              ? Colors.green.shade100
-                              : Colors.red.shade100,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+          
+                    DataCell(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Text(
-                          (category["status"] == 1) ? "Active" : "Inactive",
+                          category["category_name"] ?? "",
                           style: TextStyle(
-                            color: (category["status"] == 1)
-                                ? Colors.green
-                                : Colors.red,
                             fontWeight: FontWeight.bold,
+                            color: Color(0xFF5E5E5E),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Text(
-                        category["created_at"] ?? "N/A",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF5E5E5E),
+                    DataCell(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Text(
+                          category["description"] ?? "",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF5E5E5E),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            }),
+                    DataCell(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: (category["status"] == 1)
+                                ? Colors.green.shade100
+                                : Colors.red.shade100,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            (category["status"] == 1) ? "Active" : "Inactive",
+                            style: TextStyle(
+                              color: (category["status"] == 1)
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Text(
+                          category["created_at"] ?? "N/A",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF5E5E5E),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ),
           ),
         );
       },

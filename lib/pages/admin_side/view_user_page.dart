@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/pages/admin_side/user_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
-
 class ViewUserScreen extends StatefulWidget {
   const ViewUserScreen({super.key});
 
@@ -143,143 +142,145 @@ class _UserTableState extends State<UserTable> {
         if (provider.users.isEmpty) {
           return const Center(child: Text("No users found"));
         }
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: [
-              DataColumn(
-                numeric: true,
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Center(
-                    child: Text(
-                      "No.",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+        return Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: [
+                DataColumn(
+                  numeric: true,
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Center(
+                      child: Text(
+                        "No.",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Center(
-                    child: Text(
-                      "Actions",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Center(
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  child: Center(
-                    child: Text(
-                      "User Email",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    child: Center(
+                      child: Text(
+                        "User Email",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
-                  child: Center(
-                    child: Text(
-                      "Status",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 35),
+                    child: Center(
+                      child: Text(
+                        "Status",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Created At",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: Center(
+                      child: Text(
+                        "Created At",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-            rows: List.generate(provider.users.length, (index) {
-              final user = provider.users[index];
-              return DataRow(
-                cells: [
-                  DataCell(
-                    Text(
-                      "${index + 1}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+              ],
+              rows: List.generate(provider.users.length, (index) {
+                final user = provider.users[index];
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(
+                        "${index + 1}",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5E5E5E),
+                        ),
                       ),
                     ),
-                  ),
-                  DataCell(
-                    ActionButtons(
-                      onEdit: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => UserScreen(
-                              id: user['user_id'], // 🔥 Pass this!
-                              email: user['email'],
-                              roleId: user['role_id'],
-                              status: user['status'],
-                            ),
-                          ),
-                        );
-                      },
-                      onDelete: () async {
-                        bool? confirmed = await showDialog<bool>(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text("Are you sure to delete user?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: const Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: const Text("Delete"),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        if (confirmed == true) {
-                          await Provider.of<UserProvider>(
+                    DataCell(
+                      ActionButtons(
+                        onEdit: () {
+                          Navigator.push(
                             context,
-                            listen: false,
-                          ).deleteUser(user['user_id']);
-                        }
-                      },
+                            MaterialPageRoute(
+                              builder: (_) => UserScreen(
+                                id: user['user_id'], // 🔥 Pass this!
+                                email: user['email'],
+                                roleId: user['role_id'],
+                                status: user['status'],
+                              ),
+                            ),
+                          );
+                        },
+                        onDelete: () async {
+                          bool? confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text("Are you sure to delete user?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text("Delete"),
+                                ),
+                              ],
+                            ),
+                          );
+          
+                          if (confirmed == true) {
+                            await Provider.of<UserProvider>(
+                              context,
+                              listen: false,
+                            ).deleteUser(user['user_id']);
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  DataCell(Text(user['email'] ?? "")),
-                  DataCell(Text(user['status'] == 1 ? "Active" : "Inactive")),
-                  DataCell(Text(user['created_at'] ?? "")),
-                ],
-              );
-            }),
+                    DataCell(Text(user['email'] ?? "")),
+                    DataCell(Text(user['status'] == 1 ? "Active" : "Inactive")),
+                    DataCell(Text(user['created_at'] ?? "")),
+                  ],
+                );
+              }),
+            ),
           ),
         );
       },

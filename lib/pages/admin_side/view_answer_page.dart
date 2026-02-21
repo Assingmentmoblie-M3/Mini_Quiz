@@ -90,7 +90,7 @@ class _ViewAnswerScreenState extends State<ViewAnswerScreen> {
                           vertical: 18,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
@@ -145,98 +145,100 @@ class _AnswerTableState extends State<AnswerTable> {
           return const Center(child: Text("No data found."));
         }
 
-        return SizedBox(
-          width: double.infinity,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
-              columns: const [
-                DataColumn(label: _Header("No")),
-                DataColumn(label: _Header("Actions")),
-                DataColumn(label: _Header("Questions")),
-                DataColumn(label: _Header("Answer A")),
-                DataColumn(label: _Header("Answer B")),
-                DataColumn(label: _Header("Answer C")),
-                DataColumn(label: _Header("Answer D")),
-                DataColumn(label: _Header("Correct Answers")),
-              ],
-              // ក្នុងផ្នែក DataTable ត្រង់ rows:
-              rows: provider.answers.asMap().entries.map((entry) {
-                int index = entry.key;
-                Map item = entry.value;
-
-                return DataRow(
-                  cells: [
-                    // 1. លេខរៀង (No)
-                    DataCell(Text("${index + 1}")),
-
-                    // 2. សកម្មភាព (Actions)
-                    DataCell(
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.blue,
-                              size: 20,
+        return Expanded(
+          child: SizedBox(
+            width: double.infinity,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
+                columns: const [
+                  DataColumn(label: _Header("No")),
+                  DataColumn(label: _Header("Actions")),
+                  DataColumn(label: _Header("Questions")),
+                  DataColumn(label: _Header("Answer A")),
+                  DataColumn(label: _Header("Answer B")),
+                  DataColumn(label: _Header("Answer C")),
+                  DataColumn(label: _Header("Answer D")),
+                  DataColumn(label: _Header("Correct Answers")),
+                ],
+                // ក្នុងផ្នែក DataTable ត្រង់ rows:
+                rows: provider.answers.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  Map item = entry.value;
+          
+                  return DataRow(
+                    cells: [
+                      // 1. លេខរៀង (No)
+                      DataCell(Text("${index + 1}")),
+          
+                      // 2. សកម្មភាព (Actions)
+                      DataCell(
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
+                              onPressed: () => _navigateToEdit(item),
                             ),
-                            onPressed: () => _navigateToEdit(item),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                              size: 20,
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 20,
+                              ),
+                              onPressed: () => _confirmDelete(item['answer_id']),
                             ),
-                            onPressed: () => _confirmDelete(item['answer_id']),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // 3. ឈ្មោះសំណួរ (Question Name) - ទាញពី Key ដែលយើងបានថែមក្នុង Resource
-                    DataCell(
-                      SizedBox(
-                        width: 150,
-                        child: Text(
-                          // បើ question_text null វានឹងបង្ហាញពាក្យ "No Question" ជំនួស
-                          item['question']?.toString() ?? "No Question",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
+                          ],
                         ),
                       ),
-                    ),
-
-                    // 4. ចម្លើយ A, B, C, D
-                    DataCell(Text(item['answer_a'] ?? "")),
-                    DataCell(Text(item['answer_b'] ?? "")),
-                    DataCell(Text(item['answer_c'] ?? "")),
-                    DataCell(Text(item['answer_d'] ?? "")),
-
-                    // 5. ចម្លើយដែលត្រឹមត្រូវ (Correct Answer)
-                    DataCell(
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          item['is_correct'] ?? "",
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
+          
+                      // 3. ឈ្មោះសំណួរ (Question Name) - ទាញពី Key ដែលយើងបានថែមក្នុង Resource
+                      DataCell(
+                        SizedBox(
+                          width: 150,
+                          child: Text(
+                            // បើ question_text null វានឹងបង្ហាញពាក្យ "No Question" ជំនួស
+                            item['question']?.toString() ?? "No Question",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              }).toList(),
+          
+                      // 4. ចម្លើយ A, B, C, D
+                      DataCell(Text(item['answer_a'] ?? "")),
+                      DataCell(Text(item['answer_b'] ?? "")),
+                      DataCell(Text(item['answer_c'] ?? "")),
+                      DataCell(Text(item['answer_d'] ?? "")),
+          
+                      // 5. ចម្លើយដែលត្រឹមត្រូវ (Correct Answer)
+                      DataCell(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            item['is_correct'] ?? "",
+                            style: const TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
           ),
         );
