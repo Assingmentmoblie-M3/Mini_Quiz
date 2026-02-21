@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../service/api_fetch.dart';
-
 class QuestionProvider extends ChangeNotifier {
   List<Map<String, dynamic>> questions = [];
   bool isLoading = false;
@@ -8,13 +7,9 @@ Future<void> fetchQuestions() async {
   isLoading = true;
   notifyListeners();
   try {
-    final response = await ApiService.get("questions"); // ពិនិត្យ 's' កន្លែងនេះ
-    
-    // បន្ថែមការ print ដើម្បីដឹងថា data មកដល់ឬអត់
+    final response = await ApiService.get("questions");
     print("Full Response: $response");
-
     if (response != null && response['result'] == true) {
-      // ត្រូវប្រាកដថា Backend បញ្ជូន response['data'] មកជា List
       questions = List<Map<String, dynamic>>.from(response['data']);
       print("Total Questions Loaded: ${questions.length}");
     } else {

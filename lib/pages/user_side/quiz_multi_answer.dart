@@ -619,36 +619,25 @@ class _MultiAnswerState extends State<Multi_answer> {
       }
     });
   }
-
   void goNext() {
     final provider = context.read<QuizProvider>();
-
-    // ១. ឆែកចម្លើយ (បញ្ជូន list នៃ index ដែល user បានរើស)
     provider.checkAnswer(selectedIndexes.toList());
-
-    // ២. ឆែកថាជាសំណួរចុងក្រោយឬអត់
     if (provider.isLastQuestion) {
       timer?.cancel();
-      // បើចង់ទៅ Screen លទ្ធផល អាចដូរ Navigator.pop ទៅជា Navigator.pushReplacement ទៅ ResultPage
       Navigator.pop(context); 
     } else {
-      // ប្តូរទៅសំណួរថ្មីក្នុង Provider
       provider.nextQuestion();
-      
-      // Reset state ក្នុង Screen នេះសម្រាប់សំណួរថ្មី
       setState(() {
         selectedIndexes.clear();
       });
       startTimer();
     }
   }
-
   @override
   void dispose() {
     timer?.cancel();
     super.dispose();
   }
-
   String formatTime(int seconds) {
     final minutes = seconds ~/ 60;
     final secs = seconds % 60;
@@ -667,15 +656,12 @@ class _MultiAnswerState extends State<Multi_answer> {
 
   @override
   Widget build(BuildContext context) {
-    // 👈 ចំណុចសំខាន់៖ ទាញសំណួរស្រស់ៗពី Provider នៅទីនេះ
     final provider = context.watch<QuizProvider>();
     final currentQ = provider.currentQuestion;
 
     if (currentQ.isEmpty) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
-    // ទាញបញ្ជីចម្លើយ A, B, C, D
     final List answersList = currentQ['answers'] ?? [];
     List options = [];
     if (answersList.isNotEmpty) {
@@ -699,7 +685,7 @@ class _MultiAnswerState extends State<Multi_answer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Multi-Quiz", // ប្តូរឈ្មោះបន្តិចឱ្យដឹងថាជា Multi Answer
+                    "Multi-Quiz",
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: primaryGreen),
                   ),
                   Text(
@@ -712,8 +698,6 @@ class _MultiAnswerState extends State<Multi_answer> {
               ),
 
               const SizedBox(height: 20),
-
-              /// QUESTION CARD
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(28),
@@ -729,8 +713,6 @@ class _MultiAnswerState extends State<Multi_answer> {
               ),
 
               const SizedBox(height: 26),
-
-              /// OPTIONS LIST
               Expanded(
                 child: ListView.builder(
                   itemCount: options.length,
@@ -744,7 +726,6 @@ class _MultiAnswerState extends State<Multi_answer> {
                         padding: const EdgeInsets.only(bottom: 12),
                         child: Row(
                           children: [
-                            // ប្រអប់ Checkbox
                             Container(
                               width: 50,
                               height: 50,
@@ -755,7 +736,6 @@ class _MultiAnswerState extends State<Multi_answer> {
                               child: isSelected ? Icon(Icons.check, color: currentColor) : null,
                             ),
                             const SizedBox(width: 12),
-                            // អត្ថបទចម្លើយ
                             Expanded(
                               child: Container(
                                 height: 50,
@@ -778,8 +758,6 @@ class _MultiAnswerState extends State<Multi_answer> {
                   },
                 ),
               ),
-
-              /// BOTTOM NAVIGATION
               Row(
                 children: [
                   GestureDetector(
@@ -798,20 +776,54 @@ class _MultiAnswerState extends State<Multi_answer> {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: selectedIndexes.isEmpty ? null : goNext,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryGreen,
-                        disabledBackgroundColor: const Color(0xFFE0E0E0),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                      ),
-                      child: const Text(
-                        "Next",
-                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),
+                    child: SizedBox(
+                      height:52,
+                      child: ElevatedButton(
+                        onPressed: selectedIndexes.isEmpty ? null : goNext,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryGreen,
+                            disabledBackgroundColor: const Color(0xFFE0E0E0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            elevation: 0,
+                          ),
+                        child: const Text(
+                          "Next",
+                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
+                  /*Expanded(
+                    child: SizedBox(
+                      height: 54,
+                      child: ElevatedButton(
+                        onPressed: selectedIndexes.isEmpty
+                            ? null
+                            : () {
+                                timer?.cancel();
+                                Navigator.pushNamed(context, '/q4');
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryGreen,
+                          disabledBackgroundColor: const Color(0xFFE0E0E0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          "Next",
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),*/
                 ],
               ),
             ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/user_side/quiz_QCM1.dart';
-import 'package:mini_quiz/pages/user_side/quiz_multi_answer.dart' hide Quiz_QCM1;
+import 'package:mini_quiz/pages/user_side/quiz_multi_answer.dart';
 import 'package:mini_quiz/provider/quiz1_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -29,19 +29,24 @@ class _QuizMainScreenState extends State<QuizMainScreen> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
         if (provider.questions.isEmpty) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body:Row(
+              children: [
+                Center(
+                  child:const Text("No Questions!"),
+                ),
+              ],
+            ),
           );
         }
 
         final question = provider.currentQuestion;
-        final answers = question['answers'] as List? ?? []; // បន្ថែម null check
+        final answers = question['answers'] as List? ?? [];
         if (answers.isEmpty) {
           return Scaffold(
             appBar: AppBar(
@@ -90,16 +95,12 @@ class _QuizMainScreenState extends State<QuizMainScreen> {
             ),
           );
         }
-        // ឆែកមើលចម្លើយត្រូវក្នុង Database
         String correctStr =
             (answers[0]['is_correct'] ?? answers[0]['correct_options'] ?? "")
                 .toString();
-
-        // ✅ បើមានសញ្ញាក្បៀស (ឧទាហរណ៍: "A.4,B.3") ឱ្យទៅ Screen ជ្រើសរើសបានច្រើន
         if (correctStr.contains(',')) {
           return Multi_answer(question: question);
         } else {
-          // ✅ បើគ្មានសញ្ញាក្បៀស ឱ្យទៅ Screen ជ្រើសរើសបានតែ១
           return Quiz_QCM1(
             question: question,
             categoryId: widget.categoryId,
