@@ -1,6 +1,6 @@
 
 import 'package:get/get.dart';
-import 'package:mini_quiz/pages/admin_side/category_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/category_page.dart';
 import 'package:mini_quiz/pages/admin_side/model/category_model.dart';
 import 'package:mini_quiz/services/api_service.dart';
 

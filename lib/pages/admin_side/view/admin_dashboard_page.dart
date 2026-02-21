@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/components/stat_card.dart';
-import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
+import '../controller/result_controller.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,6 +14,7 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 class _DashboardScreenState extends State<DashboardScreen> {
+  final ResultController resultController = Get.put(ResultController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,14 +69,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       ),
                       SizedBox(width: 16),
-                      Obx(() => userController.status.value == false
-    ? StatCard(
-        title: "Total Quizzes",
-        value: userController.totalQuizzes.value.toString(),
-        color: Colors.orange,
-      )
-    : const SizedBox(),
-),
+                      Obx(() => resultController.totalQuizzes.value > 0
+                          ? StatCard(
+                              title: "Total Quizzes",
+                              value: resultController.totalQuizzes.value.toString(),
+                              color: Colors.orange,
+                            )
+                          : const SizedBox()),
 
                       SizedBox(width: 16),
                       StatCard(

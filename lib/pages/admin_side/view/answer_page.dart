@@ -3,9 +3,9 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:mini_quiz/pages/admin_side/controller/answer_controller.dart';
 import 'package:mini_quiz/pages/admin_side/controller/question_controller.dart';
 
-import '../../layout/admin_sidebar.dart';
+import '../../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_answer_page.dart';
 
 class AnswerScreen extends StatefulWidget {
   const AnswerScreen({super.key});

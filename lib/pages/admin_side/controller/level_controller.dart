@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
-import 'package:mini_quiz/pages/admin_side/levels_page.dart';
+import 'package:mini_quiz/pages/admin_side/controller/answer_controller.dart';
+import 'package:mini_quiz/pages/admin_side/controller/question_controller.dart';
+import 'package:mini_quiz/pages/admin_side/model/answer_model.dart';
+import 'package:mini_quiz/pages/admin_side/view/levels_page.dart';
 import 'package:mini_quiz/pages/admin_side/model/category_model.dart';
 import 'package:mini_quiz/pages/admin_side/model/level_model.dart';
 import 'package:mini_quiz/pages/admin_side/controller/category_controller.dart';
-import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_level_page.dart';
 import 'package:mini_quiz/services/api_service.dart';
 
 class LevelController extends GetxController {
@@ -17,6 +20,8 @@ class LevelController extends GetxController {
 
   var filteredLevels = <Level>[].obs;  // filtered list
   var searchText = ''.obs;
+  final QuestionController questionController = Get.put(QuestionController());
+  final AnswerController answerController = Get.put(AnswerController());
 
   void startEdit(int id, String name, String description, int categoryId) {
     isEditing.value = true;
@@ -43,6 +48,8 @@ class LevelController extends GetxController {
     levelNameController.clear();
     descriptionController.clear();
     levelController.selectedCategoryId.value = null;
+    editingLevelId = null;
+    isEditing.value = false;
   }
   void searchLevels(String value) {
     if (value.isEmpty) {
@@ -53,6 +60,23 @@ class LevelController extends GetxController {
       );
     }
   }
+ List<Answer> getAnswersForLevel(int levelId) {
+  print('=== getAnswersForLevel ===');
+  print('Filtering for level ID: $levelId');
+  print('Total answers in controller: ${answerController.answers.length}');
+  
+  for (var i = 0; i < answerController.answers.length; i++) {
+    var a = answerController.answers[i];
+    print('Answer $i: levelId=${a.levelId}, question.levelId=${a.questions?.levelId}, question=${a.questions?.questionName}');
+  }
+  
+  final filtered = answerController.answers
+      .where((a) => a.levelId == levelId || a.questions?.levelId == levelId)
+      .toList();
+  
+  print('Filtered results: ${filtered.length}');
+  return filtered;
+}
   Future<void> fetchLevels() async {
     try {
       isLoading.value = true;

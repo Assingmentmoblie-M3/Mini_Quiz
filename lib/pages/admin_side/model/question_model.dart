@@ -43,12 +43,14 @@ class LevelForQuestion {
   final String levelName;
   final String description;
   final DateTime createdAt;
+  final int? categoryId;
 
   LevelForQuestion({
     required this.levelId,
     required this.levelName,
     required this.description,
     required this.createdAt,
+    this.categoryId,
   });
 
   factory LevelForQuestion.fromJson(Map<String, dynamic> json) {
@@ -57,6 +59,9 @@ class LevelForQuestion {
       levelName: json['level_name'],
       description: json['description'],
       createdAt: DateTime.parse(json['created_at']),
+      categoryId: json['category'] is Map<String, dynamic>
+          ? (json['category']['category_id'] as int?)
+          : (json['category_id'] as int?),
 
     );
   }
@@ -66,6 +71,7 @@ class LevelForQuestion {
       'level_name': levelName,
       'description': description,
       'created_at': createdAt.toIso8601String(),
+      'category_id': categoryId,
     };
   }
 }

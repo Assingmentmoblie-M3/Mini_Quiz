@@ -1,20 +1,22 @@
-
 import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/model/user_model.dart';
 import 'package:mini_quiz/services/api_service.dart';
+import 'package:mini_quiz/services/local_storage_service.dart';
 
 class UserController extends GetxController {
   var users = <User>[].obs;
   var isLoading = false.obs;
   RxBool status = false.obs;
-  RxInt totalQuizzes = 0.obs;
+  
 
-  var filteredUsers = <User>[].obs;  // filtered list
+  var filteredUsers = <User>[].obs; // filtered list
   var searchText = ''.obs;
 
   var isEditing = false.obs;
   int? editingUserId;
   var selectedUserId = RxnInt();
+
+  final LocalStorageService localStorageService = LocalStorageService();
   void startEdit(int id, String email) {
     isEditing.value = true;
     editingUserId = id;
@@ -24,35 +26,40 @@ class UserController extends GetxController {
     isEditing.value = false;
     editingUserId = null;
   }
+
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
   }
+
   void setSelectedUserId(int? id) {
     selectedUserId.value = id;
   }
+
   void searchUsers(String value) {
     if (value.isEmpty) {
       filteredUsers.assignAll(users);
     } else {
       filteredUsers.assignAll(
-        users.where((user) =>
-            user.email.toLowerCase().contains(value.toLowerCase()) ||
-            user.roleId.toString().contains(value)),
+        users.where(
+          (user) =>
+              user.email.toLowerCase().contains(value.toLowerCase()) ||
+              user.roleId.toString().contains(value),
+        ),
       );
     }
   }
+
   Future<void> fetchUsers() async {
     try {
       isLoading.value = true;
       final response = await ApiService.dio.get('/users');
       if (response.statusCode == 200) {
         final List data = response.data['data'];
-        users.value =
-            data.map((json) => User.fromJson(json)).toList();
-            
-            // print(data);
+        users.value = data.map((json) => User.fromJson(json)).toList();
+
+        // print(data);
       } else {
         Get.snackbar('Error', 'Failed to load users');
       }
@@ -64,28 +71,54 @@ class UserController extends GetxController {
     filteredUsers.assignAll(users);
   }
 
-  Future<void> addUser(String email) async {
+  Future<User?> login(String email) async {
+    // prevents double tap
+
     try {
-      final response = await ApiService.dio.post('/user', data: {
-        'email': email,
-      });
-      if (response.statusCode == 201) {
-        Get.snackbar('Success', 'User added successfully');
-        fetchUsers(); // Refresh the list after adding
-      } else {
-        Get.snackbar('Error', 'Failed to add user');
+      // First: try login
+      final response = await ApiService.dio.post(
+        '/login',
+        data: {'email': email},
+      );
+
+      User? user;
+
+      if (response.statusCode == 200) {
+        final data = response.data['data'];
+
+        if (data != null) {
+          user = User.fromJson(data);
+        } else {
+          // User not found → create automatically
+          final createResponse = await ApiService.dio.post(
+            '/users',
+            data: {'email': email},
+          );
+print("Create user response: ${createResponse.data}");
+          if (createResponse.statusCode == 200) {
+            user = User.fromJson(createResponse.data['data']);
+          }
+          localStorageService.write('userId', user?.userId);
+          localStorageService.write('roleId', user?.roleId);
+          
+        }
       }
+
+      return user; // can be null if something fails
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred while adding user');
+      print("Login error: $e"); // optional debug
+      return null;
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  Future <void> updateUser(int userId, String email) async {
+  Future<void> updateUser(int userId, String email) async {
     try {
-      final response = await ApiService.dio.patch('/user/$userId', data: {
-        'email': email,
-        
-      });
+      final response = await ApiService.dio.patch(
+        '/user/$userId',
+        data: {'email': email},
+      );
       if (response.statusCode == 200) {
         Get.snackbar('Success', 'User updated successfully');
         fetchUsers(); // Refresh the list after updating
@@ -96,6 +129,7 @@ class UserController extends GetxController {
       Get.snackbar('Error', 'An error occurred while updating user');
     }
   }
+
   Future<void> deleteUser(int userId) async {
     try {
       final response = await ApiService.dio.delete('/user/$userId');
@@ -110,5 +144,4 @@ class UserController extends GetxController {
       Get.snackbar('Error', 'An error occurred while deleting user');
     }
   }
-
 }

@@ -1,6 +1,6 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/HomeScreen/LoginScren.dart';
+import 'package:mini_quiz/pages/user_side/view/login_screen.dart';
 // import 'package:quiz_minidemo/LoginScren.dart';
 // import 'package:mini_quiz_demo/Screen/LoginScreen.dart';
 
@@ -110,12 +110,7 @@ class Homescreen extends StatelessWidget {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => LoginScreen(),
-                          ),
-                        );
+                        Navigator.pushNamed(context, '/login');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF009E08),

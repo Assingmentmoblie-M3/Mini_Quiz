@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/controller/level_controller.dart';
 import 'package:mini_quiz/pages/admin_side/model/category_model.dart';
-import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_level_page.dart';
 
 class LevelsScreen extends StatefulWidget {
   const LevelsScreen({super.key});

@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/category_controller.dart';
 
 class Topiccard extends StatelessWidget {
-  final String title;
   final Color color;
+  final String title;
+  final String description;
+  final int categoryId;
+  final categoryController = Get.find<CategoryController>();
 
-  const Topiccard({required this.title, required this.color});
+  Topiccard({required this.title, required this.color, required this.description, required this.categoryId, super.key});
 
   @override
   Widget build(BuildContext context) {

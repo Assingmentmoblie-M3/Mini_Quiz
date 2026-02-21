@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mini_quiz/pages/admin_side/controller/category_controller.dart';
 
-import '../../layout/admin_sidebar.dart';
+import '../../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_category_page.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});

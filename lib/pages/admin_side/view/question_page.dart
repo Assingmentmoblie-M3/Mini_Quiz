@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/pages/admin_side/controller/question_controller.dart';
-import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
+import 'package:mini_quiz/pages/admin_side/model/question_model.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_question_page.dart';
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key});
@@ -82,7 +83,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                         ),
                       ),
                       child: const Text(
-                        "View Category",
+                        "View Questions",
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
@@ -155,6 +156,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                     .toList(),
                                 onChanged: (value) {
                                   questionController.selectedCategoryId.value = value;
+                                  // reset selected level when category changes
+                                  questionController.selectedLevelId.value = null;
                                 },
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -172,14 +175,22 @@ class _QuestionScreenState extends State<QuestionScreen> {
                             child: Obx(
                               () => DropdownButtonFormField<int>(
                                 value: questionController.selectedLevelId.value,
-                                items: questionController.levels
-                                    .map(
-                                      (level) => DropdownMenuItem<int>(
-                                        value: level.levelId,
-                                        child: Text(level.levelName),
-                                      ),
-                                    )
-                                    .toList(), 
+                                items: (() {
+                                  final selectedCat = questionController.selectedCategoryId.value;
+                                  final filtered = selectedCat == null
+                                      ? <LevelForQuestion>[]
+                                      : questionController.levels
+                                          .where((l) => l.categoryId == selectedCat)
+                                          .toList();
+                                  return filtered
+                                      .map(
+                                        (level) => DropdownMenuItem<int>(
+                                          value: level.levelId,
+                                          child: Text(level.levelName),
+                                        ),
+                                      )
+                                      .toList();
+                                })(),
                                 onChanged: (value) {
                                   questionController.selectedLevelId.value = value;
                                 },
@@ -188,7 +199,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                hint: const Text('Choose level'),
+                                hint: const Text('Choose level (select category first)'),
                               ),
                             ),
                           ),

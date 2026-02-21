@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/admin_dashboard_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_category_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_level_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/admin_dashboard_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_category_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_level_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_question_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_result_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_answer_page.dart';
 
 class Sidebar extends StatelessWidget {
   final String selected;

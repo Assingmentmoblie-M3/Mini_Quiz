@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 // import 'package:mini_quiz/pages/admin_side/model/category_model.dart';
 // import 'package:mini_quiz/pages/admin_side/model/level_model.dart';
 import 'package:mini_quiz/pages/admin_side/model/question_model.dart';
-import 'package:mini_quiz/pages/admin_side/question_page.dart';
+import 'package:mini_quiz/pages/admin_side/controller/level_controller.dart';
+import 'package:mini_quiz/pages/admin_side/model/level_model.dart' as LM;
+import 'package:mini_quiz/pages/admin_side/view/question_page.dart';
 import 'package:mini_quiz/services/api_service.dart';
 
 class QuestionController extends GetxController {
@@ -53,7 +55,36 @@ class QuestionController extends GetxController {
     super.onInit();
     fetchQuestions();
     fetchLevels();
+    // If LevelController exists, listen for changes so levels stay in sync
+    try {
+      final lvlCtrl = Get.find<LevelController>();
+      // initialize from existing levels
+      _syncLevelsFromLevelController(lvlCtrl.levels);
+      // subscribe to updates
+      lvlCtrl.levels.listen((_) {
+        _syncLevelsFromLevelController(lvlCtrl.levels);
+      });
+    } catch (e) {
+      // LevelController not registered yet; ignore
+    }
     fetchCategories();
+  }
+
+  void _syncLevelsFromLevelController(List<LM.Level> srcLevels) {
+    try {
+      final mapped = srcLevels.map((l) {
+        return LevelForQuestion(
+          levelId: l.levelId,
+          levelName: l.levelName,
+          description: l.description,
+          createdAt: l.createdAt,
+          categoryId: l.category.categoryId,
+        );
+      }).toList();
+      levels.assignAll(mapped);
+    } catch (e) {
+      // ignore mapping errors
+    }
   }
 
   Future<void> fetchQuestions() async {
@@ -64,7 +95,7 @@ class QuestionController extends GetxController {
         final List data = response.data['data'];
         questions.value =
             data.map((json) => Question.fromJson(json)).toList();
-            print(data);
+            print('Fetched questions: ${data}');
       } else {
         Get.snackbar('Error', 'Failed to load questions');
       }
@@ -73,6 +104,7 @@ class QuestionController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+    filteredQuestions.assignAll(questions);
   }
   Future<void> fetchCategories() async {
     try {

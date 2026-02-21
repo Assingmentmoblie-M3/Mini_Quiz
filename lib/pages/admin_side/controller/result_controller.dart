@@ -24,8 +24,10 @@ class ResultController extends GetxController {
 
   var totalScoreController = TextEditingController();
 
-  var sortColumn = "user_id".obs;
-var sortDirection = "desc".obs;
+  var column = "total_score".obs;
+  var sortDirection = "desc".obs;
+
+  RxInt totalQuizzes = 0.obs;
 // Total Score column index
 
 
@@ -69,9 +71,9 @@ var sortDirection = "desc".obs;
         '/results',
         queryParameters: {
           'search': search.value,
-          'sort_column': sortColumn.value,
-          'sort_direction': sortDirection.value,
-          "perpage": 10,
+          'column': column.value,
+          'sort': sortDirection.value,
+          'per_page': 10,
         },
       );
       

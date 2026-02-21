@@ -1,6 +1,6 @@
-import '../../layout/admin_sidebar.dart';
+import '../../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
 import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 class UserScreen extends StatefulWidget {
@@ -149,7 +149,7 @@ class _UserScreenState extends State<UserScreen> {
                                       );
                                     } else {
                                       // SAVE
-                                      userController.addUser(email);
+                                      userController.login(email);
                                     }
 
                                     // Reset
