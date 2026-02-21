@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/user_side/quiz_QCM1.dart';
+import 'package:mini_quiz/pages/HomeScreen/LoginScren.dart';
 import 'package:mini_quiz/pages/user_side/quiz_QCM2.dart';
+import 'package:mini_quiz/pages/user_side/quizmain.dart';
 import 'package:mini_quiz/provider/fetchlevel_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -73,7 +74,6 @@ class _LevelPageState extends State<LevelPage> {
                     itemCount: provider.levelList.length,
                     itemBuilder: (context, index) {
                       final level = provider.levelList[index];
-
                       return quizButton(
                         text: level.levelName,
                         color: _getColor(index),
@@ -81,12 +81,10 @@ class _LevelPageState extends State<LevelPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => 
-                                Quiz_QCM2()
-                              /*Quiz_QCM1(
-                                categoryId: level.categoryId ?? 0, 
+                              builder: (_) => QuizMainScreen(
+                                categoryId: widget.catagoryId,
                                 levelId: level.levelId,
-                              ),*/
+                              ),
                             ),
                           );
                         },
@@ -101,7 +99,6 @@ class _LevelPageState extends State<LevelPage> {
       ),
     );
   }
-
   Widget quizButton({
     required String text,
     required Color color,
@@ -133,123 +130,6 @@ class _LevelPageState extends State<LevelPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/* ------------------ RESULT PAGE ------------------ */
-
-class ResultPage extends StatelessWidget {
-  const ResultPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFE0E0E0),
-      body: Center(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-
-              const Text(
-                "Quiz Completed!",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF3A7CA5),
-                ),
-              ),
-              const SizedBox(height: 10),
-              RichText(
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Your Score: ",
-                      style: TextStyle(color: Colors.grey, fontSize: 18),
-                    ),
-                    TextSpan(
-                      text: "5/5",
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              const Text("WOW!! 🐰💖", style: TextStyle(fontSize: 50)),
-
-              const SizedBox(height: 20),
-
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.pink),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  "Good job! You did great.",
-                  style: TextStyle(color: Colors.pink),
-                ),
-              ),
-
-              const Spacer(),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (builder) => Quiz_QCM2()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009E08),
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 20,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: Text(
-                        "Continue",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-            ],
           ),
         ),
       ),

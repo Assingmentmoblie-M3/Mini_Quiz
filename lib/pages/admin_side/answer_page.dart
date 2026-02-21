@@ -252,9 +252,9 @@ class AnswerInput extends StatelessWidget {
 
 import 'package:flutter/material.dart';
 import 'package:mini_quiz/pages/admin_side/view_answer_page.dart';
-import 'package:mini_quiz/provider/answer_provider.dart';
 import 'package:provider/provider.dart';
 import '../../layout/admin_sidebar.dart';
+import 'package:mini_quiz/provider/answer_provider.dart';
 
 class AnswerScreen extends StatefulWidget {
   final Map? editData;
@@ -308,7 +308,7 @@ class _AnswerScreenState extends State<AnswerScreen> {
   }
 
   void _handleSave() async {
-    final provider = Provider.of<AnswerProvider>(context, listen: false);
+   final provider = Provider.of<AnswerProvider>(context, listen: false);
 
     if (_selectedQuestionId == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select a question")));

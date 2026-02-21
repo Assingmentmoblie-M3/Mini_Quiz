@@ -1,17 +1,14 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'package:flutter/material.dart';
 
 class Multi_answer extends StatefulWidget {
   const Multi_answer({super.key});
-
   @override
   State<Multi_answer> createState() => _MultiAnswerState();
 }
 
 class _MultiAnswerState extends State<Multi_answer> {
   Set<int> selectedIndexes = {};
-
-  // ===== TIMER LOGIC =====
   static const int totalSeconds = 60;
   int remainingSeconds = totalSeconds;
   Timer? timer;
@@ -271,6 +268,547 @@ class _MultiAnswerState extends State<Multi_answer> {
                             color: Colors.white,
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}*/
+/*
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:mini_quiz/provider/quiz1_provider.dart';
+
+class Multi_answer extends StatefulWidget {
+  final Map question;
+  const Multi_answer({super.key, required this.question});
+  @override
+  State<Multi_answer> createState() => _MultiAnswerState();
+}
+
+class _MultiAnswerState extends State<Multi_answer> {
+  Set<int> selectedIndexes = {};
+  static const int totalSeconds = 60;
+  int remainingSeconds = totalSeconds;
+  Timer? timer;
+
+  Map? question;
+  List options = [];
+  final Color primaryGreen = const Color(0xFF19A191);
+  final Color borderGreen = const Color(0xFFB2DFDB);
+
+@override
+void initState() {
+  super.initState();
+  startTimer();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final provider = context.read<QuizProvider>();
+    loadQuestion(provider);
+  });
+}
+void loadQuestion(QuizProvider provider) {
+  final currentQ = provider.currentQuestion; // ប្រើពី provider តែម្តង
+  if (currentQ.isNotEmpty) {
+    question = currentQ;
+    List answers = question!['answers'] ?? [];
+    
+    if (answers.isNotEmpty) {
+      final firstAnswerSet = answers[0];
+      options = [
+        firstAnswerSet['answer_a'] ?? "",
+        firstAnswerSet['answer_b'] ?? "",
+        firstAnswerSet['answer_c'] ?? "",
+        firstAnswerSet['answer_d'] ?? "",
+      ];
+    } else {
+      options = [];
+    }
+    setState(() {});
+  }
+}
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (remainingSeconds == 0) {
+        goNext();
+      } else {
+        setState(() {
+          remainingSeconds--;
+        });
+      }
+    });
+  }
+
+void goNext() {
+  final provider = context.read<QuizProvider>();
+  provider.checkAnswer(selectedIndexes.toList());
+  if (provider.isLastQuestion) {
+    timer?.cancel();
+    Navigator.pop(context); 
+  } else {
+    timer?.cancel(); 
+    provider.nextQuestion();
+    setState(() {
+      selectedIndexes.clear(); // លុបចម្លើយចាស់ដែល user បានរើស
+      remainingSeconds = totalSeconds; // Reset ម៉ោង
+    });
+    loadQuestion(provider); // ដាក់ទិន្នន័យសំណួរថ្មី
+    startTimer(); // ចាប់ផ្តើម timer ថ្មី
+  }
+}
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  String formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+
+    return '${minutes.toString().padLeft(2, '0')}:'
+        '${secs.toString().padLeft(2, '0')}';
+  }
+
+  void toggleSelection(int index) {
+    setState(() {
+      if (selectedIndexes.contains(index)) {
+        selectedIndexes.remove(index);
+      } else {
+        selectedIndexes.add(index);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (question == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+
+              /// HEADER
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Quiz",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: primaryGreen,
+                    ),
+                  ),
+
+                  Text(
+                    '${formatTime(remainingSeconds)}\n'
+                    '${context.watch<QuizProvider>().currentIndex + 1}/'
+                    '${context.watch<QuizProvider>().questions.length}',
+                    textAlign: TextAlign.right,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              /// QUESTION
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(28),
+                decoration: BoxDecoration(
+                  color: primaryGreen,
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                child: Text(
+                  question!['question'] ?? "",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 26),
+
+              /// OPTIONS
+              Expanded(
+                child: ListView.builder(
+                  itemCount: options.length,
+                  itemBuilder: (context, index) {
+
+                    final isSelected =
+                        selectedIndexes.contains(index);
+
+                    final Color currentColor =
+                        isSelected
+                            ? const Color(0xFF00D60B)
+                            : const Color(0xFF91E3D9);
+
+                    return GestureDetector(
+                      onTap: () => toggleSelection(index),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: currentColor,
+                                  width: 2.5,
+                                ),
+                              ),
+                              child: isSelected
+                                  ? Icon(
+                                      Icons.check,
+                                      color: currentColor,
+                                    )
+                                  : null,
+                            ),
+
+                            const SizedBox(width: 12),
+
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: currentColor,
+                                    width: 2.5,
+                                  ),
+                                ),
+                                child: Text(
+                                  options[index] ?? "",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    color: primaryGreen,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              /// BUTTONS
+              Row(
+                children: [
+
+                  GestureDetector(
+                    onTap: () {
+                      timer?.cancel();
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 54,
+                      width: 54,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: borderGreen, width: 2),
+                      ),
+                      child: Icon(Icons.arrow_back_ios_new,
+                          color: primaryGreen),
+                    ),
+                  ),
+
+                  const SizedBox(width: 16),
+
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed:
+                          selectedIndexes.isEmpty ? null : goNext,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryGreen,
+                        disabledBackgroundColor:
+                            const Color(0xFFE0E0E0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+*/
+
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:mini_quiz/provider/quiz1_provider.dart';
+
+class Multi_answer extends StatefulWidget {
+  final Map question;
+  const Multi_answer({super.key, required this.question});
+
+  @override
+  State<Multi_answer> createState() => _MultiAnswerState();
+}
+
+class _MultiAnswerState extends State<Multi_answer> {
+  // ទុកតែ Index ដែល User ជ្រើសរើសប៉ុណ្ណោះ
+  Set<int> selectedIndexes = {};
+  
+  static const int totalSeconds = 60;
+  int remainingSeconds = totalSeconds;
+  Timer? timer;
+
+  final Color primaryGreen = const Color(0xFF19A191);
+  final Color borderGreen = const Color(0xFFB2DFDB);
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  // ===== TIMER =====
+  void startTimer() {
+    timer?.cancel();
+    remainingSeconds = totalSeconds;
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (remainingSeconds == 0) {
+        goNext();
+      } else {
+        setState(() {
+          remainingSeconds--;
+        });
+      }
+    });
+  }
+
+  void goNext() {
+    final provider = context.read<QuizProvider>();
+
+    // ១. ឆែកចម្លើយ (បញ្ជូន list នៃ index ដែល user បានរើស)
+    provider.checkAnswer(selectedIndexes.toList());
+
+    // ២. ឆែកថាជាសំណួរចុងក្រោយឬអត់
+    if (provider.isLastQuestion) {
+      timer?.cancel();
+      // បើចង់ទៅ Screen លទ្ធផល អាចដូរ Navigator.pop ទៅជា Navigator.pushReplacement ទៅ ResultPage
+      Navigator.pop(context); 
+    } else {
+      // ប្តូរទៅសំណួរថ្មីក្នុង Provider
+      provider.nextQuestion();
+      
+      // Reset state ក្នុង Screen នេះសម្រាប់សំណួរថ្មី
+      setState(() {
+        selectedIndexes.clear();
+      });
+      startTimer();
+    }
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  String formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  }
+
+  void toggleSelection(int index) {
+    setState(() {
+      if (selectedIndexes.contains(index)) {
+        selectedIndexes.remove(index);
+      } else {
+        selectedIndexes.add(index);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 👈 ចំណុចសំខាន់៖ ទាញសំណួរស្រស់ៗពី Provider នៅទីនេះ
+    final provider = context.watch<QuizProvider>();
+    final currentQ = provider.currentQuestion;
+
+    if (currentQ.isEmpty) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    // ទាញបញ្ជីចម្លើយ A, B, C, D
+    final List answersList = currentQ['answers'] ?? [];
+    List options = [];
+    if (answersList.isNotEmpty) {
+      final data = answersList[0];
+      options = [
+        data['answer_a'] ?? "",
+        data['answer_b'] ?? "",
+        data['answer_c'] ?? "",
+        data['answer_d'] ?? "",
+      ];
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              /// HEADER
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Multi-Quiz", // ប្តូរឈ្មោះបន្តិចឱ្យដឹងថាជា Multi Answer
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: primaryGreen),
+                  ),
+                  Text(
+                    '${formatTime(remainingSeconds)}\n'
+                    '${provider.currentIndex + 1}/${provider.questions.length}',
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              /// QUESTION CARD
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(28),
+                decoration: BoxDecoration(
+                  color: primaryGreen,
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                child: Text(
+                  currentQ['question'] ?? "",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+              ),
+
+              const SizedBox(height: 26),
+
+              /// OPTIONS LIST
+              Expanded(
+                child: ListView.builder(
+                  itemCount: options.length,
+                  itemBuilder: (context, index) {
+                    final isSelected = selectedIndexes.contains(index);
+                    final Color currentColor = isSelected ? const Color(0xFF00D60B) : const Color(0xFF91E3D9);
+
+                    return GestureDetector(
+                      onTap: () => toggleSelection(index),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            // ប្រអប់ Checkbox
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: currentColor, width: 2.5),
+                              ),
+                              child: isSelected ? Icon(Icons.check, color: currentColor) : null,
+                            ),
+                            const SizedBox(width: 12),
+                            // អត្ថបទចម្លើយ
+                            Expanded(
+                              child: Container(
+                                height: 50,
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(color: currentColor, width: 2.5),
+                                ),
+                                child: Text(
+                                  options[index],
+                                  style: TextStyle(fontWeight: FontWeight.w800, color: primaryGreen),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              /// BOTTOM NAVIGATION
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      timer?.cancel();
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 54, width: 54,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: borderGreen, width: 2),
+                      ),
+                      child: Icon(Icons.arrow_back_ios_new, color: primaryGreen),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: selectedIndexes.isEmpty ? null : goNext,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryGreen,
+                        disabledBackgroundColor: const Color(0xFFE0E0E0),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                      ),
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ),
