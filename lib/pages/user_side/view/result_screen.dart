@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/model/answer_model.dart';
 import 'package:mini_quiz/pages/admin_side/model/question_model.dart';
+import 'package:mini_quiz/services/local_storage_service.dart';
+import 'package:mini_quiz/utill/responsive.dart';
 
 class ResultScreen extends StatefulWidget {
   final int correctScore;
@@ -23,6 +26,14 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  LocalStorageService localStorageService = LocalStorageService();
+  @override
+  void initState() {
+   final categoryId = localStorageService.read('categoryId');
+    final userId = localStorageService.read('userId');
+    print('Category ID: $categoryId, User ID: $userId');
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final score = widget.correctScore;
@@ -34,10 +45,11 @@ class _ResultScreenState extends State<ResultScreen> {
       body: CustomScrollView(
         slivers: [
           // Header with score
-          SliverAppBar(
+        SliverAppBar(
             backgroundColor: Colors.white,
             pinned: true,
             expandedHeight: 250,
+            automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 color: Colors.white,
@@ -188,7 +200,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
           // Continue button at bottom
           SliverPadding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(30),
             sliver: SliverToBoxAdapter(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -199,9 +211,9 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                 ),
                 onPressed: () {
+                  
                   // Pop the result screen and the quiz screen to go back to level selection
-                  Navigator.pop(context); // Pop ResultScreen
-                  Navigator.pop(context); // Pop DynamicQuizPage
+                  Get.offAllNamed('select_topic_screen');
                 },
                 child: const Text(
                   "Continue",

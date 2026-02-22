@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/model/answer_model.dart';
+import 'package:mini_quiz/pages/user_side/view/result_screen.dart';
 import 'package:mini_quiz/services/api_service.dart';
 import '../model/result_model.dart';
 import '../model/category_model.dart';
@@ -37,6 +39,7 @@ class ResultController extends GetxController {
     fetchUsers();
     fetchCategories();
     fetchResults();
+    
   }
 
   // ================= EDIT / RESET =================
@@ -134,46 +137,72 @@ class ResultController extends GetxController {
     return answer['selected_options'].contains(optionId);
   }
 
-  // ================= SAVE / DELETE =================
-  Future<void> addResult() async {
-    if (selectedUserId.value == null || selectedCategoryId.value == null) {
-      Get.snackbar("Error", "Select user and category");
-      return;
-    }
-    if (answers.isEmpty) {
-      Get.snackbar("Error", "Select at least one answer");
-      return;
-    }
-
+  Future<void> saveResult(int userId, int categoryId, int totalScore) async {
     try {
-      final response = await ApiService.dio.post(
-        '/result',
-        data: {
-          'user_id': selectedUserId.value,
-          'category_id': selectedCategoryId.value,
-          'answers': answers,
-        },
-      );
-
-      if (response.statusCode == 201) {
-        Get.snackbar("Success", "Result saved");
-        resetForm();
-        fetchResults();
+      isLoading.value = true;
+      print('Saving result... userId: $userId, categoryId: $categoryId, totalScore: $totalScore');
+      
+      final response = await ApiService.dio.post('/save-result', data: {
+        "user_id": userId,
+        "category_id": categoryId,
+        "total_score": totalScore,
+      });
+      
+      print('Response status code: ${response.statusCode}');
+      print('Response data: ${response.data}');
+      
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Get.snackbar('Success', 'Result saved successfully');
+        //fetchResults(); // Refresh results list
+      } else {
+        Get.snackbar('Error', 'Failed to save result - Status: ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to save result");
-    }
-  }
-
-  Future<void> deleteResult(int resultId) async {
-    try {
-      final response = await ApiService.dio.delete('/result/$resultId');
-      if (response.statusCode == 200) {
-        Get.snackbar('Success', 'Result deleted successfully');
-        fetchResults();
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'An error occurred while deleting result');
+      print('Error saving result: $e');
+      Get.snackbar('Error', 'Error: ${e.toString()}');
+    } finally {
+      isLoading.value = false;
     }
   }
 }
+//   Future<void> fetchUserResults(int userId, int levelId) async {
+//   try {
+//     final response =
+//         await ApiService.dio.get('/users/$userId/levels/$levelId/results');
+
+//     if (response.statusCode == 200) {
+//       final data = response.data['data'] as List;
+
+//       List<Answer> userAnswers =
+//           data.map((json) => Answer.fromJson(json)).toList();
+
+//       Map<int, Question> questionMap = {};
+//       for (var a in userAnswers) {
+//         if (a.questions != null) {
+//           questionMap[a.questions!.questionId] = a.questions!;
+//         }
+//       }
+
+//       // ✅ Correct Score Calculation
+//       int correctScore = userAnswers.where((a) {
+//         return a.selectedAnswer == a.isCorrect;
+//       }).length;
+
+//       int totalScore = userAnswers.length;
+
+//       Get.to(() => ResultScreen(
+//             correctScore: correctScore,
+//             totalScore: totalScore,
+//             quiz: userAnswers,
+//             selectedAnswers: {
+//               for (var a in userAnswers)
+//                 a.questions!.questionId: a.selectedAnswer
+//             },
+//             questionMap: questionMap,
+//           ));
+//     }
+//   } catch (e) {
+//     Get.snackbar('Error', 'Failed to fetch user results: $e');
+//   }
+// }
+

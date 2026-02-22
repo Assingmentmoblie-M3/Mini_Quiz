@@ -6,7 +6,10 @@ import 'package:mini_quiz/pages/admin_side/model/answer_model.dart';
 import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/controller/question_controller.dart';
 import 'package:mini_quiz/pages/admin_side/model/question_model.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_result_page.dart';
 import 'package:mini_quiz/pages/user_side/view/result_screen.dart';
+import 'package:mini_quiz/services/local_storage_service.dart';
+import 'package:mini_quiz/utill/responsive.dart';
 
 class DynamicQuizPage extends StatefulWidget {
   final List<Answer> answers;
@@ -21,9 +24,8 @@ class DynamicQuizPage extends StatefulWidget {
   @override
   State<DynamicQuizPage> createState() => _DynamicQuizPageState();
 }
-
 class _DynamicQuizPageState extends State<DynamicQuizPage> {
-
+  LocalStorageService localStorageService = LocalStorageService(); 
   int currentIndex = 0;
   Map<int, dynamic> selectedAnswers = {};
 
@@ -39,7 +41,12 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
   @override
   void initState() {
     super.initState();
-    quiz = widget.answers;
+    // Initialize quiz immediately from widget
+    if (widget.answers.isNotEmpty) {
+      quiz = widget.answers;
+    } else {
+      quiz = [];
+    }
     startTimer();
     
     // Show toast message with question count
@@ -106,6 +113,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
       setState(() => currentIndex++);
     } else {
       submit();
+      
     }
   }
 
@@ -115,7 +123,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
     }
   }
 
-  void submit() {
+  void submit() async{
     timer?.cancel();
 
     try {
@@ -170,7 +178,33 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
           rc.totalQuizzes.value = rc.totalQuizzes.value + 1;
         }
       } catch (_) {}
-
+      
+      final categoryId = localStorageService.read('categoryId');
+      final userId = localStorageService.read('userId');
+      print('Category ID: $categoryId (${categoryId.runtimeType}), User ID: $userId (${userId.runtimeType})');
+      
+      // Get or create ResultController
+      final resultController = Get.isRegistered<ResultController>() 
+          ? Get.find<ResultController>() 
+          : Get.put(ResultController());
+      
+      // Save result to backend - convert to int if needed
+      if (userId != null && categoryId != null) {
+        final userIdInt = userId is int ? userId : int.tryParse(userId.toString());
+        final categoryIdInt = categoryId is int ? categoryId : int.tryParse(categoryId.toString());
+        
+        if (userIdInt != null && categoryIdInt != null) {
+          print('Saving result - userId: $userIdInt, categoryId: $categoryIdInt, score: $correctSum');
+          await resultController.saveResult(userIdInt, categoryIdInt, correctSum);
+        } else {
+          print('ERROR: Could not convert userId or categoryId to int');
+          Get.snackbar('Error', 'Invalid user or category ID');
+        }
+      } else {
+        print('ERROR: userId or categoryId is null');
+        Get.snackbar('Error', 'User or category not found');
+      }
+      
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -460,7 +494,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    color: currentColor,
+                    color: primaryGreen,
                   ),
                 ),
               ),

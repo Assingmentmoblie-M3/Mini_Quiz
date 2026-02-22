@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/controller/level_controller.dart';
 import 'package:mini_quiz/pages/admin_side/controller/result_controller.dart';
 import 'package:mini_quiz/pages/user_side/view/dynamic_quiz_screen.dart';
+import 'package:mini_quiz/services/local_storage_service.dart';
 import '../../admin_side/model/level_model.dart';
+import 'package:mini_quiz/utill/responsive.dart';
 
 import '../view/result_screen.dart';
 
@@ -42,11 +44,14 @@ class LevelPage extends StatefulWidget {
 
 class _LevelPageState extends State<LevelPage> {
   late final LevelController levelController;
-
+  LocalStorageService localStorageService = LocalStorageService();
+  
   @override
   void initState() {
     super.initState();
+    // Initialize controller FIRST before using any getters
     _initializeController();
+                          localStorageService.write('categoryId', widget.categoryId);
   }
 
   void _initializeController() {
@@ -59,19 +64,22 @@ class _LevelPageState extends State<LevelPage> {
       _loadLevels();
     } catch (e) {
       print('Error initializing controller: $e');
+      rethrow; // Re-throw to see the error
     }
   }
 
   Future<void> _loadLevels() async {
     try {
-      await levelController.fetchLevels();
-      if (mounted) {
-        levelController.filteredLevels.assignAll(
-          levelController.levels
-              .where((level) => level.category.categoryId == widget.categoryId)
-              .toList(),
-        );
-      }
+       await levelController.fetchLevelsByCategory(widget.categoryId);
+    
+      // if (mounted) {
+        
+      //   levelController.filteredLevelsByCategory.assignAll(
+      //     levelController.levels
+      //         .where((level) => level.category.categoryId == widget.categoryId)
+      //         .toList(),
+      //   );
+      // }
     } catch (e) {
       print('Error loading levels: $e');
     }
@@ -89,7 +97,10 @@ class _LevelPageState extends State<LevelPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context);
+            localStorageService.remove('categoryId');
+          } ,
           icon: Icon(CupertinoIcons.chevron_back),
           color: Colors.green,
           iconSize: 30,
@@ -99,7 +110,7 @@ class _LevelPageState extends State<LevelPage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(R.wp(context, 0.05)),
         decoration: BoxDecoration(
           color: Colors.white,
           
@@ -110,7 +121,7 @@ class _LevelPageState extends State<LevelPage> {
             Text(
               "Quiz",
               style: TextStyle(
-                fontSize: 48,
+                fontSize: R.adaptive(context, mobile: 44, tablet: 48, desktop: 56),
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF00D60B),
               ),
@@ -119,24 +130,25 @@ class _LevelPageState extends State<LevelPage> {
               "Choose your topic!",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 24),
                 color: const Color(0xFF5C5C5C),
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: R.hp(context, 0.05)),
             Expanded(
               child: Obx(() {
                 if (levelController.isLoading.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (levelController.filteredLevels.isEmpty) {
+                if (levelController.filteredLevelsByCategory.isEmpty) {
                   return const Center(child: Text("No levels found"));
                 }
                 return ListView(
-                  children: levelController.filteredLevels.map((Level level) {
+                  children: levelController.filteredLevelsByCategory.map((Level level) {
                     return quizButton(
                       text: level.levelName,
                       colorLevel: levelColors[level.levelId % levelColors.length],
+                      context: context,
                       onTap: () async {
                         try {
                           final levelAnswers = await levelController.answerController
@@ -177,17 +189,18 @@ class _LevelPageState extends State<LevelPage> {
   Widget quizButton({
     required String text,
     required VoidCallback onTap,
-    required Color colorLevel
+    required Color colorLevel,
+    required BuildContext context
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 25),
+      padding: EdgeInsets.only(bottom: R.hp(context, 0.03)),
       child: InkWell(
         onTap: onTap,
         child: Container(
-          height: 70,
+          height: R.hp(context, 0.10),
           decoration: BoxDecoration(
             color: colorLevel,
-            borderRadius: BorderRadius.circular(35),
+            borderRadius: BorderRadius.circular(R.wp(context, 0.08)),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -199,9 +212,9 @@ class _LevelPageState extends State<LevelPage> {
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: R.adaptive(context, mobile: 20, tablet: 22, desktop: 26),
                 fontWeight: FontWeight.bold,
               ),
             ),

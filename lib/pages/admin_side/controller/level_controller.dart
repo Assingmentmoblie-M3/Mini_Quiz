@@ -18,7 +18,8 @@ class LevelController extends GetxController {
   var categories = <Category>[].obs;
   var selectedCategoryId = RxnInt();
 
-  var filteredLevels = <Level>[].obs;  // filtered list
+  var filteredLevels = <Level>[].obs; 
+  var filteredLevelsByCategory = <Level>[].obs;
   var searchText = ''.obs;
   final QuestionController questionController = Get.put(QuestionController());
   final AnswerController answerController = Get.put(AnswerController());
@@ -51,32 +52,40 @@ class LevelController extends GetxController {
     editingLevelId = null;
     isEditing.value = false;
   }
+
   void searchLevels(String value) {
     if (value.isEmpty) {
       filteredLevels.assignAll(levels);
     } else {
       filteredLevels.assignAll(
-        levels.where((level) => level.levelName.toLowerCase().contains(value.toLowerCase())),
+        levels.where(
+          (level) =>
+              level.levelName.toLowerCase().contains(value.toLowerCase()),
+        ),
       );
     }
   }
- List<Answer> getAnswersForLevel(int levelId) {
-  print('=== getAnswersForLevel ===');
-  print('Filtering for level ID: $levelId');
-  print('Total answers in controller: ${answerController.answers.length}');
-  
-  for (var i = 0; i < answerController.answers.length; i++) {
-    var a = answerController.answers[i];
-    print('Answer $i: levelId=${a.levelId}, question.levelId=${a.questions?.levelId}, question=${a.questions?.questionName}');
+
+  List<Answer> getAnswersForLevel(int levelId) {
+    print('=== getAnswersForLevel ===');
+    print('Filtering for level ID: $levelId');
+    print('Total answers in controller: ${answerController.answers.length}');
+
+    for (var i = 0; i < answerController.answers.length; i++) {
+      var a = answerController.answers[i];
+      print(
+        'Answer $i: levelId=${a.levelId}, question.levelId=${a.questions?.levelId}, question=${a.questions?.questionName}',
+      );
+    }
+
+    final filtered = answerController.answers
+        .where((a) => a.levelId == levelId || a.questions?.levelId == levelId)
+        .toList();
+
+    print('Filtered results: ${filtered.length}');
+    return filtered;
   }
-  
-  final filtered = answerController.answers
-      .where((a) => a.levelId == levelId || a.questions?.levelId == levelId)
-      .toList();
-  
-  print('Filtered results: ${filtered.length}');
-  return filtered;
-}
+
   Future<void> fetchLevels() async {
     try {
       isLoading.value = true;
@@ -84,7 +93,7 @@ class LevelController extends GetxController {
       if (response.statusCode == 200) {
         final List data = response.data['data'];
         levels.value = data.map((json) => Level.fromJson(json)).toList();
-        print(response);
+        // print(response);
       } else {
         Get.snackbar('Error', 'Failed to load levels');
       }
@@ -94,6 +103,32 @@ class LevelController extends GetxController {
       isLoading.value = false;
     }
     filteredLevels.assignAll(levels);
+  }
+
+  Future<void> fetchLevelsByCategory(int categoryId) async {
+    try {
+      isLoading.value = true;
+      // print('Fetching levels for category ID: $categoryId');
+      filteredLevels.clear();       // remove all old items
+
+      final response = await ApiService.dio.get('/categories/$categoryId/levels');
+      if (response.statusCode == 200) {
+        // print('fetchlevelbycategory: ${response}');
+        levels.value = [];
+        final List data = response.data['data'];
+        levels.value = data.map((json) => Level.fromJson(json)).toList();
+      } else {
+        Get.snackbar('Error', 'Failed to load levels for category');
+      }
+      filteredLevelsByCategory.assignAll(levels);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'An error occurred while fetching levels for category',
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> fetchCategories() async {

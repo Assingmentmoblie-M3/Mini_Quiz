@@ -1,6 +1,7 @@
 // import 'package:device_preview/device_preview.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mini_quiz/pages/admin_side/view/answer_page.dart';
@@ -21,8 +22,6 @@ import 'package:mini_quiz/pages/user_side/view/result_screen.dart';
 import 'package:mini_quiz/pages/user_side/view/select_topic_screen.dart';
 import 'package:mini_quiz/pages/admin_side/view/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/user_side/view/home_screen.dart';
-import 'package:mini_quiz/pages/user_side/view/quiz_QCM1.dart';
-import 'package:mini_quiz/pages/user_side/view/quiz_QCM2.dart';
 import 'package:mini_quiz/pages/user_side/view/quiz_multi_answer.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
  
@@ -37,40 +36,31 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      // theme: ThemeData(
-      //   fontFamily: 'Fredoka',
-      //   textTheme: const TextTheme(
-      //     titleLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, letterSpacing: 1.4),
-      //     bodyMedium: TextStyle(fontSize: 16, ),
-        
-      //   ),
-      // ),
-      //  home: const DashboardScreen(),
-      // home: const Homescreen(),
-
-      // home: const ViewCategoryScreen(),
-      theme: ThemeData(
-        fontFamily: 'Fredoka',
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.4,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // Standard mobile design size
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: 'Fredoka',
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.4,
+              ),
+              bodyMedium: TextStyle(fontSize: 16),
+            ),
           ),
-          bodyMedium: TextStyle(fontSize: 16),
-        ),
-      ),
-      initialRoute: '/login',
-      // If the browser requests an unknown path (e.g. on refresh),
-      // redirect to the selection screen instead of showing an error
-      onUnknownRoute: (settings) => MaterialPageRoute(
-        builder: (_) => SelectionScreen(),
-      ),
-  routes: {
-    '/': (context) =>SelectionScreen(),
-    '/home': (context) => const Homescreen(),
+          initialRoute: '/',
+          onUnknownRoute: (settings) => MaterialPageRoute(
+            builder: (_) => SelectionScreen(),
+          ),
+          routes: {
+    // '/': (context) =>SelectionScreen(),
+    '/': (context) => const Homescreen(),
     '/login': (context) => const LoginScreen(),
 
     '/dashboard': (context) => const DashboardScreen(),
@@ -87,9 +77,6 @@ class MyApp extends StatelessWidget {
     '/view_result_page': (context) => ViewResultScreen(),
 
     '/select_topic_screen': (context) => SelectionScreen(),
-    // '/q1': (context) => const Quiz_QCM1(),
-    // '/q2': (context) => const Quiz_QCM2(),
-    // '/q3': (context) => const Multi_answer(),
     '/level_screen': (context) {
       final args = ModalRoute.of(context)?.settings.arguments;
       int categoryId = 1;
@@ -110,7 +97,9 @@ class MyApp extends StatelessWidget {
               .arguments as Map<String, dynamic>)['total'] ?? 0,
           )
         : ResultScreen(correctScore: 0, totalScore: 0),
-  },
+          },
+        );
+      },
     );
   }
 }

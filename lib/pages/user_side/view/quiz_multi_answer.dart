@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/utill/responsive.dart';
 
 class Multi_answer extends StatefulWidget {
   const Multi_answer({super.key});
@@ -78,7 +79,7 @@ class _MultiAnswerState extends State<Multi_answer> {
           // width: double.infinity,
           // height: double.infinity,
           // margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(R.wp(context, 0.05)),
           // decoration: BoxDecoration(
           //   color: Colors.white,
           //   borderRadius: BorderRadius.circular(35),
@@ -94,7 +95,7 @@ class _MultiAnswerState extends State<Multi_answer> {
                   Text(
                     "Quiz #1",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: R.adaptive(context, mobile: 28, tablet: 30, desktop: 36),
                       fontWeight: FontWeight.w800,
                       color: primaryGreen,
                     ),
@@ -102,8 +103,8 @@ class _MultiAnswerState extends State<Multi_answer> {
                   Text(
                     '${formatTime(remainingSeconds)}\n3/5',
                     textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: R.adaptive(context, mobile: 14, tablet: 16, desktop: 18),
                       fontWeight: FontWeight.bold,
                       height: 1.2,
                     ),
@@ -111,36 +112,36 @@ class _MultiAnswerState extends State<Multi_answer> {
                 ],
               ),
 
-              const SizedBox(height: 22),
+              SizedBox(height: R.hp(context, 0.03)),
 
               /// Question Card
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 22,
-                  vertical: 28,
+                padding: EdgeInsets.symmetric(
+                  horizontal: R.wp(context, 0.06),
+                  vertical: R.hp(context, 0.04),
                 ),
                 decoration: BoxDecoration(
                   color: primaryGreen,
-                  borderRadius: BorderRadius.circular(35),
+                  borderRadius: BorderRadius.circular(R.wp(context, 0.08)),
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     Text(
                       "Q3.",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 19,
+                        fontSize: R.adaptive(context, mobile: 17, tablet: 19, desktop: 22),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: R.hp(context, 0.015)),
                     Text(
                       "Which festivals are officially celebrated in Cambodia?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 24),
                         height: 1.4,
                         fontWeight: FontWeight.w800,
                       ),

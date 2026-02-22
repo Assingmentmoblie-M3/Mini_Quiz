@@ -5,6 +5,7 @@ import 'package:mini_quiz/pages/user_side/view/select_topic_screen.dart';
 import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 import 'package:mini_quiz/pages/admin_side/model/user_model.dart';
 import 'package:mini_quiz/pages/admin_side/view/admin_dashboard_page.dart';
+import 'package:mini_quiz/utill/responsive.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -97,11 +98,14 @@ class _LoginScreenState extends State<LoginScreen> {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(CupertinoIcons.chevron_back),
           color: Colors.green,
-          iconSize: 30,
+          iconSize: R.scaleWidth(7),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: R.wp(context, 0.05),
+          vertical: R.wp(context, 0.05),
+        ),
         child: Form(
           key: _formKey,
           child: Column(
@@ -110,21 +114,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Enter Your Email",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: R.adaptive(context, mobile: 28, tablet: 32, desktop: 36),
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF00D60B),
+                        color: const Color(0xFF00D60B),
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    const Text(
+                    SizedBox(height: R.hp(context, 0.02)),
+                    Text(
                       "We'll only use this to save your program!\nWe won't spam you.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15, color: Color(0xFF5C5C5C)),
+                      style: TextStyle(
+                        fontSize: R.adaptive(context, mobile: 13, tablet: 15, desktop: 17),
+                        color: const Color(0xFF5C5C5C),
+                      ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: R.hp(context, 0.04)),
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
@@ -133,19 +140,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           Icons.email_outlined,
                           color: Color(0xFF8C8C8C),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 30,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: R.hp(context, 0.025),
+                          horizontal: R.wp(context, 0.08),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(R.wp(context, 0.05)),
                           borderSide: const BorderSide(
                             color: Color(0xFF40DCCA),
                             width: 2,
                           ),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(R.wp(context, 0.05)),
                         ),
                       ),
                       validator: _emailValidator,
@@ -156,40 +163,42 @@ class _LoginScreenState extends State<LoginScreen> {
               Obx(
                 () => SizedBox(
                   width: double.maxFinite,
-                  height: 60,
+                  height: R.hp(context, 0.08),
                   child: ElevatedButton(
-                    onPressed: userController.isLoading.value
-                        ? null
-                        : () async {
-                            if (_formKey.currentState!.validate()) {
-                              userController.isLoading.value = true;
-                              // 👈 show loading
-                              final email = emailController.text
-                                  .trim()
-                                  .toLowerCase();
+                    onPressed: () async {
+                      // Prevent double clicks
+                      if (userController.isLoading.value) return;
 
-                              final user = await userController.login(email);
+                      if (_formKey.currentState!.validate()) {
+                        final email = emailController.text
+                            .trim()
+                            .toLowerCase();
 
-                              if (user != null) {
-                                if (user.roleId == 0) {
-                                  Get.off(() => SelectionScreen());
-                                } else if (user.roleId == 1) {
-                                  Get.off(() => DashboardScreen());
-                                }
-                              }
-                            }
-                          },
+                        final user = await userController.login(email);
+
+                        if (user != null) {
+                          if (user.roleId == 0) {
+                            Get.off(() => SelectionScreen());
+                          } else if (user.roleId == 1) {
+                            Get.off(() => DashboardScreen());
+                          }
+                        }
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00A408),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(R.wp(context, 0.04)),
                       ),
                     ),
                     child: userController.isLoading.value
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
+                        : Text(
                             "Continue",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
+                            style: TextStyle(
+                              fontSize: R.adaptive(context, mobile: 16, tablet: 18, desktop: 20),
+                              color: Colors.white,
+                            ),
                           ),
                   ),
                 ),

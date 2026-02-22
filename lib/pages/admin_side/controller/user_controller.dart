@@ -72,10 +72,13 @@ class UserController extends GetxController {
   }
 
   Future<User?> login(String email) async {
-    // prevents double tap
+    // Check if already loading to prevent double clicks
+    if (isLoading.value) return null;
 
     try {
-      // First: try login
+      isLoading.value = true;
+
+      // Call login endpoint - backend already creates user if doesn't exist
       final response = await ApiService.dio.post(
         '/login',
         data: {'email': email},
@@ -85,28 +88,19 @@ class UserController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = response.data['data'];
-
         if (data != null) {
           user = User.fromJson(data);
-        } else {
-          // User not found → create automatically
-          final createResponse = await ApiService.dio.post(
-            '/users',
-            data: {'email': email},
-          );
-print("Create user response: ${createResponse.data}");
-          if (createResponse.statusCode == 200) {
-            user = User.fromJson(createResponse.data['data']);
-          }
-          localStorageService.write('userId', user?.userId);
-          localStorageService.write('roleId', user?.roleId);
           
+          // Save to local storage
+          localStorageService.write('userId', user.userId);
+          localStorageService.write('roleId', user.roleId);
+          print('User saved to local storage - userId: ${user.userId}, roleId: ${user.roleId}');
         }
       }
-
-      return user; // can be null if something fails
+      print('user ${user}');
+      return user;
     } catch (e) {
-      print("Login error: $e"); // optional debug
+      print("Login error: $e");
       return null;
     } finally {
       isLoading.value = false;

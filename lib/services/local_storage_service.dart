@@ -11,6 +11,7 @@ class LocalStorageService {
 
   // Read
   T? read<T>(String key) {
+    // print('key: $key');
     return _box.read<T>(key);
   }
 

@@ -95,7 +95,7 @@ class QuestionController extends GetxController {
         final List data = response.data['data'];
         questions.value =
             data.map((json) => Question.fromJson(json)).toList();
-            print('Fetched questions: ${data}');
+            // print('Fetched questions: ${data}');
       } else {
         Get.snackbar('Error', 'Failed to load questions');
       }
