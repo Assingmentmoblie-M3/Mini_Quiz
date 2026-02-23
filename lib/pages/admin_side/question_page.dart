@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/components/action_button.dart';
 import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
-import 'package:mini_quiz/pages/admin_side/view_user_page.dart';
 import 'package:mini_quiz/provider/qusetion_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';

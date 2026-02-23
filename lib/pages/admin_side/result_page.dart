@@ -1,12 +1,9 @@
 import 'package:mini_quiz/pages/admin_side/view_question_page.dart';
 import 'package:mini_quiz/provider/user_provider.dart';
-
 import '../../layout/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_quiz/provider/result_provider.dart';
-import 'package:mini_quiz/pages/admin_side/view_result_page.dart';
-
 class ResultScreen extends StatefulWidget {
   final int? id;
   final String? userEmail;
@@ -23,24 +20,20 @@ class ResultScreen extends StatefulWidget {
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
-
 class _ResultScreenState extends State<ResultScreen> {
   final _totalScoreController = TextEditingController();
   int? selectedUserId;
   bool _isSubmitting = false;
-
   @override
   void initState() {
     super.initState();
-    // fetch user list from provider
+
     Future.microtask(
       () => Provider.of<UserProvider>(context, listen: false).fetchUsers(),
     );
-
     if (widget.totalScore != null) {
       _totalScoreController.text = widget.totalScore.toString();
     }
-    // If editing, you can map email to userId later
   }
 
   @override
@@ -48,7 +41,6 @@ class _ResultScreenState extends State<ResultScreen> {
     _totalScoreController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,14 +48,12 @@ class _ResultScreenState extends State<ResultScreen> {
       body: Row(
         children: [
           const Sidebar(selected: "Results"),
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ... header & buttons ...
                   RichText(
                     text: const TextSpan(
                       children: [
