@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/HomeScreen/LoginScren.dart';
-import 'package:mini_quiz/pages/user_side/quiz_QCM2.dart';
 import 'package:mini_quiz/pages/user_side/quizmain.dart';
 import 'package:mini_quiz/provider/fetchlevel_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +12,7 @@ class LevelPage extends StatefulWidget {
 }
 
 class _LevelPageState extends State<LevelPage> {
+  int? selectedIndex;
   Color _getColor(int index) {
     List<Color> colors = [
       Color(0xFFF35B6DA),
@@ -76,8 +75,14 @@ class _LevelPageState extends State<LevelPage> {
                       final level = provider.levelList[index];
                       return quizButton(
                         text: level.levelName,
-                        color: _getColor(index),
+                        color: selectedIndex == index
+                            ? Colors
+                                  .green // selected color
+                            : _getColor(index),
                         onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                          });
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -99,6 +104,7 @@ class _LevelPageState extends State<LevelPage> {
       ),
     );
   }
+
   Widget quizButton({
     required String text,
     required Color color,

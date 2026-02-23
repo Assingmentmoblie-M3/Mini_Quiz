@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/pages/admin_side/user_page.dart';
 import 'package:mini_quiz/components/action_button.dart';
+
 class ViewUserScreen extends StatefulWidget {
   const ViewUserScreen({super.key});
 
@@ -28,7 +29,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Users"),
+          SizedBox(width: 250, child: const Sidebar(selected: "Users")),
 
           Expanded(
             child: Padding(
@@ -111,7 +112,7 @@ class _ViewUserScreenState extends State<ViewUserScreen> {
                         });
                       },
                       searchHint: "Search users...",
-                      child: UserTable(),
+                      child:const UserTable(),
                     ),
                   ),
                 ],
@@ -142,8 +143,10 @@ class _UserTableState extends State<UserTable> {
         if (provider.users.isEmpty) {
           return const Center(child: Text("No users found"));
         }
-        return Expanded(
-          child: SingleChildScrollView(
+        return SizedBox(
+          width: double.infinity,
+          child:Scrollbar(
+            child:SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: [
@@ -239,7 +242,7 @@ class _UserTableState extends State<UserTable> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => UserScreen(
-                                id: user['user_id'], // 🔥 Pass this!
+                                id: user['user_id'],
                                 email: user['email'],
                                 roleId: user['role_id'],
                                 status: user['status'],
@@ -254,7 +257,8 @@ class _UserTableState extends State<UserTable> {
                               title: const Text("Are you sure to delete user?"),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
                                   child: const Text("Cancel"),
                                 ),
                                 TextButton(
@@ -264,7 +268,7 @@ class _UserTableState extends State<UserTable> {
                               ],
                             ),
                           );
-          
+
                           if (confirmed == true) {
                             await Provider.of<UserProvider>(
                               context,
@@ -281,6 +285,7 @@ class _UserTableState extends State<UserTable> {
                 );
               }),
             ),
+          ),
           ),
         );
       },

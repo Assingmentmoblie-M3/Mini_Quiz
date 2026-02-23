@@ -31,7 +31,7 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Questions"),
+          SizedBox(width: 250, child: const Sidebar(selected: "Questions")),
 
           Expanded(
             child: Padding(
@@ -95,20 +95,21 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   Expanded(
                     child: SectionCard(
                       title: "Table Questions",
-                      onSearchChanged: (value) {
-                        setState(() {
-                          searchText = value;
-                        });
-                      },
                       searchHint: "Search questions...",
-                      child: QuestionsTable(),
+                      onSearchChanged: (value) {},
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: QuestionsTable(),
+                      ),
                     ),
                   ),
+
+                  // },
+                  // ),
                 ],
               ),
             ),
@@ -137,261 +138,239 @@ class _QuestionsTableState extends State<QuestionsTable> {
         if (provider.questions.isEmpty) {
           return const Center(child: Text("No Question Fount"));
         }
-        return LayoutBuilder(
-          builder: (context, constraints){
-           return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columnSpacing: 30,
-            columns: const [
-              DataColumn(
-                label: Center(
-                  child: Text(
-                    "No.",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF5E5E5E),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text(
-                    "Actions",
-                    style: TextStyle(
-                      color: Color(0xFF5E5E5E),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Question",
+        return SizedBox(
+            width:double.infinity,
+            child:Scrollbar(
+              child:SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                columnSpacing: 30,
+                columns: const [
+                  DataColumn(
+                    label: Text(
+                      "No.",
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
                         color: Color(0xFF5E5E5E),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60),
-                  child: Center(
-                    child: Text(
-                      "Score",
-                      style: TextStyle(
+                        fontFamily: 'Fredoka',
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
                       ),
                     ),
                   ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35),
-                  child: Center(
-                    child: Text(
-                      "Category",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Level",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: Text(
+                        "Question",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              DataColumn(
-                label: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Center(
-                    child: Text(
-                      "Created_at",
-                      style: TextStyle(color: Color(0XFF5E5E5E)),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-            rows: List.generate(provider.questions.length, (index) {
-              final q = provider.questions[index];
-              print("testing ${q}");
-              return DataRow(
-                cells: [
-                  DataCell(
-                    Text(
-                      "${index + 1}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF5E5E5E),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: Text(
+                        "Score",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  DataCell(
-                    ActionButtons(
-                      onEdit: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => QuestionScreen(
-                              questionId: q['question_id'],
-                              questionText: q['question'],
-                              score: q['score'],
-                              categoryId: q['category']?['category_id'],
-                              levelId: q['level']?['level_id'],
-                            ),
-                          ),
-                        );
-                      },
-                      onDelete: () async {
-                        bool? confirm = await showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text(
-                              "Are you sure you want to delete?",
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                child: const Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                child: const Text("Delete"),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        if (confirm == true) {
-                          await provider.deleteQuestion(q['question_id']);
-                        }
-                      },
-                    ),
-                  ),
-                  DataCell(
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(child: Text(q['question'] ?? "")),
-                    ),
-                  ),
-
-                  DataCell(Text(q['score']?.toString() ?? "")),
-                  DataCell(
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(
-                        child: Text(q['category']?['category_name'] ?? ""),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: Text(
+                        "Category",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  DataCell(
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Center(
-                        child: Text(q['level']?['level_name'] ?? ""),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: Text(
+                        "Level",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  DataCell(Center(child: Text(q['created_at'] ?? ""))),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 35),
+                      child: Text(
+                        "Created_at",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontFamily: 'Fredoka',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
-              );
-            }),
-          ),
-        );
-          },
-        );
-      },
-    );
-  }
-}
-
-/*class _QuestionsTableState extends State<QuestionsTable> {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<QuestionProvider>(
-      builder: (context, provider, child) {
-        if (provider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (provider.questions.isEmpty) {
-          return const Center(child: Text("No Question Found"));
-        }
-
-        return LayoutBuilder( // ប្រើ LayoutBuilder ដើម្បីដឹងពីទទឹងអេក្រង់
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical, // ឱ្យ Scroll ចុះក្រោមបាន
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, // ឱ្យ Scroll ទៅឆ្វេងស្ដាំបាន
-                child: DataTable(
-                  columnSpacing: 20,
-                  columns: const [
-                    DataColumn(label: Text("No.", style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text("Actions", style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text("Question", style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text("Score", style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text("Category", style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text("Level", style: TextStyle(fontWeight: FontWeight.bold))),
-                    DataColumn(label: Text("Created_at", style: TextStyle(fontWeight: FontWeight.bold))),
-                  ],
-                  rows: List.generate(provider.questions.length, (index) {
-                    final q = provider.questions[index];
-                    return DataRow(
-                      cells: [
-                        DataCell(Text("${index + 1}")),
-                        DataCell(
-                          ActionButtons(
-                            onEdit: () { /* កូដ Edit របស់អ្នក */ },
-                            onDelete: () async { /* កូដ Delete របស់អ្នក */ },
+                rows: List.generate(provider.questions.length, (index) {
+                  final q = provider.questions[index];
+            
+                  return DataRow(
+                    cells: [
+                      DataCell(
+                        Text(
+                          "${index + 1}",
+                          style: TextStyle(
+                            color: Color(0xFF5E5E5E),
+                            fontFamily: 'Fredoka',
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        DataCell(
-                          Container(
-                            width: 300, // កំណត់ទទឹងសំណួរ កុំឱ្យវាវែងពេក
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              q['question'] ?? "",
-                              softWrap: true,
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: ActionButtons(
+                            onEdit: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => QuestionScreen(
+                                    questionId: q['question_id'],
+                                    questionText: q['question'],
+                                    score: q['score'],
+                                    categoryId: q['category']?['id'],
+                                    levelId: q['level']?['id'],
+                                  ),
+                                ),
+                              );
+                            },
+                            onDelete: () async {
+                              bool? confirm = await showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: const Text(
+                                    "Are you sure you want to delete?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text("Delete"),
+                                    ),
+                                  ],
+                                ),
+                              );
+            
+                              if (confirm == true) {
+                                await provider.deleteQuestion(q['question_id']);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: Text(
+                            q['question'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        DataCell(Text(q['score']?.toString() ?? "")),
-                        DataCell(Text(q['category']?['category_name'] ?? "")),
-                        DataCell(Text(q['level']?['level_name'] ?? "")),
-                        DataCell(Text(q['created_at'] ?? "")),
-                      ],
-                    );
-                  }),
-                ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: Text(
+                            q['score']?.toString() ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: Text(
+                            q['category']?['category_name'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: Text(
+                            q['level']?['level_name'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35),
+                          child: Text(
+                            q['created_at'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontFamily: 'Fredoka',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
               ),
-            );
-          },
-        );
+            ),
+            ),
+          );
+        
       },
     );
   }
 }
-*/

@@ -1,8 +1,36 @@
 import 'package:flutter/material.dart';
 import '../service/api_fetch.dart';
+
 class QuestionProvider extends ChangeNotifier {
   List<Map<String, dynamic>> questions = [];
   bool isLoading = false;
+
+Future<void> fetchQuestions() async {
+  isLoading = true;
+  notifyListeners(); 
+  try {
+    final response = await ApiService.get("questions");   
+    if (response != null && response['data'] != null) {
+
+      print("DEBUG DATA: ${response['data'][0]}"); 
+      List<Map<String, dynamic>> fetchedData = List<Map<String, dynamic>>.from(response['data']);
+    
+      fetchedData.sort((a, b) => 
+        (b['question_id'] ?? 0).compareTo(a['question_id'] ?? 0)
+      );
+
+      questions = fetchedData;
+    } else {
+      questions = [];
+    }
+  } catch (e) {
+    print("LOG: Error fetching questions: $e");
+    questions = [];
+  }
+  isLoading = false;
+  notifyListeners();
+}
+  /*
 Future<void> fetchQuestions() async {
   isLoading = true;
   notifyListeners();
@@ -21,7 +49,7 @@ Future<void> fetchQuestions() async {
   }
   isLoading = false;
   notifyListeners();
-}
+}*/
 
   Future<bool> addQuestion({
     required String question,

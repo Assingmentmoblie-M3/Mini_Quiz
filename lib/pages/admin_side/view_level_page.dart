@@ -30,7 +30,7 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
       backgroundColor: const Color(0xFFF1F1F1),
       body: Row(
         children: [
-          const Sidebar(selected: "Levels"),
+          SizedBox(width: 250, child: Sidebar(selected: "Levels")),
 
           Expanded(
             child: Padding(
@@ -117,7 +117,6 @@ class _ViewLevelScreenState extends State<ViewLevelScreen> {
 
 class LevelsTable extends StatefulWidget {
   const LevelsTable({super.key});
-
   @override
   State<LevelsTable> createState() => _LevelsTableState();
 }
@@ -130,76 +129,214 @@ class _LevelsTableState extends State<LevelsTable> {
         if (provider.isloading) {
           return const Center(child: CircularProgressIndicator());
         }
-
         if (provider.level.isEmpty) {
           return const Center(child: Text("No Levels Found"));
         }
-
-        return Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: const [
-                DataColumn(label: Text("No.")),
-                DataColumn(label: Text("Actions")),
-                DataColumn(label: Text("Level Name")),
-                DataColumn(label: Text("Description")),
-                DataColumn(label: Text("Category")),
-                DataColumn(label: Text("Created Date")),
-              ],
-              rows: List.generate(provider.level.length, (index) {
-                final level = provider.level[index];
-                return DataRow(
-                  cells: [
-                    DataCell(Text("${index + 1}")),
-                    DataCell(
-                      ActionButtons(
-                        onEdit: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LevelsScreen(
-                                levelId: level['level_id'],
-                                levelName: level['level_name'],
-                                description: level['description'],
-                                categoryId: level['category']?['id'],
-                              ),
-                            ),
-                          );
-                        },
-                        onDelete: () async {
-                          bool? confirm = await showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const Text(
-                                "Are you sure you want to delete?",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
-                                  child: const Text("Cancel"),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text("Delete"),
-                                ),
-                              ],
-                            ),
-                          );
-          
-                          if (confirm == true) {
-                            await provider.deleteLevel(level['level_id']);
-                          }
-                        },
+        return SizedBox(
+          width: double.infinity,
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: DataTable(
+                columns: const [
+                  DataColumn(
+                    label: Text(
+                      "No.",
+                      style: TextStyle(
+                        color: Color(0xFF5E5E5E),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Fredoka',
                       ),
                     ),
-                    DataCell(Text(level['level_name'] ?? "")),
-                    DataCell(Text(level['description'] ?? "")),
-                    DataCell(Text(level['category']?['name'] ?? "")),
-                    DataCell(Text(level['created_at'] ?? "")),
-                  ],
-                );
-              }),
+                  ),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        "Actions",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Fredoka',
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        "Level Name",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Fredoka',
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        "Description",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Fredoka',
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        "Category",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Fredoka',
+                        ),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Text(
+                        "Created Date",
+                        style: TextStyle(
+                          color: Color(0xFF5E5E5E),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Fredoka',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                rows: List.generate(provider.level.length, (index) {
+                  final level = provider.level[index];
+
+                  return DataRow(
+                    cells: [
+                      DataCell(Text("${index + 1}")),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: ActionButtons(
+                            onEdit: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => LevelsScreen(
+                                    levelId: level['level_id'],
+                                    levelName: level['level_name'],
+                                    description: level['description'],
+                                    categoryId: level['category']?['id'],
+                                  ),
+                                ),
+                              );
+                            },
+                            onDelete: () async {
+                              bool? confirm = await showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: const Text(
+                                    "Are you sure you want to delete?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                          color: Color(0xFF5E5E5E),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Fredoka',
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text(
+                                        "Delete",
+                                        style: TextStyle(
+                                          color: Color(0xFF5E5E5E),
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Fredoka',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                await provider.deleteLevel(level['level_id']);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            level['level_name'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Fredoka',
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            level['description'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Fredoka',
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            level['category']?['name'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Fredoka',
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            level['created_at'] ?? "",
+                            style: TextStyle(
+                              color: Color(0xFF5E5E5E),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Fredoka',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
             ),
           ),
         );

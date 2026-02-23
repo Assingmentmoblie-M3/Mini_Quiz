@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:mini_quiz/pages/HomeScreen/LoginScren.dart';
 import 'package:mini_quiz/pages/HomeScreen/SelectionScreen.dart';
 
 class ResultPages extends StatelessWidget {

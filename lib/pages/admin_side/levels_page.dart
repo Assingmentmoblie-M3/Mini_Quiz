@@ -4,13 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/provider/category_provider.dart';
 import 'package:mini_quiz/provider/level_provider.dart';
-
 class LevelsScreen extends StatefulWidget {
   final int? levelId;
   final String? levelName;
   final String? description;
   final int? categoryId;
-
   const LevelsScreen({
     this.levelId,
     this.levelName,
@@ -18,7 +16,6 @@ class LevelsScreen extends StatefulWidget {
     this.categoryId,
     super.key,
   });
-
   @override
   State<LevelsScreen> createState() => _LevelsScreenState();
 }
@@ -38,8 +35,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
       text: widget.description ?? "",
     );
     selectedCategoryId = widget.categoryId;
-
-    // Fetch categories
     Future.microtask(
       () => Provider.of<CategoryProvider>(
         context,
@@ -70,14 +65,12 @@ class _LevelsScreenState extends State<LevelsScreen> {
     bool success;
 
     if (widget.levelId == null) {
-      // Add new level
       success = await provider.createLevel(
         _levelNameController.text.trim(),
         _descriptionController.text.trim(),
         selectedCategoryId,
       );
     } else {
-      // Update existing level
       success = await provider.updateLevel(
         widget.levelId!,
         _levelNameController.text.trim(),
@@ -87,7 +80,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
     }
 
     setState(() => _isSubmitting = false);
-
     if (success) {
       if (!mounted) return;
       Navigator.pop(context);
@@ -98,7 +90,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +97,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
       body: Row(
         children: [
           const Sidebar(selected: "Levels"),
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -134,7 +124,6 @@ class _LevelsScreenState extends State<LevelsScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 10),
                   const Text(
                     "Levels",
@@ -142,6 +131,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      fontFamily:'Fredoka',
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -171,7 +161,7 @@ class _LevelsScreenState extends State<LevelsScreen> {
                         ),
                         child: const Text(
                           "View Level",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(fontSize: 16, color: Colors.white,fontFamily: 'Fredoka'),
                         ),
                       ),
                     ),

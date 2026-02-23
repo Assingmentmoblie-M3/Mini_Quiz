@@ -9,7 +9,6 @@ class DashboardScreen extends StatefulWidget {
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
-
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
@@ -53,6 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Fredoka',
                     ),
                   ),
 

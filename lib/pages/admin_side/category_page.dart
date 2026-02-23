@@ -113,6 +113,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       color: Color(0xFF009E08),
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'Fredoka',
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -142,7 +143,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                         child: const Text(
                           "View Category",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: TextStyle(fontSize: 16, color: Colors.white,fontFamily: 'Fredoka'),
                         ),
                       ),
                     ),
@@ -167,6 +168,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               color: Color(0xFF5C5C5C),
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              fontFamily: 'Fredoka'
                             ),
                           ),
                           Form(
