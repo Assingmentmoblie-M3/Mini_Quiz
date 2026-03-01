@@ -78,17 +78,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           : const SizedBox()),
 
                       SizedBox(width: 16),
-                      StatCard(
-                        title: "Average Score",
-                        value: "80%",
-                        color: Colors.pink,
+                      Obx(() =>
+                        StatCard(
+                          title: "Average Score",
+                          value: resultController.totalAvgScore.value.toString(),
+                          color: Colors.pink,
+                        ),
                       ),
                       SizedBox(width: 16),
-                      StatCard(
-                        title: "Completion Rate",
-                        value: "85%",
-                        color: Colors.blue,
-                      ),
                     ],
                   ),
 
@@ -100,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Expanded(
                           flex: 3,
                           child: SectionCard(
-                            title: "Recent Quiz Attempts",
+                            title: "Recent User Attempts",
                             child: RecentQuizTable(),
                           ),
                         ),

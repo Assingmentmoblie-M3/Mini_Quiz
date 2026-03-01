@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_result_page.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
 
 class SectionCard extends StatelessWidget {
   final String title;
@@ -96,22 +98,14 @@ class RecentQuizTable extends StatelessWidget {
         columns: [
           DataColumn(
             label: Text(
-              "Topic",
+              "Email",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF5E5E5E),
               ),
             ),
           ),
-          DataColumn(
-            label: Text(
-              "Level",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5E5E5E),
-              ),
-            ),
-          ),
+
           DataColumn(
             label: Text(
               "Status",
@@ -122,33 +116,37 @@ class RecentQuizTable extends StatelessWidget {
             ),
           ),
         ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text("Math")),
-              DataCell(Text("Easy")),
-              DataCell(
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(232, 248, 233, 1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      "Active",
-                      style: TextStyle(
-                        color: Color(0xFF00D60B),
-                        backgroundColor: Color.fromRGBO(232, 248, 233, 1),
+        rows: userController.filteredUsers
+            .where(
+              (user) => user.userId == userController.filteredUsers.last.userId,
+            )
+            .map((user) {
+              return DataRow(
+                cells: [
+                  DataCell(Text(user.email.toString())),
+                  DataCell(
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 0),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(232, 248, 233, 1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          "Active",
+                          style: TextStyle(color: Color(0xFF00D60B)),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-        ],
+                ],
+              );
+            })
+            .toList(),
       ),
     );
   }
@@ -174,7 +172,7 @@ class FavTopicTable extends StatelessWidget {
           ),
           DataColumn(
             label: Text(
-              "Total Users",
+              "Unique Users",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF5E5E5E),
@@ -182,9 +180,14 @@ class FavTopicTable extends StatelessWidget {
             ),
           ),
         ],
-        rows: const [
+        rows: [
           DataRow(
-            cells: [DataCell(Text("General Knowledge")), DataCell(Text("10"))],
+            cells: [
+              DataCell(Text(resultController.theMostCategory.value)),
+              DataCell(
+                Text(resultController.theMostCategoryUsed.value.toString()),
+              ),
+            ],
           ),
         ],
       ),

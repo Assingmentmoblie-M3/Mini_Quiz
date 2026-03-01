@@ -56,11 +56,6 @@ class ViewResultScreen extends StatelessWidget {
                   Expanded(
                     child: SectionCard(
                       title: "Table Results",
-                      onSearchChanged: (val) {
-                        controller.search.value = val;
-                        controller.fetchResults();
-                      },
-                      searchHint: "Search...",
                       child: ResultTable(),
                     ),
                   ),

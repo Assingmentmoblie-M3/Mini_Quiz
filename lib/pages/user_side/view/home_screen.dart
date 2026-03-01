@@ -10,6 +10,13 @@ class Homescreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Responsive container size - fixed sizes work better than percentages for full-screen fit
+    final containerSize = R.isDesktop(context)
+        ? 250.0
+        : R.isTablet(context)
+            ? 220.0
+            : R.wp(context, 0.65);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -19,15 +26,16 @@ class Homescreen extends StatelessWidget {
             Text(
               'welcome to',
               style: TextStyle(
-                fontSize: R.adaptive(context, mobile: 16, tablet: 18, desktop: 20),
+                fontSize: R.adaptive(context, mobile: 16, tablet: 18, desktop: 18),
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF8C8C8C),
               ),
             ),
+            SizedBox(height: R.hp(context, 0.01)),
             RichText(
               text: TextSpan(
                 style: TextStyle(
-                  fontSize: R.adaptive(context, mobile: 36, tablet: 40, desktop: 48),
+                  fontSize: R.adaptive(context, mobile: 36, tablet: 40, desktop: 40),
                   fontWeight: FontWeight.bold,
                   letterSpacing: -1,
                 ),
@@ -36,7 +44,7 @@ class Homescreen extends StatelessWidget {
                     text: 'mini ',
                     style: TextStyle(
                       color: const Color(0xFF5C5C5C),
-                      fontSize: R.adaptive(context, mobile: 22, tablet: 25, desktop: 30),
+                      fontSize: R.adaptive(context, mobile: 22, tablet: 25, desktop: 25),
                     ),
                   ),
                   TextSpan(
@@ -47,28 +55,27 @@ class Homescreen extends StatelessWidget {
               ),
             ),
             Container(
-              height: R.hp(context, 0.003),
-              width: R.wp(context, 0.25),
+              height: 2,
+              width: 100,
               decoration: BoxDecoration(
                 color: Colors.green.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(R.wp(context, 0.01)),
+                borderRadius: BorderRadius.circular(1),
               ),
             ),
-            SizedBox(height: R.hp(context, 0.04)),
+            SizedBox(height: R.hp(context, 0.03)),
             Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.bottomCenter,
               children: [
                 Container(
-                  width: R.wp(context, 0.65),
-                  height: R.wp(context, 0.65),
-                  padding: EdgeInsets.all(R.wp(context, 0.05)),
+                  width: containerSize,
+                  height: containerSize,
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    // color: Colors.white,
-                    borderRadius: BorderRadius.circular(R.wp(context, 0.10)),
+                    borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: const Color(0xFF40DCCA),
-                      width: 4,
+                      width: 3,
                     ),
                   ),
                   child: Center(
@@ -77,18 +84,18 @@ class Homescreen extends StatelessWidget {
                       children: [
                         Text(
                           'Ready for a',
-                          textAlign: TextAlign.start,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 24),
+                            fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 18),
                             fontWeight: FontWeight.bold,
                             color: const Color(0xFF5C5C5C),
                           ),
                         ),
                         Text(
                           'Challange?',
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: R.adaptive(context, mobile: 24, tablet: 27, desktop: 32),
+                            fontSize: R.adaptive(context, mobile: 24, tablet: 27, desktop: 24),
                             fontWeight: FontWeight.bold,
                             color: const Color(0xFF5EC0B5),
                           ),
@@ -98,14 +105,14 @@ class Homescreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: -R.hp(context, 0.04),
+                  bottom: -28,
                   child: Container(
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
                           blurRadius: 10,
-                          offset: Offset(0, 5),
+                          offset: const Offset(0, 5),
                         ),
                       ],
                     ),
@@ -117,11 +124,11 @@ class Homescreen extends StatelessWidget {
                         backgroundColor: const Color(0xFF009E08),
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(
-                          horizontal: R.wp(context, 0.10),
-                          vertical: R.hp(context, 0.03),
+                          horizontal: 40,
+                          vertical: 16,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(R.wp(context, 0.05)),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         elevation: 5,
                       ),
@@ -129,7 +136,7 @@ class Homescreen extends StatelessWidget {
                         "Start Quiz",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: R.adaptive(context, mobile: 24, tablet: 28, desktop: 32),
+                          fontSize: R.adaptive(context, mobile: 24, tablet: 26, desktop: 20),
                           color: Colors.white,
                         ),
                       ),
@@ -138,6 +145,7 @@ class Homescreen extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: 50),
           ],
         ),
       ),

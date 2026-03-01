@@ -30,8 +30,12 @@ class ResultController extends GetxController {
   var sortDirection = "desc".obs;
 
   RxInt totalQuizzes = 0.obs;
-// Total Score column index
+  var filteredUsers = <UserForResult>[].obs; // filtered list
+  var searchText = ''.obs;
 
+  RxDouble totalAvgScore = 0.0.obs;
+
+  // Total Score column index
 
   @override
   void onInit() {
@@ -39,7 +43,9 @@ class ResultController extends GetxController {
     fetchUsers();
     fetchCategories();
     fetchResults();
-    
+    fetchTotalQuizzes();
+    fetchTotalAvgScore();
+    countTheMostCategory();
   }
 
   // ================= EDIT / RESET =================
@@ -79,7 +85,7 @@ class ResultController extends GetxController {
           'per_page': 10,
         },
       );
-      
+
       if (response.statusCode == 200) {
         final List data = response.data['data'];
         results.value = data.map((e) => Result.fromJson(e)).toList();
@@ -87,6 +93,19 @@ class ResultController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> fetchTotalQuizzes() async {
+    final response = await ApiService.dio.get('/results');
+    final List data = response.data['data'];
+    totalQuizzes.value = data.length;
+  }
+
+  Future<void> fetchTotalAvgScore() async {
+    final response = await ApiService.dio.get('/results');
+    final List data = response.data['data'];
+    totalAvgScore.value =
+        data.map((e) => e['total_score']).reduce((a, b) => a + b) / data.length;
   }
 
   Future<void> fetchUsers() async {
@@ -140,22 +159,30 @@ class ResultController extends GetxController {
   Future<void> saveResult(int userId, int categoryId, int totalScore) async {
     try {
       isLoading.value = true;
-      print('Saving result... userId: $userId, categoryId: $categoryId, totalScore: $totalScore');
-      
-      final response = await ApiService.dio.post('/save-result', data: {
-        "user_id": userId,
-        "category_id": categoryId,
-        "total_score": totalScore,
-      });
-      
+      print(
+        'Saving result... userId: $userId, categoryId: $categoryId, totalScore: $totalScore',
+      );
+
+      final response = await ApiService.dio.post(
+        '/save-result',
+        data: {
+          "user_id": userId,
+          "category_id": categoryId,
+          "total_score": totalScore,
+        },
+      );
+
       print('Response status code: ${response.statusCode}');
       print('Response data: ${response.data}');
-      
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Get.snackbar('Success', 'Result saved successfully');
         //fetchResults(); // Refresh results list
       } else {
-        Get.snackbar('Error', 'Failed to save result - Status: ${response.statusCode}');
+        Get.snackbar(
+          'Error',
+          'Failed to save result - Status: ${response.statusCode}',
+        );
       }
     } catch (e) {
       print('Error saving result: $e');
@@ -164,45 +191,57 @@ class ResultController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  final theMostCategory = ''.obs;
+  final theMostCategoryUsed = ''.obs;
+ Future<void> countTheMostCategory() async {
+  final response = await ApiService.dio.get('/results');
+  final List data = response.data['data'];
+
+  if (data.isEmpty) return;
+
+  // 🔥 Store unique (user_id, category_id)
+  final uniquePairs = <String>{};
+
+  // 🔥 Store category_id → category_name
+  final categoryNames = <int, String>{};
+
+  for (final item in data) {
+    final user = item['user'];
+    final category = item['category'];
+
+    if (user == null || category == null) continue;
+
+    final int userId = user['user_id'];
+    final int categoryId = category['category_id'];
+    final String categoryName = category['category_name'];
+
+    uniquePairs.add('$userId-$categoryId');
+    categoryNames[categoryId] = categoryName;
+  }
+
+  // 🔥 Count unique users per category
+  final countMap = <int, int>{};
+
+  for (final pair in uniquePairs) {
+    final parts = pair.split('-');
+    final int categoryId = int.parse(parts[1]);
+
+    countMap[categoryId] = (countMap[categoryId] ?? 0) + 1;
+  }
+
+  if (countMap.isEmpty) return;
+
+  final mostUsed = countMap.entries
+      .reduce((a, b) => a.value > b.value ? a : b);
+
+  final mostCategoryName = categoryNames[mostUsed.key];
+
+  print("Most used category: $mostCategoryName");
+  print("Unique users: ${mostUsed.value}");
+
+  // 👇 Store name instead of id
+  theMostCategory.value = mostCategoryName ?? '';
+  theMostCategoryUsed.value = mostUsed.value.toString();
 }
-//   Future<void> fetchUserResults(int userId, int levelId) async {
-//   try {
-//     final response =
-//         await ApiService.dio.get('/users/$userId/levels/$levelId/results');
-
-//     if (response.statusCode == 200) {
-//       final data = response.data['data'] as List;
-
-//       List<Answer> userAnswers =
-//           data.map((json) => Answer.fromJson(json)).toList();
-
-//       Map<int, Question> questionMap = {};
-//       for (var a in userAnswers) {
-//         if (a.questions != null) {
-//           questionMap[a.questions!.questionId] = a.questions!;
-//         }
-//       }
-
-//       // ✅ Correct Score Calculation
-//       int correctScore = userAnswers.where((a) {
-//         return a.selectedAnswer == a.isCorrect;
-//       }).length;
-
-//       int totalScore = userAnswers.length;
-
-//       Get.to(() => ResultScreen(
-//             correctScore: correctScore,
-//             totalScore: totalScore,
-//             quiz: userAnswers,
-//             selectedAnswers: {
-//               for (var a in userAnswers)
-//                 a.questions!.questionId: a.selectedAnswer
-//             },
-//             questionMap: questionMap,
-//           ));
-//     }
-//   } catch (e) {
-//     Get.snackbar('Error', 'Failed to fetch user results: $e');
-//   }
-// }
-
+}

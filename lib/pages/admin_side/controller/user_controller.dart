@@ -64,6 +64,7 @@ class UserController extends GetxController {
         Get.snackbar('Error', 'Failed to load users');
       }
     } catch (e) {
+      print('Error fetching users: $e');
       Get.snackbar('Error', 'An error occurred while fetching users');
     } finally {
       isLoading.value = false;

@@ -127,7 +127,7 @@ class _LevelPageState extends State<LevelPage> {
               ),
             ),
             Text(
-              "Choose your topic!",
+              "Choose your level!",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 24),
