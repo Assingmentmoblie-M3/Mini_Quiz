@@ -1,30 +1,26 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/user_side/result.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_quiz/provider/quiz1_provider.dart';
 
 class Multi_answer extends StatefulWidget {
-  const Multi_answer({super.key});
+  final Color themeColor;
+  const Multi_answer({super.key, required this.themeColor});
   @override
   State<Multi_answer> createState() => _MultiAnswerState();
 }
-
 class _MultiAnswerState extends State<Multi_answer> {
   Set<int> selectedIndexes = {};
-
   static const int totalSeconds = 60;
   int remainingSeconds = totalSeconds;
   Timer? timer;
-
-  final Color primaryGreen = const Color(0xFF19A191);
-  final Color borderGreen = const Color(0xFFB2DFDB);
-
   @override
   void initState() {
     super.initState();
     startTimer();
   }
-
   void startTimer() {
     timer?.cancel();
     remainingSeconds = totalSeconds;
@@ -38,8 +34,33 @@ class _MultiAnswerState extends State<Multi_answer> {
       }
     });
   }
+void goNext() {
+  final provider = context.read<QuizProvider>();
+  
+  // បញ្ជូន index ដែល user បានរើសទៅឆែក
+  provider.checkAnswer(selectedIndexes.toList());
 
-  void goNext() {
+  if (provider.isLastQuestion) {
+    timer?.cancel(); // ឈប់ Timer
+    // ត្រូវប្រើ pushReplacement ទៅកាន់ Result Page
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultPages(
+          score: provider.score,
+          total: provider.questions.length,
+        ),
+      ),
+    );
+  } else {
+    provider.nextQuestion();
+    setState(() {
+      selectedIndexes.clear();
+    });
+    startTimer(); // ចាប់ផ្តើម Timer ឡើងវិញសម្រាប់សំណួរថ្មី
+  }
+}
+  /*void goNext() {
     final provider = context.read<QuizProvider>();
     provider.checkAnswer(selectedIndexes.toList());
     if (provider.isLastQuestion) {
@@ -52,14 +73,12 @@ class _MultiAnswerState extends State<Multi_answer> {
       });
       startTimer();
     }
-  }
-
+  }*/
   @override
   void dispose() {
     timer?.cancel();
     super.dispose();
   }
-
   String formatTime(int seconds) {
     final minutes = seconds ~/ 60;
     final secs = seconds % 60;
@@ -110,14 +129,14 @@ class _MultiAnswerState extends State<Multi_answer> {
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: primaryGreen,
+                      color: widget.themeColor,
                     ),
                   ),
                   Text(
                     '${formatTime(remainingSeconds)}\n'
                     '${provider.currentIndex + 1}/${provider.questions.length}',
                     textAlign: TextAlign.right,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style:TextStyle(fontWeight: FontWeight.bold,color: widget.themeColor),
                   ),
                 ],
               ),
@@ -127,7 +146,7 @@ class _MultiAnswerState extends State<Multi_answer> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: primaryGreen,
+                  color: widget.themeColor,
                   borderRadius: BorderRadius.circular(35),
                 ),
                 child: Text(
@@ -148,8 +167,8 @@ class _MultiAnswerState extends State<Multi_answer> {
                   itemBuilder: (context, index) {
                     final isSelected = selectedIndexes.contains(index);
                     final Color currentColor = isSelected
-                        ? const Color(0xFF00D60B)
-                        : const Color(0xFF91E3D9);
+                        ? widget.themeColor
+                        : Colors.white.withOpacity(0.2);
 
                     return GestureDetector(
                       onTap: () => toggleSelection(index),
@@ -163,12 +182,12 @@ class _MultiAnswerState extends State<Multi_answer> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(
-                                  color: currentColor,
+                                  color:widget.themeColor,
                                   width: 2.5,
                                 ),
                               ),
                               child: isSelected
-                                  ? Icon(Icons.check, color: currentColor)
+                                  ? Icon(Icons.check, color:widget.themeColor)
                                   : null,
                             ),
                             const SizedBox(width: 12),
@@ -182,7 +201,7 @@ class _MultiAnswerState extends State<Multi_answer> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(
-                                    color: currentColor,
+                                    color:widget.themeColor,
                                     width: 2.5,
                                   ),
                                 ),
@@ -190,7 +209,7 @@ class _MultiAnswerState extends State<Multi_answer> {
                                   options[index],
                                   style: TextStyle(
                                     fontWeight: FontWeight.w800,
-                                    color: primaryGreen,
+                                    color:widget.themeColor,
                                   ),
                                 ),
                               ),
@@ -210,19 +229,19 @@ class _MultiAnswerState extends State<Multi_answer> {
                       child: ElevatedButton(
                         onPressed: selectedIndexes.isEmpty ? null : goNext,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryGreen,
-                          disabledBackgroundColor: const Color(0xFFE0E0E0),
+                          backgroundColor:widget.themeColor,
+                        //  disabledBackgroundColor:widget.themeColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
                           elevation: 0,
                         ),
-                        child: const Text(
+                        child: Text(
                           "Next",
                           style: TextStyle(
                             fontSize: 19,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color:Colors.white,
                           ),
                         ),
                       ),

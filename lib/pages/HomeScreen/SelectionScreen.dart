@@ -89,7 +89,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => LevelPage(catagoryId: category.id),
+                                    builder: (_) => LevelPage(catagoryId: category.id,themeColor: Colors.green,),
                                   ),
                                 );
                               },

@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 16),
         ),
       ),
-      home: Homescreen(),
+      home:const Homescreen(),
     ),
     );
 

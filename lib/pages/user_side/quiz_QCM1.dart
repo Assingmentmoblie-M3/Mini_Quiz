@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_quiz/pages/user_side/quiz_multi_answer.dart';
 import 'package:mini_quiz/pages/user_side/result.dart';
 import 'package:mini_quiz/provider/quiz1_provider.dart';
 import 'package:provider/provider.dart';
@@ -7,11 +9,12 @@ import 'package:provider/provider.dart';
 class Quiz_QCM1 extends StatefulWidget {
   final int categoryId;
   final int levelId;
+  final Color themeColor;
   const Quiz_QCM1({
     super.key,
     required this.categoryId,
     required this.levelId,
-    required Map<dynamic, dynamic> question,
+    required Map<dynamic, dynamic> question, required this.themeColor,
   });
 
   @override
@@ -144,22 +147,28 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
                 ),
               ),
               const Spacer(),
-              SizedBox(
-                height: 52,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: selectedIndex == null ? null : goNext,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF19A191),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 52,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: selectedIndex == null ? null : goNext,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: widget.themeColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text(
+                          "Next",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    "Next",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
+                ],
               ),
             ],
           ),
@@ -174,18 +183,21 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
+        Text(
           'Quiz',
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF19A191),
+           color: widget.themeColor,
           ),
         ),
         Text(
           '${formatTime(remainingSeconds)}\n'
           '${provider.currentIndex + 1}/${provider.questions.length}',
           textAlign: TextAlign.right,
+          style: TextStyle(
+            color:widget.themeColor,
+          ),
         ),
       ],
     );
@@ -196,7 +208,7 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
       width: double.infinity,
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: const Color(0xFF19A191),
+        color:widget.themeColor,
         borderRadius: BorderRadius.circular(35),
       ),
       child: Text(
@@ -223,19 +235,19 @@ class _QuizScreen1State extends State<Quiz_QCM1> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+           //color: widget.themeColor,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: selected ? const Color(0xFF00D60B) : const Color(0xFFB2DFDB),
-            width: 2,
+           color: selected ? widget.themeColor : widget.themeColor.withOpacity(0.2),
+            width:2.5,
           ),
         ),
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF19A191),
+            color:widget.themeColor,
           ),
         ),
       ),

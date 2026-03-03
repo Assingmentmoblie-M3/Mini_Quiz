@@ -24,20 +24,16 @@ class QuizProvider extends ChangeNotifier {
 void nextQuestion() {
   if (currentIndex < questions.length - 1) {
     currentIndex++;
-    print("ប្តូរទៅសំណួរទី: $currentIndex"); 
+    print("changes: $currentIndex"); 
     notifyListeners();
   } else {
-    print("អស់សំណួរហើយ!");
+    print("not answer!");
   }
 }
-
 void checkAnswer(List<int> selectedIndexes) {
   List answersList = currentQuestion['answers'] ?? [];
   if (answersList.isEmpty) return;
-
   var data = answersList[0];
-
-  // ១. ទាញយកចម្លើយត្រូវពី Database ហើយបំបែកជា List (ឧទាហរណ៍: ["A.2", "D.2"])
   String correctStr = (data['correct_options'] ?? data['is_correct'] ?? "").toString();
   List<String> correctValuesFromDB = correctStr
       .split(',')
@@ -56,14 +52,12 @@ void checkAnswer(List<int> selectedIndexes) {
   if (userSelectedValues.length == correctValuesFromDB.length) {
     isCorrect = userSelectedValues.every((val) => correctValuesFromDB.contains(val));
   }
-
   if (isCorrect) {
     score++;
     print(" ត្រឹមត្រូវ! ពិន្ទុបច្ចុប្បន្ន: $score");
   } else {
     print("ខុសហើយ! User រើស: $userSelectedValues | ចម្លើយត្រូវគឺ: $correctValuesFromDB");
   }
-
   notifyListeners();
 }
   void resetQuiz() {

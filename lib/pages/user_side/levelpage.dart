@@ -6,13 +6,14 @@ import 'package:provider/provider.dart';
 
 class LevelPage extends StatefulWidget {
   final int catagoryId;
-  LevelPage({super.key, required this.catagoryId});
+  final Color themeColor;
+  LevelPage({super.key, required this.catagoryId,required this.themeColor,});
   @override
   State<LevelPage> createState() => _LevelPageState();
 }
 
 class _LevelPageState extends State<LevelPage> {
-  int? selectedIndex;
+  //int? selectedIndex;
   Color _getColor(int index) {
     List<Color> colors = [
       Color(0xFFF35B6DA),
@@ -73,22 +74,21 @@ class _LevelPageState extends State<LevelPage> {
                     itemCount: provider.levelList.length,
                     itemBuilder: (context, index) {
                       final level = provider.levelList[index];
+                      final levelColor = _getColor(index);
                       return quizButton(
                         text: level.levelName,
-                        color: selectedIndex == index
-                            ? Colors
-                                  .green // selected color
-                            : _getColor(index),
+                        color: levelColor,
                         onTap: () {
-                          setState(() {
-                            selectedIndex = index;
-                          });
+                           setState(() {
+                             final selectedColor = _getColor(index);
+                           });
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => QuizMainScreen(
                                 categoryId: widget.catagoryId,
                                 levelId: level.levelId,
+                                themeColor: levelColor,
                               ),
                             ),
                           );

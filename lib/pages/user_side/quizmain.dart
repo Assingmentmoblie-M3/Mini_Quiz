@@ -7,10 +7,12 @@ import 'package:provider/provider.dart';
 class QuizMainScreen extends StatefulWidget {
   final int categoryId;
   final int levelId;
+   final Color themeColor;
   const QuizMainScreen({
     super.key,
     required this.categoryId,
     required this.levelId,
+     required this.themeColor,
   });
   @override
   State<QuizMainScreen> createState() => _QuizMainScreenState();
@@ -30,16 +32,16 @@ class _QuizMainScreenState extends State<QuizMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+       appBar: AppBar(
+         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.chevron_back),
-          color: Colors.green,
-          iconSize: 30,
-        ),
-      ),
+         leading: IconButton(
+           onPressed: () => Navigator.pop(context),
+           icon: Icon(CupertinoIcons.chevron_back),
+           color: widget.themeColor,
+           iconSize: 30,
+         ),
+       ),
       backgroundColor: Colors.white,
       body: Consumer<QuizProvider>(
         builder: (context, provider, child) {
@@ -77,12 +79,13 @@ class _QuizMainScreenState extends State<QuizMainScreen> {
               (answers[0]['is_correct'] ?? answers[0]['correct_options'] ?? "")
                   .toString();
           if (correctStr.contains(',')) {
-            return Multi_answer();
+            return Multi_answer(themeColor: widget.themeColor,);
           } else {
             return Quiz_QCM1(
               question: question,
               categoryId: widget.categoryId,
               levelId: widget.levelId,
+              themeColor: widget.themeColor,
             );
           }
         },
