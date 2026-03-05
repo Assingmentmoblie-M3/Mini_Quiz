@@ -49,7 +49,18 @@ class _SelectionScreenState extends State<SelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false, // remove default back button
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pushNamed(context, '/login'),
+            icon: Icon(Icons.logout_outlined),
+            color: const Color.fromARGB(255, 231, 3, 3),
+            iconSize: 30,
+          ),
+        ],
+      ),
       //backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
@@ -60,7 +71,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
               Text(
                 "Quiz",
                 style: TextStyle(
-                  fontSize: R.adaptive(context, mobile: 44, tablet: 48, desktop: 56),
+                  fontSize: R.adaptive(
+                    context,
+                    mobile: 44,
+                    tablet: 48,
+                    desktop: 56,
+                  ),
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF00D60B),
                 ),
@@ -69,7 +85,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 "Choose your topic!",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 24),
+                  fontSize: R.adaptive(
+                    context,
+                    mobile: 18,
+                    tablet: 20,
+                    desktop: 24,
+                  ),
                   color: const Color(0xFF5C5C5C),
                 ),
               ),
@@ -79,18 +100,23 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   if (categoryController.isLoading.value) {
                     return Center(child: CircularProgressIndicator());
                   }
-        
+
                   if (categoryController.categories.isEmpty) {
                     return Center(
                       child: Text(
                         "No categories available",
                         style: TextStyle(
-                          fontSize: R.adaptive(context, mobile: 14, tablet: 16, desktop: 18),
+                          fontSize: R.adaptive(
+                            context,
+                            mobile: 14,
+                            tablet: 16,
+                            desktop: 18,
+                          ),
                         ),
                       ),
                     );
                   }
-        
+
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: R.isTablet(context) ? 3 : 2,
@@ -102,10 +128,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     itemBuilder: (context, index) {
                       final category = categoryController.categories[index];
                       final boxColor = topicColors[index % topicColors.length];
-        
+
                       return GestureDetector(
                         onTap: () {
-                          Get.to(() => LevelPage(categoryId: category.categoryId));
+                          Get.to(
+                            () => LevelPage(categoryId: category.categoryId),
+                          );
                         },
                         child: Topiccard(
                           title: category.categoryName,

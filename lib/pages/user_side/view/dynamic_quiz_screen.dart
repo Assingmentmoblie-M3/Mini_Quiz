@@ -32,9 +32,10 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
   late List<Answer> quiz;
   
   // Timer functionality
-  static const int totalSeconds = 300; // 5 minutes per question
+  static const int totalSeconds = 30; // 5 minutes per question
   int remainingSeconds = totalSeconds;
   Timer? timer;
+  bool isTimeExpired = false;
   
   static const Color primaryGreen = Color(0xFF19A191);
 
@@ -50,14 +51,14 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
     startTimer();
     
     // Show toast message with question count
-    Future.delayed(const Duration(milliseconds: 500), () {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${quiz.length} question${quiz.length > 1 ? 's' : ''} loaded for this level'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    });
+    // Future.delayed(const Duration(milliseconds: 180), () {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text('${quiz.length} question${quiz.length > 1 ? 's' : ''} loaded for this level'),
+    //       duration: const Duration(seconds: 2),
+    //     ),
+    //   );
+    // });
     
     // Debug output
     print('╔════════════════════════════════════════╗');
@@ -83,7 +84,21 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (remainingSeconds == 0) {
         t.cancel();
-        next();
+        setState(() {
+          isTimeExpired = true;
+        });
+        // Show snackbar before submitting
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Time expired! Submitting your answers...'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+          ),
+        );
+        // Delay submission slightly to ensure UI updates
+        Future.delayed(const Duration(milliseconds: 200), () {
+          submit();
+        });
       } else {
         setState(() {
           remainingSeconds--;
@@ -370,7 +385,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
     final selected = selectedAnswers[qId] == key;
 
     return GestureDetector(
-      onTap: () {
+      onTap: isTimeExpired ? null : () {
         setState(() {
           selectedAnswers[qId] = key;
         });
@@ -443,7 +458,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
         : const Color(0xFF91E3D9);
 
     return GestureDetector(
-      onTap: () {
+      onTap: isTimeExpired ? null : () {
         setState(() {
           if (isSelected) {
             set.remove(key);
@@ -598,20 +613,20 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
         if (!isFirst)
           // Back Button
           GestureDetector(
-            onTap: previous,
+            onTap: isTimeExpired ? null : previous,
             child: Container(
               height: 54,
               width: 54,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFB2DFDB),
+                  color: isTimeExpired ? Colors.grey[300]! : const Color(0xFFB2DFDB),
                   width: 2,
                 ),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back_ios_new,
-                color: primaryGreen,
+                color: isTimeExpired ? Colors.grey[400] : primaryGreen,
                 size: 20,
               ),
             ),
@@ -622,7 +637,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
           child: SizedBox(
             height: 54,
             child: ElevatedButton(
-              onPressed: hasSelection ? next : null,
+              onPressed: (hasSelection && !isTimeExpired) ? next : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryGreen,
                 disabledBackgroundColor: const Color(0xFFE0E0E0),
