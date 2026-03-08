@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 import 'package:mini_quiz/pages/admin_side/view/admin_dashboard_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_category_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_level_page.dart';
@@ -6,7 +8,9 @@ import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_question_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_result_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_answer_page.dart';
+import 'package:mini_quiz/pages/user_side/view/login_screen.dart';
 
+// final UserController userController = Get.find<UserController>();
 class Sidebar extends StatelessWidget {
   final String selected;
 
@@ -92,108 +96,62 @@ class Sidebar extends StatelessWidget {
             icon: Icons.dashboard,
             title: "Dashboard",
             active: selected == "Dashboard",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const DashboardScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
-              ),
-            ),
+            onTap: () => Navigator.pushNamed(context, '/dashboard'),
           ),
           _menuItem(
             icon: Icons.category,
             title: "Category",
             active: selected == "Category",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewCategoryScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
-              ),
-            ),
+            onTap: () => Navigator.pushNamed(context, '/categories_page'),
           ),
           _menuItem(
             icon: Icons.bar_chart,
             title: "Levels",
             active: selected == "Levels",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewLevelScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
-              ),
-            ),
+            onTap: () => Navigator.pushNamed(context, '/levels_page'),
           ),
 
           _menuItem(
             icon: Icons.help_outline,
             title: "Questions",
             active: selected == "Questions",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewQuestionScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
-              ),
-            ),
+            onTap: () => Navigator.pushNamed(context, '/questions_page'),
           ),
 
           _menuItem(
             icon: Icons.check_circle_outline,
             title: "Answers",
             active: selected == "Answers",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewAnswerScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
-              ),
-            ),
+            onTap: () => Navigator.pushNamed(context, '/answers_page'),
           ),
           _menuItem(
             icon: Icons.people_outline,
             title: "Users",
             active: selected == "Users",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const ViewUserScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
-              ),
-            ),
+            onTap: () => Navigator.pushNamed(context, '/users_page'),
           ),
           _menuItem(
             icon: Icons.assignment_outlined,
             title: "Results",
             active: selected == "Results",
-            onTap: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                     ViewResultScreen(),
-                transitionDuration: Duration.zero, // no animation
-                reverseTransitionDuration:
-                    Duration.zero, // no animation when back
+            onTap: () => Navigator.pushNamed(context, '/result_page'),
+          ),
+          Column(
+            children: [
+              _menuItem(
+                icon: Icons.logout,
+                title: "Logout",
+                active: selected == "Logout",
+                onTap: () {
+                  userController.logout();
+                  Navigator.pushNamed(
+                    context,
+                    '/login',
+                  );
+                  //
+                },
               ),
-            ),
+            ],
           ),
         ],
       ),

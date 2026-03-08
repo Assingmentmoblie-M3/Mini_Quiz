@@ -117,7 +117,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       "Enter Your Email",
                       style: TextStyle(
-                        fontSize: R.adaptive(context, mobile: 28, tablet: 32, desktop: 36),
+                        fontSize: R.adaptive(
+                          context,
+                          mobile: 28,
+                          tablet: 32,
+                          desktop: 36,
+                        ),
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF00D60B),
                       ),
@@ -127,7 +132,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       "We'll only use this to save your program!\nWe won't spam you.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: R.adaptive(context, mobile: 13, tablet: 15, desktop: 17),
+                        fontSize: R.adaptive(
+                          context,
+                          mobile: 13,
+                          tablet: 15,
+                          desktop: 17,
+                        ),
                         color: const Color(0xFF5C5C5C),
                       ),
                     ),
@@ -145,14 +155,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           horizontal: R.wp(context, 0.08),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(R.wp(context, 0.05)),
+                          borderRadius: BorderRadius.circular(
+                            R.wp(context, 0.05),
+                          ),
                           borderSide: const BorderSide(
                             color: Color(0xFF40DCCA),
                             width: 2,
                           ),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(R.wp(context, 0.05)),
+                          borderRadius: BorderRadius.circular(
+                            R.wp(context, 0.05),
+                          ),
                         ),
                       ),
                       validator: _emailValidator,
@@ -167,36 +181,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       // Prevent double clicks
-                      if (userController.isLoading.value) return;
+                      if (userController.isLoggingIn.value) return;
 
                       if (_formKey.currentState!.validate()) {
-                        final email = emailController.text
-                            .trim()
-                            .toLowerCase();
-
-                        final user = await userController.login(email);
-
-                        if (user != null) {
-                          if (user.roleId == 0) {
-                            Get.off(() => SelectionScreen());
-                          } else if (user.roleId == 1) {
-                            Get.off(() => DashboardScreen());
-                          }
-                        }
+                        final email = emailController.text.trim().toLowerCase();
+                        await userController.login(email);
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00A408),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(R.wp(context, 0.04)),
+                        borderRadius: BorderRadius.circular(
+                          R.wp(context, 0.04),
+                        ),
                       ),
                     ),
-                    child: userController.isLoading.value
+                    child: userController.isLoggingIn.value
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(
                             "Continue",
                             style: TextStyle(
-                              fontSize: R.adaptive(context, mobile: 16, tablet: 18, desktop: 20),
+                              fontSize: R.adaptive(
+                                context,
+                                mobile: 16,
+                                tablet: 18,
+                                desktop: 20,
+                              ),
                               color: Colors.white,
                             ),
                           ),

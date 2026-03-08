@@ -4,6 +4,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:mini_quiz/layout/admin_sidebar.dart';
 import 'package:mini_quiz/components/section_card.dart';
 import 'package:mini_quiz/components/stat_card.dart';
+import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
 import '../controller/result_controller.dart';
 
@@ -15,6 +16,13 @@ class DashboardScreen extends StatefulWidget {
 }
 class _DashboardScreenState extends State<DashboardScreen> {
   final ResultController resultController = Get.put(ResultController());
+  late final UserController userController;
+@override
+  void initState() {
+    super.initState();
+    userController = Get.find<UserController>();
+    userController.fetchUsers(); // ✅ fetch only here
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   Expanded(
                     child: Row(
-                      children: const [
+                      children:  [
                         Expanded(
                           flex: 3,
                           child: SectionCard(
@@ -106,7 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           flex: 2,
                           child: SectionCard(
                             title: "Fav Topic",
-                            child: FavTopicTable(),
+                            child: FavTopicTable()
                           ),
                         ),
                       ],

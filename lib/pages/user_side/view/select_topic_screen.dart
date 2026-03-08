@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
 import 'package:mini_quiz/pages/user_side/components/topic_card.dart';
 import 'package:mini_quiz/pages/admin_side/controller/category_controller.dart';
 // Import your next page
@@ -44,6 +45,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     super.initState();
     // Ensure categories are fetched when this screen appears
     Future.microtask(() => categoryController.fetchCategories());
+    
   }
 
   @override
@@ -54,7 +56,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
         automaticallyImplyLeading: false, // remove default back button
         actions: [
           IconButton(
-            onPressed: () => Navigator.pushNamed(context, '/login'),
+            onPressed: () {
+              userController.logout();
+                Navigator.pushNamed(context, '/login');
+            },
             icon: Icon(Icons.logout_outlined),
             color: const Color.fromARGB(255, 231, 3, 3),
             iconSize: 30,

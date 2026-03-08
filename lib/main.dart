@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mini_quiz/pages/admin_side/controller/result_controller.dart';
+import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 import 'package:mini_quiz/pages/admin_side/view/answer_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/category_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/levels_page.dart';
@@ -29,6 +31,8 @@ void main() async {
   setUrlStrategy(PathUrlStrategy());
    WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  Get.put(UserController(), permanent: true); // global single instance
+  Get.put(ResultController(), permanent: true);
   runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
 }
 
@@ -59,22 +63,21 @@ class MyApp extends StatelessWidget {
             builder: (_) => SelectionScreen(),
           ),
           routes: {
-    // '/': (context) =>SelectionScreen(),
     '/': (context) => const Homescreen(),
     '/login': (context) => const LoginScreen(),
 
     '/dashboard': (context) => const DashboardScreen(),
     '/category_page': (context) => const CategoryScreen(),
-    '/view_category_page': (context) => const ViewCategoryScreen(),
+    '/categories_page': (context) => const ViewCategoryScreen(),
     '/level_page': (context) => const LevelsScreen(),
-    '/view_level_page': (context) => const ViewLevelScreen(),
+    '/levels_page': (context) => const ViewLevelScreen(),
     '/question_page': (context) => const QuestionScreen(),
-    '/view_question_page': (context) => const ViewQuestionScreen(),
+    '/questions_page': (context) => const ViewQuestionScreen(),
     '/answer_page': (context) => const AnswerScreen(),
-    '/view_answer_page': (context) => const ViewAnswerScreen(),
+    '/answers_page': (context) => const ViewAnswerScreen(),
     '/user_page': (context) => const UserScreen(),
-    '/view_user_page': (context) => const ViewUserScreen(),
-    '/view_result_page': (context) => ViewResultScreen(),
+    '/users_page': (context) => const ViewUserScreen(),
+    '/result_page': (context) => ViewResultScreen(),
 
     '/select_topic_screen': (context) => SelectionScreen(),
     '/level_screen': (context) {

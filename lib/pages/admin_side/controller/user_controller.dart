@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/model/user_model.dart';
 import 'package:mini_quiz/services/api_service.dart';
@@ -7,7 +8,7 @@ class UserController extends GetxController {
   var users = <User>[].obs;
   var isLoading = false.obs;
   RxBool status = false.obs;
-  
+  var isLoggingIn = false.obs;
 
   var filteredUsers = <User>[].obs; // filtered list
   var searchText = ''.obs;
@@ -30,7 +31,7 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchUsers();
+    // fetchUsers();
   }
 
   void setSelectedUserId(int? id) {
@@ -56,6 +57,7 @@ class UserController extends GetxController {
       isLoading.value = true;
       final response = await ApiService.dio.get('/users');
       if (response.statusCode == 200) {
+
         final List data = response.data['data'];
         users.value = data.map((json) => User.fromJson(json)).toList();
 
@@ -73,41 +75,54 @@ class UserController extends GetxController {
   }
 
   Future<User?> login(String email) async {
-    // Check if already loading to prevent double clicks
-    if (isLoading.value) return null;
+  if (isLoggingIn.value) return null;
 
-    try {
-      isLoading.value = true;
+  try {
+    isLoggingIn.value = true;
 
-      // Call login endpoint - backend already creates user if doesn't exist
-      final response = await ApiService.dio.post(
-        '/login',
-        data: {'email': email},
-      );
+    final response = await ApiService.dio.post(
+      '/login',
+      data: {'email': email},
+    );
 
-      User? user;
+    User? user;
 
-      if (response.statusCode == 200) {
-        final data = response.data['data'];
-        if (data != null) {
-          user = User.fromJson(data);
-          
-          // Save to local storage
-          localStorageService.write('userId', user.userId);
-          localStorageService.write('roleId', user.roleId);
-          print('User saved to local storage - userId: ${user.userId}, roleId: ${user.roleId}');
-        }
+    if (response.statusCode == 200) {
+      final data = response.data['data'];
+
+      if (data != null) {
+        user = User.fromJson(data);
+
+        localStorageService.write('userId', user.userId);
+        localStorageService.write('roleId', user.roleId);
       }
-      print('user ${user}');
-      return user;
-    } catch (e) {
-      print("Login error: $e");
-      return null;
-    } finally {
-      isLoading.value = false;
     }
-  }
 
+    if (user != null) {
+      if (user.roleId == 0) {
+        Get.offAllNamed('/select_topic_screen');
+      } else {
+        Get.offAllNamed('/dashboard');
+      }
+    }
+
+    return user;
+  } catch (e) {
+    Get.snackbar(
+      "Login Failed",
+      "Please try again",
+      snackPosition: SnackPosition.BOTTOM,
+    );
+    return null;
+  } finally {
+    isLoggingIn.value = false;
+  }
+}
+  void logout() {
+    localStorageService.clear();
+
+    // Get.offAllNamed('/login');
+}
   Future<void> updateUser(int userId, String email) async {
     try {
       final response = await ApiService.dio.patch(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:mini_quiz/pages/admin_side/model/answer_model.dart';
@@ -46,6 +48,9 @@ class ResultController extends GetxController {
     fetchTotalQuizzes();
     fetchTotalAvgScore();
     countTheMostCategory();
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      fetchResults();
+    });
   }
 
   // ================= EDIT / RESET =================
@@ -82,7 +87,7 @@ class ResultController extends GetxController {
           'search': search.value,
           'column': column.value,
           'sort': sortDirection.value,
-          'per_page': 10,
+          'per_page': 30,
         },
       );
 
@@ -194,16 +199,13 @@ class ResultController extends GetxController {
 
   final theMostCategory = ''.obs;
   final theMostCategoryUsed = ''.obs;
- Future<void> countTheMostCategory() async {
+  Future<void> countTheMostCategory() async {
   final response = await ApiService.dio.get('/results');
   final List data = response.data['data'];
 
   if (data.isEmpty) return;
 
-  // 🔥 Store unique (user_id, category_id)
   final uniquePairs = <String>{};
-
-  // 🔥 Store category_id → category_name
   final categoryNames = <int, String>{};
 
   for (final item in data) {
@@ -220,7 +222,6 @@ class ResultController extends GetxController {
     categoryNames[categoryId] = categoryName;
   }
 
-  // 🔥 Count unique users per category
   final countMap = <int, int>{};
 
   for (final pair in uniquePairs) {
@@ -232,16 +233,24 @@ class ResultController extends GetxController {
 
   if (countMap.isEmpty) return;
 
-  final mostUsed = countMap.entries
-      .reduce((a, b) => a.value > b.value ? a : b);
+  // 🔥 find max value
+  final maxCount = countMap.values.reduce((a, b) => a > b ? a : b);
 
-  final mostCategoryName = categoryNames[mostUsed.key];
+  // 🔥 get all categories with that max value
+  final mostCategories = countMap.entries
+      .where((entry) => entry.value == maxCount)
+      .toList();
 
-  print("Most used category: $mostCategoryName");
-  print("Unique users: ${mostUsed.value}");
+  // 🔥 convert ids → names
+  final names = mostCategories
+      .map((e) => categoryNames[e.key])
+      .whereType<String>()
+      .toList();
 
-  // 👇 Store name instead of id
-  theMostCategory.value = mostCategoryName ?? '';
-  theMostCategoryUsed.value = mostUsed.value.toString();
+  print("Most used categories: $names");
+  print("Unique users: $maxCount");
+
+  theMostCategory.value = names.join(', ');
+  theMostCategoryUsed.value = maxCount.toString();
 }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mini_quiz/pages/admin_side/controller/result_controller.dart';
+import 'package:mini_quiz/pages/admin_side/controller/user_controller.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_result_page.dart';
 import 'package:mini_quiz/pages/admin_side/view/view_user_page.dart';
 
@@ -88,108 +91,109 @@ class SectionCard extends StatelessWidget {
 // ---------------- TABLES ----------------
 
 class RecentQuizTable extends StatelessWidget {
-  const RecentQuizTable({super.key});
-
+   RecentQuizTable({super.key});
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DataTable(
-        columns: [
-          DataColumn(
-            label: Text(
-              "Email",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5E5E5E),
+    return Obx(()=>
+      SizedBox(
+        width: double.infinity,
+        child: DataTable(
+          columns: [
+            DataColumn(
+              label: Text(
+                "Email",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
+                ),
               ),
             ),
-          ),
-
-          DataColumn(
-            label: Text(
-              "Status",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5E5E5E),
+      
+            DataColumn(
+              label: Text(
+                "Status",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
+                ),
               ),
             ),
-          ),
-        ],
-        rows: userController.filteredUsers
-            .where(
-              (user) => user.userId == userController.filteredUsers.last.userId,
-            )
-            .map((user) {
-              return DataRow(
-                cells: [
-                  DataCell(Text(user.email.toString())),
-                  DataCell(
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(232, 248, 233, 1),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          "Active",
-                          style: TextStyle(color: Color(0xFF00D60B)),
+          ],
+          rows: userController.filteredUsers
+              .where(
+                (user) => user.userId == userController.filteredUsers.last.userId,
+              )
+              .map((user) {
+                return DataRow(
+                  cells: [
+                    DataCell(Text(user.email.toString())),
+                    DataCell(
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(232, 248, 233, 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Text(
+                            "Active",
+                            style: TextStyle(color: Color(0xFF00D60B)),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            })
-            .toList(),
+                  ],
+                );
+              })
+              .toList(),
+        ),
       ),
     );
   }
 }
 
 class FavTopicTable extends StatelessWidget {
-  const FavTopicTable({super.key});
-
+  FavTopicTable({super.key});
+  final ResultController resultController = Get.find<ResultController>();
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            label: Text(
-              "Topic",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5E5E5E),
+    return Obx(
+      () => SizedBox( child: DataTable(
+          columns: [
+            DataColumn(
+              label: Text(
+                "Topic",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
+                ),
               ),
             ),
-          ),
-          DataColumn(
-            label: Text(
-              "Unique Users",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF5E5E5E),
+            DataColumn(
+              label: Text(
+                "Unique Users",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF5E5E5E),
+                ),
               ),
             ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text(resultController.theMostCategory.value)),
-              DataCell(
-                Text(resultController.theMostCategoryUsed.value.toString()),
-              ),
-            ],
-          ),
-        ],
+          ],
+          rows: [
+            DataRow(
+              cells: [
+                DataCell(Text(resultController.theMostCategory.value)),
+                DataCell(
+                  Text(resultController.theMostCategoryUsed.value.toString()),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
