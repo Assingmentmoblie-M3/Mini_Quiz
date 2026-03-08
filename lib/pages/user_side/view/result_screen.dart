@@ -200,7 +200,7 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
           // Continue button at bottom
           SliverPadding(
-            padding: EdgeInsets.all(0),
+            padding: EdgeInsets.all(20),
             sliver: SliverToBoxAdapter(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(

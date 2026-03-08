@@ -102,6 +102,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
               SizedBox(height: R.hp(context, 0.05)),
               Expanded(
                 child: Obx(() {
+                  
                   if (categoryController.isLoading.value) {
                     return Center(child: CircularProgressIndicator());
                   }

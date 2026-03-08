@@ -109,9 +109,11 @@ class LevelController extends GetxController {
     try {
       isLoading.value = true;
       // print('Fetching levels for category ID: $categoryId');
-      filteredLevels.clear();       // remove all old items
-
+      // remove all old items
+      
+      filteredLevels.clear();  
       final response = await ApiService.dio.get('/categories/$categoryId/levels');
+
       if (response.statusCode == 200) {
         // print('fetchlevelbycategory: ${response}');
         levels.value = [];

@@ -96,7 +96,7 @@ class _DynamicQuizPageState extends State<DynamicQuizPage> {
           ),
         );
         // Delay submission slightly to ensure UI updates
-        Future.delayed(const Duration(milliseconds: 200), () {
+        Future.delayed(const Duration(milliseconds: 5000), () {
           submit();
         });
       } else {

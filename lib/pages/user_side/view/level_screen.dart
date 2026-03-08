@@ -30,13 +30,11 @@ const List<Color> levelColors = [
   Colors.brown,
   Colors.blueGrey,
 ];
+
 class LevelPage extends StatefulWidget {
   final int categoryId;
 
-  const LevelPage({
-    super.key,
-    required this.categoryId,
-  });
+  const LevelPage({super.key, required this.categoryId});
 
   @override
   State<LevelPage> createState() => _LevelPageState();
@@ -45,13 +43,13 @@ class LevelPage extends StatefulWidget {
 class _LevelPageState extends State<LevelPage> {
   late final LevelController levelController;
   LocalStorageService localStorageService = LocalStorageService();
-  
+
   @override
   void initState() {
     super.initState();
     // Initialize controller FIRST before using any getters
     _initializeController();
-                          localStorageService.write('categoryId', widget.categoryId);
+    localStorageService.write('categoryId', widget.categoryId);
   }
 
   void _initializeController() {
@@ -70,21 +68,20 @@ class _LevelPageState extends State<LevelPage> {
 
   Future<void> _loadLevels() async {
     try {
-       await levelController.fetchLevelsByCategory(widget.categoryId);
-    
-      // if (mounted) {
-        
+      await levelController.fetchLevelsByCategory(widget.categoryId);
+    } catch (e) {
+      print('Error loading levels: $e');
+    }
+  }
+  
+// if (mounted) {
+
       //   levelController.filteredLevelsByCategory.assignAll(
       //     levelController.levels
       //         .where((level) => level.category.categoryId == widget.categoryId)
       //         .toList(),
       //   );
       // }
-    } catch (e) {
-      print('Error loading levels: $e');
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -100,7 +97,7 @@ class _LevelPageState extends State<LevelPage> {
           onPressed: () {
             Navigator.pop(context);
             localStorageService.remove('categoryId');
-          } ,
+          },
           icon: Icon(CupertinoIcons.chevron_back),
           color: Colors.green,
           iconSize: 30,
@@ -111,17 +108,19 @@ class _LevelPageState extends State<LevelPage> {
         width: double.infinity,
         height: double.infinity,
         padding: EdgeInsets.all(R.wp(context, 0.05)),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          
-        ),
+        decoration: BoxDecoration(color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Quiz",
               style: TextStyle(
-                fontSize: R.adaptive(context, mobile: 44, tablet: 48, desktop: 56),
+                fontSize: R.adaptive(
+                  context,
+                  mobile: 44,
+                  tablet: 48,
+                  desktop: 56,
+                ),
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF00D60B),
               ),
@@ -130,7 +129,12 @@ class _LevelPageState extends State<LevelPage> {
               "Choose your level!",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: R.adaptive(context, mobile: 18, tablet: 20, desktop: 24),
+                fontSize: R.adaptive(
+                  context,
+                  mobile: 18,
+                  tablet: 20,
+                  desktop: 24,
+                ),
                 color: const Color(0xFF5C5C5C),
               ),
             ),
@@ -144,23 +148,30 @@ class _LevelPageState extends State<LevelPage> {
                   return const Center(child: Text("No levels found"));
                 }
                 return ListView(
-                  children: levelController.filteredLevelsByCategory.map((Level level) {
+                  children: levelController.filteredLevelsByCategory.map((
+                    Level level,
+                  ) {
                     return quizButton(
                       text: level.levelName,
-                      colorLevel: levelColors[level.levelId % levelColors.length],
+                      colorLevel:
+                          levelColors[level.levelId % levelColors.length],
                       context: context,
                       onTap: () async {
                         try {
-                          final levelAnswers = await levelController.answerController
+                          final levelAnswers = await levelController
+                              .answerController
                               .fetchAnswersByLevel(level.levelId);
-                          
+
                           if (!mounted) return;
-                          
+
                           if (levelAnswers.isEmpty) {
-                            Get.snackbar('Info', 'No questions available for this level');
+                            Get.snackbar(
+                              'Info',
+                              'No questions available for this level',
+                            );
                             return;
                           }
-                          
+
                           if (!mounted) return;
                           Navigator.push(
                             context,
@@ -190,7 +201,7 @@ class _LevelPageState extends State<LevelPage> {
     required String text,
     required VoidCallback onTap,
     required Color colorLevel,
-    required BuildContext context
+    required BuildContext context,
   }) {
     return Padding(
       padding: EdgeInsets.only(bottom: R.hp(context, 0.03)),
@@ -214,7 +225,12 @@ class _LevelPageState extends State<LevelPage> {
               text,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: R.adaptive(context, mobile: 20, tablet: 22, desktop: 26),
+                fontSize: R.adaptive(
+                  context,
+                  mobile: 20,
+                  tablet: 22,
+                  desktop: 26,
+                ),
                 fontWeight: FontWeight.bold,
               ),
             ),
